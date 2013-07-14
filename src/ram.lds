@@ -7,6 +7,7 @@ MEMORY {
 
 SECTIONS {
 	.text : {
+		*(.isr_vectors*)
 		*(.text*)
 	} > ram
 	
@@ -33,3 +34,4 @@ SECTIONS {
 }
 
 _stack = ORIGIN(ccmram) + LENGTH(ccmram);
+_stack_irq = ORIGIN(ram) + LENGTH(ram);

@@ -29,7 +29,7 @@ lib/%.o: lib/%.cpp $(LIB_INCS)
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
 
 %.bin: %.o $(LIB_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS)
-	-$(LD) $^ -o $@ $(LDFLAGS) -Tsrc/ram.lds
+	$(LD) $^ -o $@ $(LDFLAGS) -Tsrc/ram.lds
 
 clean:
 	-rm -f examples/*.bin $(FREERTOS_OBJS) $(LIB_OBJS) $(SRC_OBJS)

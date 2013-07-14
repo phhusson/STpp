@@ -1,4 +1,6 @@
 #include <stm32f4xx.h>
+#include <FreeRTOS.h>
+#include <task.h>
 
 void init(void) {
 	//HSEON&~HSEBYP
@@ -50,17 +52,40 @@ void init(void) {
 
 	extern char _sbss,_ebss;
 	char *b=&_sbss;
-	while( b < _ebss)
-		*b++=0;
+	while( b < &_ebss)
+		*b++ = 0;
 
-	vTaskStartScheduler();
+	extern void *g_pfnVectors;
+	//Set interrupt vector to proper location
+	SCB->VTOR = (int)&g_pfnVectors;
 
-	extern void (**__init_array_start)();
-	extern void (**__init_array_end)();
+	//Set priority mode 4.4
+	SCB->AIRCR = (SCB->AIRCR & SCB_AIRCR_PRIGROUP_Msk) | 3 << SCB_AIRCR_PRIGROUP_Pos;
+
+
+	void **vectors = &g_pfnVectors;
+	extern void vPortSVCHandler(void);
+	extern void xPortPendSVHandler(void);
+	extern void xPortSysTickHandler(void);
+	vectors[11]=vPortSVCHandler;
+	vectors[14]=xPortPendSVHandler;
+	vectors[15]=xPortSysTickHandler;
+
+	SysTick->LOAD = 168000;
+	SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_CLKSOURCE_Msk;
+
+	extern unsigned long __init_array_start;
+	extern unsigned long __init_array_end;
 	unsigned long *ptr;
 	void (*p)();
 	for (ptr = &__init_array_start; ptr < &__init_array_end; ++ptr) {
 		p = (*ptr);
 		p();
 	}
+
+	xTaskHandle handle_main;
+	extern void main(void);
+	xTaskCreate(main, (const signed char*)"Main thread", 512, NULL, tskIDLE_PRIORITY+1, &handle_main);
+
+	vTaskStartScheduler();
 }
