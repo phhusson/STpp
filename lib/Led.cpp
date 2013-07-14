@@ -1,6 +1,10 @@
 #include <Led.h>
 
 Led::Led(Gpio p, bool rev) :_p(p), _rev(rev) {
+	p.setDirection(Gpio::OUTPUT);
+	p.setPushPull();
+	p.setSpeed(Gpio::SPEED_50MHz);
+	p.setFunction(Gpio::GPIO);
 }
 
 void Led::on() {

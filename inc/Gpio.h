@@ -1,20 +1,17 @@
 class GpioPort;
 class Gpio {
-	private:
-		GpioPort *port;
-		int number;
-		Gpio(GpioPort*, int);
-		friend class GpioPort;
 	public:
 		enum Direction {
 			INPUT,
-			OUTPUT
+			OUTPUT,
+			ANALOG
 		};
 		void setDirection(Gpio::Direction);
 
 		enum Speed {
+			SPEED_100MHz,
 			SPEED_50MHz,
-			SPEED_10MHz,
+			SPEED_25MHz,
 			SPEED_2MHz
 		};
 		void setSpeed(Gpio::Speed);
@@ -22,12 +19,21 @@ class Gpio {
 		void setOpenDrain();
 
 		enum Function {
-			GPIO
+			GPIO,
+			ALTERNATE
 		};
 		void setFunction(Gpio::Function);
 
 		void setState(bool);
 		bool getState();
+	private:
+		GpioPort *port;
+		int number;
+		Gpio::Function function;
+		Gpio::Direction direction;
+		Gpio(GpioPort*, int);
+		void updateModeR();
+		friend class GpioPort;
 };
 
 class GpioPort {
