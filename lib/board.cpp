@@ -1,3 +1,3 @@
 #include "Led.h"
 
-Led LedR(GPIOB[10]);
+Led LedR(GpioD[12]);

@@ -1,12 +1,33 @@
+#include <stm32f4xx.h>
 #include "Gpio.h"
 
 //DM00031020.pdf p53
-GpioPort GPIOA((volatile void*)0x40020000);
-GpioPort GPIOB((volatile void*)0x40020400);
-GpioPort GPIOC((volatile void*)0x40020800);
-GpioPort GPIOD((volatile void*)0x40020C00);
-GpioPort GPIOE((volatile void*)0x40021000);
-GpioPort GPIOF((volatile void*)0x40021400);
-GpioPort GPIOG((volatile void*)0x40021800);
-GpioPort GPIOH((volatile void*)0x40021C00);
-GpioPort GPIOI((volatile void*)0x40022000);
+GpioPort GpioA(GPIOA);
+GpioPort GpioB(GPIOB);
+GpioPort GpioC(GPIOC);
+GpioPort GpioD(GPIOD);
+GpioPort GpioE(GPIOE);
+GpioPort GpioF(GPIOF);
+GpioPort GpioG(GPIOG);
+GpioPort GpioH(GPIOH);
+GpioPort GpioI(GPIOI);
+
+#define me ((volatile GPIO_TypeDef*)(this->port->base))
+
+Gpio::Gpio(GpioPort *p, int n)
+	: port(p), number(n) {
+}
+
+void Gpio::setState(bool v) {
+	if(v) {
+		//Set pin
+		me->BSRRL = 1 << number;
+	} else {
+		//Reset pin
+		me->BSRRH = 1 << number;
+	}
+}
+
+bool Gpio::getState() {
+	return !! (me->IDR & (1 << number));
+}

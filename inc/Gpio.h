@@ -2,7 +2,8 @@ class GpioPort;
 class Gpio {
 	private:
 		GpioPort *port;
-		Gpio(GpioPort, int);
+		int number;
+		Gpio(GpioPort*, int);
 		friend class GpioPort;
 	public:
 		enum Direction {
@@ -40,12 +41,12 @@ class GpioPort {
 		friend class Gpio;
 };
 
-extern GpioPort GPIOA;
-extern GpioPort GPIOB;
-extern GpioPort GPIOC;
-extern GpioPort GPIOD;
-extern GpioPort GPIOE;
-extern GpioPort GPIOF;
-extern GpioPort GPIOG;
-extern GpioPort GPIOH;
-extern GpioPort GPIOI;
+extern GpioPort GpioA;
+extern GpioPort GpioB;
+extern GpioPort GpioC;
+extern GpioPort GpioD;
+extern GpioPort GpioE;
+extern GpioPort GpioF;
+extern GpioPort GpioG;
+extern GpioPort GpioH;
+extern GpioPort GpioI;

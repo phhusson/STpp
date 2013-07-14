@@ -10,7 +10,7 @@ FREERTOS_OBJS=$(subst .c,.o,$(FREERTOS_SRCS))
 
 CXXFLAGS=-mcpu=cortex-m4
 ASFLAGS:=$(CXXFLAGS)
-CXXFLAGS+=-Iinc $(FREERTOS_INC) $(STM32_INC)
+CXXFLAGS+=-Iinc $(FREERTOS_INC) $(STM32_INC) -Wall
 CFLAGS:=$(CXXFLAGS)
 CXXFLAGS+=-fno-rtti -fno-exceptions
 LIB_SRC=$(wildcard lib/*.cpp)
