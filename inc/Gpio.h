@@ -43,7 +43,7 @@ class GpioPort {
 		Gpio operator[](int n) {
 			return Gpio(this, n);
 		}
-		GpioPort(volatile void* b) : base(b) {};
+		GpioPort(volatile void* b);
 		friend class Gpio;
 };
 
