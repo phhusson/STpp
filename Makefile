@@ -8,7 +8,8 @@ FREERTOS_SRCS+=3rdparty/FreeRTOS/Source/list.c
 FREERTOS_SRCS+=3rdparty/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c
 FREERTOS_OBJS=$(subst .c,.o,$(FREERTOS_SRCS))
 
-CXXFLAGS=-mcpu=cortex-m4 -Iinc $(FREERTOS_INC) $(STM32_INC)
+CXXFLAGS=-mcpu=cortex-m4
+CXXFLAGS+=-Iinc $(FREERTOS_INC) $(STM32_INC)
 CFLAGS:=$(CXXFLAGS)
 CXXFLAGS+=-fno-rtti -fno-exceptions
 LIB_SRC=$(wildcard lib/*.cpp)
@@ -26,7 +27,7 @@ lib/%.o: lib/%.cpp $(LIB_INCS)
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
 
 %.bin: %.o $(LIB_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS)
-	-$(LD) $^ -o $@ $(LDFLAGS) -emain
+	-$(LD) $^ -o $@ $(LDFLAGS) -Tsrc/ram.lds
 	cp $< $@
 
 clean:
