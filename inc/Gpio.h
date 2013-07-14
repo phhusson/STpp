@@ -29,6 +29,32 @@ class Gpio {
 
 		void setState(bool);
 		bool getState();
+		enum Resistor {
+			NONE,
+			PULL_UP,
+			PULL_DOWN,
+		};
+		void setResistor(Resistor);
+		enum AF {
+			SYSTEM,
+			TIM1_2,
+			TIM3_5,
+			TIM8_11,
+			I2C1_3,
+			SPI1_2,
+			SPI_3,
+			USART1_3,
+			USART4_6,
+			CAN1_2_TIM12_14,
+			OTG_FS_HS,
+			Eth,
+			FSMC_SDIO_OTG_HS,
+			Dcmi,
+			AF_14,
+			EVENT_OUT,
+		};
+		void setAlternate(int);
+		void setAlternate(AF);
 	private:
 		GpioPort *port;
 		int number;

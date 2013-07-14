@@ -77,3 +77,35 @@ GpioPort::GpioPort(volatile void* b) : base(b) {
 	int n = (((unsigned long)b) >> 10) & 0xf;
 	RCC->AHB1ENR |= 1 << n;
 }
+
+void Gpio::setResistor(Resistor r) {
+	int v;
+	switch(r) {
+		case NONE:
+			v=0;
+			break;
+		case PULL_UP:
+			v=1;
+			break;
+		case PULL_DOWN:
+			v=2;
+			break;
+	};
+	me->PUPDR = (me->PUPDR & ~(3<<(2*number))) | (v<<(2*number));
+}
+
+void Gpio::setAlternate(int af) {
+	setFunction(ALTERNATE);
+	if(number>=8) {
+		number-=8;
+		me->AFR[1] = (me->AFR[1] & ~(0xf<<(4*number))) |
+			af << (4*number);
+	} else {
+		me->AFR[0] = (me->AFR[0] & ~(0xf<<(4*number))) |
+			af << (4*number);
+	}
+}
+
+void Gpio::setAlternate(AF a) {
+	setAlternate((int)a);
+}
