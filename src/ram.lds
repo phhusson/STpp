@@ -23,6 +23,13 @@ SECTIONS {
 		*(.bss*) *(COMMON);
 	} > ram
 	_ebss = _sbss + SIZEOF(.bss);
+
+	. = ALIGN(4);
+	.init_array : {
+		__init_array_start = .;
+		*(.init_array*)
+		__init_array_end = .;
+	} > ram
 }
 
 _stack = ORIGIN(ccmram) + LENGTH(ccmram);

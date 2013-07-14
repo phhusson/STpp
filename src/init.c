@@ -47,4 +47,20 @@ void init(void) {
 	RCC->CFGR = (RCC->CFGR & ~RCC_CFGR_SW) | 2 << 0;
 	//Wait for SWS=2
 	while( (RCC->CFGR & RCC_CFGR_SWS) != (2<<2) );
+
+	extern char _sbss,_ebss;
+	char *b=&_sbss;
+	while( b < _ebss)
+		*b++=0;
+
+	vTaskStartScheduler();
+
+	extern void (**__init_array_start)();
+	extern void (**__init_array_end)();
+	unsigned long *ptr;
+	void (*p)();
+	for (ptr = &__init_array_start; ptr < &__init_array_end; ++ptr) {
+		p = (*ptr);
+		p();
+	}
 }

@@ -1,3 +1,6 @@
+#ifndef _GPIO_H
+#define _GPIO_H
+
 class GpioPort;
 class Gpio {
 	public:
@@ -56,3 +59,5 @@ extern GpioPort GpioF;
 extern GpioPort GpioG;
 extern GpioPort GpioH;
 extern GpioPort GpioI;
+
+#endif /* _GPIO_H */

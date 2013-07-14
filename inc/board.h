@@ -1,3 +1,4 @@
 #include <Led.h>
 
-extern Led LedR;
+extern Led LedG;
+extern Led LedO;
