@@ -1,6 +1,6 @@
 #include <stm32f4xx.h>
 
-void clock_init(void) {
+void init(void) {
 	//HSEON&~HSEBYP
 	RCC->CR = (RCC->CR | RCC_CR_HSEON) & ~RCC_CR_HSEBYP;
 	//Wait for HSERDY
