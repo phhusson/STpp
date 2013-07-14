@@ -8,7 +8,7 @@ FREERTOS_SRCS+=3rdparty/FreeRTOS/Source/list.c
 FREERTOS_SRCS+=3rdparty/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c
 FREERTOS_OBJS=$(subst .c,.o,$(FREERTOS_SRCS))
 
-CXXFLAGS=-Iinc $(FREERTOS_INC) -mcpu=cortex-m4
+CXXFLAGS=-mcpu=cortex-m4 -Iinc $(FREERTOS_INC) $(STM32_INC)
 CFLAGS:=$(CXXFLAGS)
 CXXFLAGS+=-fno-rtti -fno-exceptions
 LIB_SRC=$(wildcard lib/*.cpp)
@@ -20,7 +20,7 @@ SRC_OBJS=$(subst .c,.o,$(SRC))
 
 all: examples/led.bin
 
-.SECONDARY: $(LIB_OBJS) $(FREERTOS_OBJS)
+.SECONDARY: $(LIB_OBJS) $(FREERTOS_OBJS) $(SRC_OBJS)
 
 lib/%.o: lib/%.cpp $(LIB_INCS)
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
@@ -30,4 +30,4 @@ lib/%.o: lib/%.cpp $(LIB_INCS)
 	cp $< $@
 
 clean:
-	-rm -f examples/*.bin $(FREERTOS_OBJS) $(LIB_OBJS)
+	-rm -f examples/*.bin $(FREERTOS_OBJS) $(LIB_OBJS) $(SRC_OBJS)
