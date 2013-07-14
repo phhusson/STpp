@@ -1,5 +1,6 @@
 _start:
-	ldr sp, =_stack
+	ldr r0, =_stack
+	mov sp, r0
 	bl init
 	bl main
 end:

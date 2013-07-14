@@ -1,5 +1,6 @@
 #include "Gpio.h"
 
+//DM00031020.pdf p53
 GpioPort GPIOA((volatile void*)0x40020000);
 GpioPort GPIOB((volatile void*)0x40020400);
 GpioPort GPIOC((volatile void*)0x40020800);
