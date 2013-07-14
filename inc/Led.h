@@ -3,9 +3,11 @@
 
 class Led {
 	private:
-		Mutex m;
+		Mutex _m;
+		Gpio _p;
+		bool _rev;
 	public:
-		Led(Gpio);
+		Led(Gpio p, bool rev=false);
 		void on();
 		void off();
 		void toggle();

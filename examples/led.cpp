@@ -1,9 +1,9 @@
 #include "board.h"
 
-extern void sleep(int);
+extern "C" void vTaskDelay(int);
 int main() {
 	while(1) {
 		LedR.toggle();
-		sleep(1);
+		vTaskDelay(100);
 	}
 }

@@ -24,6 +24,9 @@ class Gpio {
 			GPIO
 		};
 		void setFunction(Gpio::Function);
+
+		void setState(bool);
+		bool getState();
 };
 
 class GpioPort {
