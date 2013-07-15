@@ -1,4 +1,5 @@
 #include <Led.h>
+#include <Pwm.h>
 
 extern Led LedG;
-extern Led LedO;
+extern Pwm LedO;

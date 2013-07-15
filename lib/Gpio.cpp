@@ -5,7 +5,6 @@
 
 Gpio::Gpio(GpioPort *p, int n)
 	: port(p), number(n) {
-
 	function = GPIO;
 	direction = INPUT;
 }
@@ -96,13 +95,14 @@ void Gpio::setResistor(Resistor r) {
 
 void Gpio::setAlternate(int af) {
 	setFunction(ALTERNATE);
-	if(number>=8) {
-		number-=8;
-		me->AFR[1] = (me->AFR[1] & ~(0xf<<(4*number))) |
-			af << (4*number);
+	int n = number;
+	if(n>=8) {
+		n-=8;
+		me->AFR[1] = (me->AFR[1] & ~(0xf<<(4*n))) |
+			af << (4*n);
 	} else {
-		me->AFR[0] = (me->AFR[0] & ~(0xf<<(4*number))) |
-			af << (4*number);
+		me->AFR[0] = (me->AFR[0] & ~(0xf<<(4*n))) |
+			af << (4*n);
 	}
 }
 

@@ -71,8 +71,6 @@ void init(void) {
 	vectors[14]=xPortPendSVHandler;
 	vectors[15]=xPortSysTickHandler;
 
-	SysTick->LOAD = 168000;
-	SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_CLKSOURCE_Msk;
 
 	extern unsigned long __init_array_start;
 	extern unsigned long __init_array_end;
@@ -86,6 +84,9 @@ void init(void) {
 	xTaskHandle handle_main;
 	extern void main(void);
 	xTaskCreate(main, (const signed char*)"Main thread", 512, NULL, tskIDLE_PRIORITY+1, &handle_main);
+
+	SysTick->LOAD = 168000;
+	SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_CLKSOURCE_Msk;
 
 	vTaskStartScheduler();
 }
