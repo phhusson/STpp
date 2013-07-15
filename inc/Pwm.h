@@ -12,5 +12,6 @@ class Pwm {
 		Pwm(Gpio p, Timer t, int n);
 		void setDutyCycle(float v);
 		void setDutyCycle(int percent);
+		void setComparator(unsigned int cmp);
 };
 #endif /* _PWM_H */

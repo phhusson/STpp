@@ -9,11 +9,11 @@ SECTIONS {
 	.text : {
 		*(.isr_vectors*)
 		*(.text*)
-	} > ram
+	} >rom
 	
 	.rodata : {
 		*(.rodata*)
-	} > ram
+	} >rom
 
 	.bss : {
 		_sbss = .;
@@ -26,16 +26,16 @@ SECTIONS {
 		__init_array_start = .;
 		*(.init_array*)
 		__init_array_end = .;
-	} > ram
+	} > rom
 
 	.data : {
 		*(.data*)
-	} > ram
+	} >ram AT>rom
 }
 
 _stack = ORIGIN(ccmram) + LENGTH(ccmram);
 _stack_irq = ORIGIN(ram) + LENGTH(ram);
 
-_sdata = 0;
-_edata = 0;
-_sldata = 0;
+_sdata = LOADADDR(.data);
+_edata = LOADADDR(.data)+SIZEOF(.data);
+_sldata = ADDR(.data);

@@ -85,8 +85,13 @@ void Timer::disable() {
 void Timer::setChannelDirection(int chan, Direction d) {
 	chan--;
 	int v=(int)d;
+	volatile uint16_t *CCMR=&(base->CCMR1);
+	if(chan>=2) {
+		CCMR+=2;
+		chan-=2;
+	}
 	int offset = 8*chan;
-	base->CCMR1 = (base->CCMR1 & ~(3 << offset)) |
+	*CCMR = (*CCMR & ~(3 << offset)) |
 		v << offset;
 }
 
@@ -108,18 +113,21 @@ void Timer::setChannelMode(int chan, ChannelMode m) {
 			break;
 	}
 
+	volatile uint16_t *CCMR=&(base->CCMR1);
+	if(chan>=2) {
+		CCMR+=2;
+		chan-=2;
+	}
 	int offset = 8*chan + 4;
-	base->CCMR1 = (base->CCMR1 & ~(7<<offset)) |
+	*CCMR = (*CCMR & ~(7<<offset)) |
 		v << offset;
 }
 
 void Timer::setChannelOutput(int chan, bool o) {
 	chan--;
 	if(o) {
-		base->CCMR1 = base->CCMR1 & ~(1<<(8*chan));
 		base->CCER |= 1 << (4*chan);
 	} else {
-		base->CCMR1 = base->CCMR1 | 1<<(8*chan);
 		base->CCER &= ~(1 << (4*chan));
 	}
 }

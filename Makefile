@@ -21,15 +21,18 @@ SRC:=$(wildcard src/*.c) $(wildcard src/*.s)
 SRC_OBJS:=$(subst .c,.o,$(SRC))
 SRC_OBJS:=$(subst .s,.o,$(SRC_OBJS))
 
-all: examples/led.bin
+all: examples/led.ram examples/led.flash
 
 .SECONDARY: $(LIB_OBJS) $(FREERTOS_OBJS) $(SRC_OBJS)
 
 lib/%.o: lib/%.cpp $(LIB_INCS)
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
 
-%.bin: %.o $(LIB_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS)
+%.ram: %.o $(LIB_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS)
 	$(LD) $^ -o $@ $(LDFLAGS) -Tsrc/ram.lds
+
+%.flash: %.o $(LIB_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS)
+	$(LD) $^ -o $@ $(LDFLAGS) -Tsrc/flash.lds
 
 clean:
 	-rm -f examples/*.bin $(FREERTOS_OBJS) $(LIB_OBJS) $(SRC_OBJS)

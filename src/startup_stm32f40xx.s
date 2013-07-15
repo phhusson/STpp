@@ -8,13 +8,14 @@ Reset_Handler:
 
 Default_Handler:
 Infinite_Loop:
+nop
   b  Infinite_Loop
 
 .section .isr_vectors
 
 g_pfnVectors:
   .word  _stack_irq
-  .word  Reset_Handler
+  .word  Reset_Handler+1
   .word  NMI_Handler
   .word  HardFault_Handler
   .word  MemManage_Handler
@@ -24,11 +25,11 @@ g_pfnVectors:
   .word  0
   .word  0
   .word  0
-  .word  SVC_Handler
+  .word  vPortSVCHandler//SVC_Handler
   .word  DebugMon_Handler
   .word  0
-  .word  PendSV_Handler
-  .word  SysTick_Handler
+  .word  xPortPendSVHandler//PendSV_Handler
+  .word  xPortSysTickHandler//SysTick_Handler
   
   /* External Interrupts */
   .word     WWDG_IRQHandler                   /* Window WatchDog              */                                        

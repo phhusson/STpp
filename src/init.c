@@ -3,6 +3,18 @@
 #include <task.h>
 
 void init(void) {
+	FLASH->ACR|=7;
+	extern char _sdata,_edata,_sldata;
+	char *b=&_sdata;
+	char *a=&_sldata;
+	while( b < &_edata)
+		*a++ = *b++;
+
+	extern char _sbss,_ebss;
+	b=&_sbss;
+	while( b < &_ebss)
+		*b++ = 0;
+
 	//HSEON&~HSEBYP
 	RCC->CR = (RCC->CR | RCC_CR_HSEON) & ~RCC_CR_HSEBYP;
 	//Wait for HSERDY
@@ -50,27 +62,9 @@ void init(void) {
 	//Wait for SWS=2
 	while( (RCC->CFGR & RCC_CFGR_SWS) != (2<<2) );
 
-	extern char _sbss,_ebss;
-	char *b=&_sbss;
-	while( b < &_ebss)
-		*b++ = 0;
-
-	extern void *g_pfnVectors;
-	//Set interrupt vector to proper location
-	SCB->VTOR = (int)&g_pfnVectors;
 
 	//Set priority mode 4.4
 	SCB->AIRCR = (SCB->AIRCR & SCB_AIRCR_PRIGROUP_Msk) | 3 << SCB_AIRCR_PRIGROUP_Pos;
-
-
-	void **vectors = &g_pfnVectors;
-	extern void vPortSVCHandler(void);
-	extern void xPortPendSVHandler(void);
-	extern void xPortSysTickHandler(void);
-	vectors[11]=vPortSVCHandler;
-	vectors[14]=xPortPendSVHandler;
-	vectors[15]=xPortSysTickHandler;
-
 
 	extern unsigned long __init_array_start;
 	extern unsigned long __init_array_end;

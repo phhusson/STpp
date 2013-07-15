@@ -33,3 +33,7 @@ void Pwm::setDutyCycle(float v) {
 void Pwm::setDutyCycle(int percent) {
 	tim.setChannelComparator(chan, percent*tim.getAutoReload()/100);
 }
+
+void Pwm::setComparator(unsigned int cmp) {
+	tim.setChannelComparator(chan, cmp);
+}
