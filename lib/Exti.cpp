@@ -1,6 +1,7 @@
 #include <stm32f4xx.h>
 #include "Board.h"
 #include "Exti.h"
+#include "Irq.h"
 
 void exti_handler(int v) {
 }
@@ -80,13 +81,15 @@ int Exti::irq_n() {
 
 void Exti::enableIRQ() {
 	EXTI->IMR |= 1<<chan;
-	int n = irq_n();
-	NVIC->IP[n]=230;
-	NVIC->ISER[ n >> 5] |= 1<<(n & 0x1f);
+	Irq(irq_n())
+		.enable()
+		.setPriority(230);
 }
 
 void Exti::disableIRQ() {
 	EXTI->IMR &= ~(1<<chan);
+	Irq(irq_n())
+		.disable();
 }
 
 void Exti::enableRising() {
