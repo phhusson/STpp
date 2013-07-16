@@ -13,3 +13,6 @@ Pwm LedB(GpioD[15], Tim4, 4);
 
 Led LedG_USB(GpioA[9]);
 Led LedR_USB(GpioD[5]);
+
+//Rising edge
+Gpio UserButton(GpioA[0]);

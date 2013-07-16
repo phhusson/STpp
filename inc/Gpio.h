@@ -63,6 +63,7 @@ class Gpio {
 		Gpio(GpioPort*, int);
 		void updateModeR();
 		friend class GpioPort;
+		friend class Exti;
 };
 
 class GpioPort {
@@ -74,6 +75,7 @@ class GpioPort {
 		}
 		GpioPort(volatile void* b);
 		friend class Gpio;
+		int getPortNumber();
 };
 
 extern GpioPort GpioA;

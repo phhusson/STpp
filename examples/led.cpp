@@ -1,10 +1,19 @@
 #include <Board.h>
+#include "Exti.h"
 
 extern "C" void vTaskDelay(int);
 int main() {
+	Exti e(UserButton);
+	UserButton.setDirection(Gpio::INPUT);
+	UserButton.setResistor(Gpio::PULL_DOWN);
+
+	e.enableRising();
+	e.enableIRQ();
 	Tim4.setPrescaler(42); // 100kHz
 	Tim4.setAutoReload(1000); //1kHz
 	Tim4.enable();
+
+	LedG_USB.toggle();
 
 	int r = 0, b = 2, g = 4, o = 6;
 	while(1) {

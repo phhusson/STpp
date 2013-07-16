@@ -62,6 +62,8 @@ void init(void) {
 	//Wait for SWS=2
 	while( (RCC->CFGR & RCC_CFGR_SWS) != (2<<2) );
 
+	extern void g_pfnVectors;
+	SCB->VTOR = &g_pfnVectors;
 
 	//Set priority mode 4.4
 	SCB->AIRCR = (SCB->AIRCR & SCB_AIRCR_PRIGROUP_Msk) | 3 << SCB_AIRCR_PRIGROUP_Pos;

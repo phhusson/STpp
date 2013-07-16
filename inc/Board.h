@@ -8,3 +8,5 @@ extern Pwm LedR;
 
 extern Led LedG_USB;
 extern Led LedR_USB;
+
+extern Gpio UserButton;

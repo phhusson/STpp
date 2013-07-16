@@ -109,3 +109,8 @@ void Gpio::setAlternate(int af) {
 void Gpio::setAlternate(AF a) {
 	setAlternate((int)a);
 }
+
+int GpioPort::getPortNumber() {
+	int n = (((unsigned long)base) >> 10) & 0xf;
+	return n;
+}
