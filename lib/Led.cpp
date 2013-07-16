@@ -8,14 +8,17 @@ Led::Led(Gpio p, bool rev) :_p(p), _rev(rev) {
 	on();
 }
 
-void Led::on() {
+Led& Led::on() {
 	_p.setState(!_rev);
+	return *this;
 }
 
-void Led::off() {
+Led& Led::off() {
 	_p.setState(_rev);
+	return *this;
 }
 
-void Led::toggle() {
+Led& Led::toggle() {
 	_p.setState( !_p.getState());
+	return *this;
 }

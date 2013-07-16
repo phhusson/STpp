@@ -26,14 +26,17 @@ Pwm::Pwm(Gpio p, Timer t, int n) :
 	tim.setChannelOutput(chan, true);
 }
 
-void Pwm::setDutyCycle(float v) {
+Pwm& Pwm::setDutyCycle(float v) {
 	tim.setChannelComparator(chan, v*tim.getAutoReload());
+	return *this;
 }
 
-void Pwm::setDutyCycle(int percent) {
+Pwm& Pwm::setDutyCycle(int percent) {
 	tim.setChannelComparator(chan, percent*tim.getAutoReload()/100);
+	return *this;
 }
 
-void Pwm::setComparator(unsigned int cmp) {
+Pwm& Pwm::setComparator(unsigned int cmp) {
 	tim.setChannelComparator(chan, cmp);
+	return *this;
 }

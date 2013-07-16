@@ -3,15 +3,17 @@
 
 extern "C" void vTaskDelay(int);
 int main() {
-	Exti e(UserButton);
-	UserButton.setDirection(Gpio::INPUT);
-	UserButton.setResistor(Gpio::PULL_DOWN);
+	UserButton
+		.setDirection(Gpio::INPUT)
+		.setResistor(Gpio::PULL_DOWN);
 
-	e.enableRising();
-	e.enableIRQ();
-	Tim4.setPrescaler(42); // 100kHz
-	Tim4.setAutoReload(1000); //1kHz
-	Tim4.enable();
+	Exti(UserButton)
+		.enableRising()
+		.enableIRQ();
+
+	Tim4.setPrescaler(42) // 100kHz
+		.setAutoReload(1000) //1kHz
+		.enable();
 
 	LedG_USB.toggle();
 

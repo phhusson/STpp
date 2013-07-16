@@ -9,7 +9,7 @@ class Gpio {
 			OUTPUT,
 			ANALOG
 		};
-		void setDirection(Gpio::Direction);
+		Gpio& setDirection(Gpio::Direction);
 
 		enum Speed {
 			SPEED_100MHz,
@@ -17,24 +17,24 @@ class Gpio {
 			SPEED_25MHz,
 			SPEED_2MHz
 		};
-		void setSpeed(Gpio::Speed);
-		void setPushPull();
-		void setOpenDrain();
+		Gpio& setSpeed(Gpio::Speed);
+		Gpio& setPushPull();
+		Gpio& setOpenDrain();
 
 		enum Function {
 			GPIO,
 			ALTERNATE
 		};
-		void setFunction(Gpio::Function);
+		Gpio& setFunction(Gpio::Function);
 
-		void setState(bool);
+		Gpio& setState(bool);
 		bool getState();
 		enum Resistor {
 			NONE,
 			PULL_UP,
 			PULL_DOWN,
 		};
-		void setResistor(Resistor);
+		Gpio& setResistor(Resistor);
 		enum AF {
 			SYSTEM,
 			TIM1_2,
@@ -53,8 +53,8 @@ class Gpio {
 			AF_14,
 			EVENT_OUT,
 		};
-		void setAlternate(int);
-		void setAlternate(AF);
+		Gpio& setAlternate(int);
+		Gpio& setAlternate(AF);
 	private:
 		GpioPort *port;
 		int number;

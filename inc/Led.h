@@ -8,7 +8,7 @@ class Led {
 		bool _rev;
 	public:
 		Led(Gpio p, bool rev=false);
-		void on();
-		void off();
-		void toggle();
+		Led& on();
+		Led& off();
+		Led& toggle();
 };

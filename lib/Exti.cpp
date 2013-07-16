@@ -79,39 +79,47 @@ int Exti::irq_n() {
 	return irq;
 }
 
-void Exti::enableIRQ() {
+Exti& Exti::enableIRQ() {
 	EXTI->IMR |= 1<<chan;
 	Irq(irq_n())
 		.enable()
 		.setPriority(230);
+	return *this;
 }
 
-void Exti::disableIRQ() {
+Exti& Exti::disableIRQ() {
 	EXTI->IMR &= ~(1<<chan);
 	Irq(irq_n())
 		.disable();
+	return *this;
 }
 
-void Exti::enableRising() {
+Exti& Exti::enableRising() {
 	EXTI->RTSR |= 1<<chan;
+	return *this;
 }
 
-void Exti::disableRising() {
+Exti& Exti::disableRising() {
 	EXTI->RTSR &= ~(1<<chan);
+	return *this;
 }
 
-void Exti::enableFalling() {
+Exti& Exti::enableFalling() {
 	EXTI->FTSR |= 1 << chan;
+	return *this;
 }
 
-void Exti::disableFalling() {
+Exti& Exti::disableFalling() {
 	EXTI->FTSR &= ~(1<<chan);
+	return *this;
 }
 
-void Exti::setTopCB() {
+Exti& Exti::setTopCB() {
+	return *this;
 }
 
-void Exti::setBottomCB() {
+Exti& Exti::setBottomCB() {
+	return *this;
 }
 
 void Exti::setGpioPort(int port) {

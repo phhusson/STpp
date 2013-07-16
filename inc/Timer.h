@@ -9,19 +9,19 @@ class Timer {
 	public:
 		Timer(volatile TIM_TypeDef* b, int n);
 		//All timers
-		void setPrescaler(unsigned short);
-		void setAutoReload(unsigned short);
+		Timer& setPrescaler(unsigned short);
+		Timer& setAutoReload(unsigned short);
 		unsigned short getAutoReload();
-		void setAutoReloadBuffered(bool);
+		Timer& setAutoReloadBuffered(bool);
 
-		void setCounter(unsigned short);
+		Timer& setCounter(unsigned short);
 		unsigned short getCounter();
 
-		void setOneShot(bool);
-		void setUpdateDisable(bool);
+		Timer& setOneShot(bool);
+		Timer& setUpdateDisable(bool);
 
-		void enable();
-		void disable();
+		Timer& enable();
+		Timer& disable();
 
 		int getNumber();
 
@@ -32,8 +32,8 @@ class Timer {
 			INPUT2,
 			INPUT3
 		};
-		void setChannelDirection(int,Direction);
-		void setChannelCompareBuffered(int,bool);
+		Timer& setChannelDirection(int,Direction);
+		Timer& setChannelCompareBuffered(int,bool);
 
 		enum ChannelMode {
 			MatchHigh,
@@ -41,9 +41,9 @@ class Timer {
 			CompareHigh,
 			CompareLow
 		};
-		void setChannelMode(int,ChannelMode);
-		void setChannelOutput(int,bool);
-		void setChannelComparator(int,unsigned short);
+		Timer& setChannelMode(int,ChannelMode);
+		Timer& setChannelOutput(int,bool);
+		Timer& setChannelComparator(int,unsigned short);
 };
 
 extern Timer Tim1;

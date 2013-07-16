@@ -10,8 +10,8 @@ class Pwm {
 		int chan;
 	public:
 		Pwm(Gpio p, Timer t, int n);
-		void setDutyCycle(float v);
-		void setDutyCycle(int percent);
-		void setComparator(unsigned int cmp);
+		Pwm& setDutyCycle(float v);
+		Pwm& setDutyCycle(int percent);
+		Pwm& setComparator(unsigned int cmp);
 };
 #endif /* _PWM_H */

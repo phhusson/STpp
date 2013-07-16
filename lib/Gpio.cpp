@@ -9,7 +9,7 @@ Gpio::Gpio(GpioPort *p, int n)
 	direction = INPUT;
 }
 
-void Gpio::setState(bool v) {
+Gpio& Gpio::setState(bool v) {
 	if(v) {
 		//Set pin
 		me->BSRRL = 1 << number;
@@ -17,13 +17,14 @@ void Gpio::setState(bool v) {
 		//Reset pin
 		me->BSRRH = 1 << number;
 	}
+	return *this;
 }
 
 bool Gpio::getState() {
 	return !! (me->IDR & (1 << number));
 }
 
-void Gpio::setSpeed(Gpio::Speed s) {
+Gpio& Gpio::setSpeed(Gpio::Speed s) {
 	int v;
 	switch(s) {
 		case SPEED_2MHz:
@@ -40,14 +41,17 @@ void Gpio::setSpeed(Gpio::Speed s) {
 			break;
 	};
 	me->OSPEEDR = (me->OSPEEDR & ~(3 << (2*number))) | v << (2*number);
+	return *this;
 }
 
-void Gpio::setPushPull() {
+Gpio& Gpio::setPushPull() {
 	me->OTYPER &= ~(1 << number);
+	return *this;
 }
 
-void Gpio::setOpenDrain() {
+Gpio& Gpio::setOpenDrain() {
 	me->OTYPER |= 1 << number;
+	return *this;
 }
 
 void Gpio::updateModeR() {
@@ -61,14 +65,16 @@ void Gpio::updateModeR() {
 		me->MODER = (me->MODER & ~(3 << (2*number))) | 1 << (2*number);
 }
 
-void Gpio::setDirection(Gpio::Direction d) {
+Gpio& Gpio::setDirection(Gpio::Direction d) {
 	direction = d;
 	updateModeR();
+	return *this;
 }
 
-void Gpio::setFunction(Gpio::Function f) {
+Gpio& Gpio::setFunction(Gpio::Function f) {
 	function = f;
 	updateModeR();
+	return *this;
 }
 
 GpioPort::GpioPort(volatile void* b) : base(b) {
@@ -77,7 +83,7 @@ GpioPort::GpioPort(volatile void* b) : base(b) {
 	RCC->AHB1ENR |= 1 << n;
 }
 
-void Gpio::setResistor(Resistor r) {
+Gpio& Gpio::setResistor(Resistor r) {
 	int v;
 	switch(r) {
 		case NONE:
@@ -91,9 +97,10 @@ void Gpio::setResistor(Resistor r) {
 			break;
 	};
 	me->PUPDR = (me->PUPDR & ~(3<<(2*number))) | (v<<(2*number));
+	return *this;
 }
 
-void Gpio::setAlternate(int af) {
+Gpio& Gpio::setAlternate(int af) {
 	setFunction(ALTERNATE);
 	int n = number;
 	if(n>=8) {
@@ -104,10 +111,12 @@ void Gpio::setAlternate(int af) {
 		me->AFR[0] = (me->AFR[0] & ~(0xf<<(4*n))) |
 			af << (4*n);
 	}
+	return *this;
 }
 
-void Gpio::setAlternate(AF a) {
+Gpio& Gpio::setAlternate(AF a) {
 	setAlternate((int)a);
+	return *this;
 }
 
 int GpioPort::getPortNumber() {

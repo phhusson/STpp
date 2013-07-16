@@ -50,39 +50,45 @@ unsigned short Timer::getAutoReload() {
 	return base->ARR;
 }
 
-void Timer::setAutoReload(unsigned short v) {
+Timer& Timer::setAutoReload(unsigned short v) {
 	base->ARR = v;
+	return *this;
 }
 
-void Timer::setPrescaler(unsigned short v) {
+Timer& Timer::setPrescaler(unsigned short v) {
 	base->PSC = v;
+	return *this;
 }
 
-void Timer::setAutoReloadBuffered(bool v) {
+Timer& Timer::setAutoReloadBuffered(bool v) {
 	if(v) {
 		base->CR1 |= TIM_CR1_ARPE;
 	} else {
 		base->CR1 &= ~TIM_CR1_ARPE;
 	}
+	return *this;
 }
 
-void Timer::setCounter(unsigned short v) {
+Timer& Timer::setCounter(unsigned short v) {
 	base->CNT = v;
+	return *this;
 }
 
 unsigned short Timer::getCounter() {
 	return base->CNT;
 }
 
-void Timer::enable() {
+Timer& Timer::enable() {
 	base->CR1 |= TIM_CR1_CEN;
+	return *this;
 }
 
-void Timer::disable() {
+Timer& Timer::disable() {
 	base->CR1 &= ~TIM_CR1_CEN;
+	return *this;
 }
 
-void Timer::setChannelDirection(int chan, Direction d) {
+Timer& Timer::setChannelDirection(int chan, Direction d) {
 	chan--;
 	int v=(int)d;
 	volatile uint16_t *CCMR=&(base->CCMR1);
@@ -93,9 +99,10 @@ void Timer::setChannelDirection(int chan, Direction d) {
 	int offset = 8*chan;
 	*CCMR = (*CCMR & ~(3 << offset)) |
 		v << offset;
+	return *this;
 }
 
-void Timer::setChannelMode(int chan, ChannelMode m) {
+Timer& Timer::setChannelMode(int chan, ChannelMode m) {
 	chan--;
 	int v;
 	switch(m) {
@@ -121,20 +128,23 @@ void Timer::setChannelMode(int chan, ChannelMode m) {
 	int offset = 8*chan + 4;
 	*CCMR = (*CCMR & ~(7<<offset)) |
 		v << offset;
+	return *this;
 }
 
-void Timer::setChannelOutput(int chan, bool o) {
+Timer& Timer::setChannelOutput(int chan, bool o) {
 	chan--;
 	if(o) {
 		base->CCER |= 1 << (4*chan);
 	} else {
 		base->CCER &= ~(1 << (4*chan));
 	}
+	return *this;
 }
 
-void Timer::setChannelComparator(int chan, unsigned short v) {
+Timer& Timer::setChannelComparator(int chan, unsigned short v) {
 	chan--;
 	volatile unsigned int *b=&(base->CCR1);
 	b+=chan;
 	*b=v;
+	return *this;
 }

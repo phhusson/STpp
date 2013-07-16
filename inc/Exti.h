@@ -23,14 +23,14 @@ class Exti {
 	public:
 		Exti(int c, Port p);
 		Exti(const Gpio& p);
-		void enableIRQ();
-		void disableIRQ();
-		void enableRising();
-		void disableRising();
-		void enableFalling();
-		void disableFalling();
-		void setTopCB();
-		void setBottomCB();
+		Exti& enableIRQ();
+		Exti& disableIRQ();
+		Exti& enableRising();
+		Exti& disableRising();
+		Exti& enableFalling();
+		Exti& disableFalling();
+		Exti& setTopCB();
+		Exti& setBottomCB();
 };
 
 
