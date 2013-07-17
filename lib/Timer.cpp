@@ -143,7 +143,7 @@ Timer& Timer::setChannelOutput(int chan, bool o) {
 
 Timer& Timer::setChannelComparator(int chan, unsigned short v) {
 	chan--;
-	volatile unsigned int *b=&(base->CCR1);
+	volatile unsigned int *b=(volatile unsigned int*)&(base->CCR1);
 	b+=chan;
 	*b=v;
 	return *this;

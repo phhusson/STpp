@@ -8,14 +8,22 @@ FREERTOS_SRCS+=3rdparty/FreeRTOS/Source/list.c
 FREERTOS_SRCS+=3rdparty/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c
 FREERTOS_OBJS=$(subst .c,.o,$(FREERTOS_SRCS))
 
-CXXFLAGS=-mcpu=cortex-m4 -g
+PREFIX?=arm-none-eabi-
+CXXFLAGS=-mcpu=cortex-m4 -g -mthumb -mfpu=vfpv4-d16 -mfloat-abi=hard
 ASFLAGS:=$(CXXFLAGS)
-CXXFLAGS+=-Iinc $(FREERTOS_INC) $(STM32_INC) -Wall
+CXXFLAGS+=-Iinc $(FREERTOS_INC) $(STM32_INC) -Wall -fno-stack-protector
 CFLAGS:=$(CXXFLAGS)
-CXXFLAGS+=-fno-rtti -fno-exceptions
+CXXFLAGS+=-fno-rtti -fno-exceptions -std=c++11
 LIB_SRC=$(wildcard lib/*.cpp)
 LIB_OBJS=$(subst cpp,o,$(LIB_SRC))
 LIB_INCS=$(wildcard inc/*.h)
+
+CC=$(PREFIX)gcc
+CXX=$(PREFIX)g++
+LD=$(PREFIX)ld
+AS=$(PREFIX)as
+
+
 
 SRC:=$(wildcard src/*.c) $(wildcard src/*.s)
 SRC_OBJS:=$(subst .c,.o,$(SRC))
@@ -35,4 +43,4 @@ lib/%.o: lib/%.cpp $(LIB_INCS)
 	$(LD) $^ -o $@ $(LDFLAGS) -Tsrc/flash.lds
 
 clean:
-	-rm -f examples/*.bin $(FREERTOS_OBJS) $(LIB_OBJS) $(SRC_OBJS)
+	-rm -f examples/*.{flash,ram} $(FREERTOS_OBJS) $(LIB_OBJS) $(SRC_OBJS)
