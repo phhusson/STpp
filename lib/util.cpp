@@ -20,4 +20,14 @@ extern "C" {
 		}
 		return d;
 	}	
+	void* pvPortMalloc(unsigned int);
+	void vPortFree(void*);
 };
+
+void *operator new (unsigned int n)  throw() {
+	return pvPortMalloc(n);
+}
+
+void operator delete(void* ptr) throw() {
+	vPortFree(ptr);
+}

@@ -6,18 +6,22 @@
 void exti_handler(int v) {
 }
 
+Exti::Callback Exti::top_cb[15];
+Exti::Callback Exti::bottom_cb[15];
+void *__dso_handle = 0;
+
 void exti_handler() {
 	int i = 0;
 	unsigned long reg=EXTI->PR;
 	while(reg) {
 		if(reg&1) {
+			Exti::callTopCB(i);
 			exti_handler(i);
 			EXTI->PR = 1<<i;
 		}
 		++i;
 		reg>>=1;
 	}
-	LedG_USB.toggle();
 }
 
 extern "C" {
@@ -114,11 +118,13 @@ Exti& Exti::disableFalling() {
 	return *this;
 }
 
-Exti& Exti::setTopCB() {
+Exti& Exti::setTopCB(Callback cb) {
+	top_cb[chan] = cb;
 	return *this;
 }
 
-Exti& Exti::setBottomCB() {
+Exti& Exti::setBottomCB(Callback cb) {
+	bottom_cb[chan] = cb;
 	return *this;
 }
 
@@ -141,4 +147,8 @@ Exti::Exti(int c, Port p) :
 Exti::Exti(const Gpio& p) {
 	chan = p.number;
 	port = (Exti::Port)p.port->getPortNumber();
+}
+
+void Exti::callTopCB(int nr) {
+	top_cb[nr](nr);
 }

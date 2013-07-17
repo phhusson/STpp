@@ -1,17 +1,21 @@
 #include <Board.h>
+#include <tr1/functional>
 #include "Exti.h"
 
 extern "C" void vTaskDelay(int);
 int main() {
+	//Exti::Callback cb;
 	UserButton
 		.setDirection(Gpio::INPUT)
 		.setResistor(Gpio::PULL_DOWN);
 
 	Exti(UserButton)
 		.enableRising()
-		.enableIRQ();
+		.enableIRQ()
+		.setTopCB([] (int nr) { LedG_USB.toggle();});
 
-	Tim4.setPrescaler(42) // 100kHz
+	Tim4
+		.setPrescaler(42) // 100kHz
 		.setAutoReload(1000) //1kHz
 		.enable();
 

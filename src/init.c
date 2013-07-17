@@ -86,3 +86,10 @@ void init(void) {
 
 	vTaskStartScheduler();
 }
+
+void abort() {
+	for(;;);
+}
+
+void __aeabi_atexit(void *fnc, void *arg, void *dso) {
+}
