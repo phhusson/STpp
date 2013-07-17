@@ -8,6 +8,10 @@ FREERTOS_SRCS+=3rdparty/FreeRTOS/Source/list.c
 FREERTOS_SRCS+=3rdparty/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c
 FREERTOS_OBJS=$(subst .c,.o,$(FREERTOS_SRCS))
 
+ARCH=$(shell arch)
+ifeq ($(ARCH),armv7l)
+	PREFIX=
+endif
 PREFIX?=arm-none-eabi-
 CXXFLAGS=-mcpu=cortex-m4 -g -mthumb -mfpu=vfpv4-d16 -mfloat-abi=hard
 ASFLAGS:=$(CXXFLAGS)
@@ -43,4 +47,4 @@ lib/%.o: lib/%.cpp $(LIB_INCS)
 	$(LD) $^ -o $@ $(LDFLAGS) -Tsrc/flash.lds
 
 clean:
-	-rm -f examples/*.{flash,ram} $(FREERTOS_OBJS) $(LIB_OBJS) $(SRC_OBJS)
+	-rm -f examples/*.flash examples/*.ram} $(FREERTOS_OBJS) $(LIB_OBJS) $(SRC_OBJS)
