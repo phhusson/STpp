@@ -3,3 +3,4 @@
 #include "Timer.static.h"
 
 #include "Board.static.h"
+#include "Log.static.h"

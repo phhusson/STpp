@@ -1,9 +1,12 @@
 #include <Board.h>
 #include <tr1/functional>
+#include <Log.h>
 #include "Exti.h"
 
 extern "C" void vTaskDelay(int);
 int main() {
+	log << "startup" << Log::endl;
+
 	//Exti::Callback cb;
 	UserButton
 		.setDirection(Gpio::INPUT)
