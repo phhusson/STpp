@@ -123,3 +123,7 @@ int GpioPort::getPortNumber() {
 	int n = (((unsigned long)base) >> 10) & 0xf;
 	return n;
 }
+
+Gpio::operator bool() {
+	return getState();
+}

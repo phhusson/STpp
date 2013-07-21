@@ -86,8 +86,8 @@ int Exti::irq_n() {
 Exti& Exti::enableIRQ() {
 	EXTI->IMR |= 1<<chan;
 	Irq(irq_n())
-		.enable()
-		.setPriority(230);
+		.setPriority(230)
+		.enable();
 	return *this;
 }
 

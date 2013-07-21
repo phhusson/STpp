@@ -2,30 +2,45 @@
 #include <tr1/functional>
 #include <Log.h>
 #include "Exti.h"
+#include "Uart.h"
+#include "Usb.h"
 
 extern "C" void vTaskDelay(int);
 int main() {
 	log << "startup" << Log::endl;
 
-	//Exti::Callback cb;
-	UserButton
+	GpioA[2]
+		.setPushPull()
+		.setAlternate(Gpio::USART1_3)
+		.setDirection(Gpio::OUTPUT)
+		.setFunction(Gpio::ALTERNATE);
+
+	GpioA[3]
 		.setDirection(Gpio::INPUT)
+		.setAlternate(Gpio::USART1_3)
 		.setResistor(Gpio::PULL_DOWN);
 
-	Exti(UserButton)
-		.enableRising()
-		.enableIRQ()
-		.setTopCB([] (int nr) { LedG_USB.toggle();});
-
-	Tim4
-		.setPrescaler(42) // 100kHz
-		.setAutoReload(1000) //1kHz
+	Uart uart2(2);
+	uart2
+		.setMantissa(13)
+		.setFraction(0)
+		.enableReceive()
+		.enableTransmitter()
 		.enable();
 
-	LedG_USB.toggle();
+	Tim4
+		.setPrescaler(42)
+		.setAutoReload(1000)
+		.enable();
 
 	int r = 0, b = 2, g = 4, o = 6;
 	while(1) {
+		/*
+		uart2.put('t');
+		uart2.put('t');
+		char c = uart2.waitForNext();
+		for(;;);
+		*/
 		++r;
 		++g;
 		++b;

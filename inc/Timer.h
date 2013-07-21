@@ -15,6 +15,7 @@ class Timer {
 		Timer& setAutoReloadBuffered(bool);
 
 		Timer& setCounter(unsigned short);
+		Timer& wait();
 		unsigned short getCounter();
 
 		Timer& setOneShot(bool);

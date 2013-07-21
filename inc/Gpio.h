@@ -55,6 +55,7 @@ class Gpio {
 		};
 		Gpio& setAlternate(int);
 		Gpio& setAlternate(AF);
+		operator bool();
 	private:
 		GpioPort *port;
 		int number;

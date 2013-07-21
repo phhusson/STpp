@@ -2,5 +2,7 @@
 #include "Gpio.static.h"
 #include "Timer.static.h"
 
-#include "Board.static.h"
 #include "Log.static.h"
+
+#include "Board.static.h"
+#include "Usb.static.h"

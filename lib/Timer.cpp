@@ -148,3 +148,11 @@ Timer& Timer::setChannelComparator(int chan, unsigned short v) {
 	*b=v;
 	return *this;
 }
+
+Timer& Timer::wait() {
+	int v = base->CNT, w;
+	do {
+		w = base->CNT;
+	} while(v < w);
+	return *this;
+}
