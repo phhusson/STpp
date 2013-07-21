@@ -13,13 +13,49 @@ Ax12::Ax12(Uart u, int i) :
 		.setHalfDuplex(true)
 		.enableReceive()
 		.enableTransmitter();
+}
 
-	writeReg(0x06, (unsigned short)0);
-	writeReg(0x08, (unsigned short)0x1ff);
+Ax12& Ax12::setCWLimit(unsigned short v) {
+	writeReg(0x06, (unsigned short)v);
+	return *this;
+}
 
-	writeReg(0x20, (unsigned short)0x3ff);
+Ax12& Ax12::setCCWLimit(unsigned short v) {
+	writeReg(0x08, (unsigned short)v);
+	return *this;
+}
+
+Ax12& Ax12::setEndless() {
+	setCWLimit(0);
+	setCCWLimit(0);
+	return *this;
+}
+
+Ax12& Ax12::clearEndless() {
+	setCWLimit(0);
+	setCCWLimit(0x1ff);
+	return *this;
+}
+
+Ax12& Ax12::enable() {
 	writeReg(0x18, (char)1);
-	writeReg(0x1E, (unsigned short)0x1ff);
+	return *this;
+}
+
+Ax12& Ax12::disable() {
+	writeReg(0x18, (char)0);
+	return *this;
+}
+
+Ax12& Ax12::goTo(unsigned short v) {
+	writeReg(0x1E, v);
+	return *this;
+}
+
+Ax12& Ax12::setSpeed(unsigned short v) {
+	v&=0x7ff;
+	writeReg(0x20, v);
+	return *this;
 }
 
 void Ax12::prelude() {

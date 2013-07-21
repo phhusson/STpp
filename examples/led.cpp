@@ -23,7 +23,7 @@ int main() {
 	uart2_rx
 		.setDirection(Gpio::INPUT)
 		.setFunction(Gpio::GPIO)
-		//.setAlternate(Gpio::USART1_3)
+		.setAlternate(Gpio::USART1_3)
 		.setResistor(Gpio::PULL_UP);
 	vTaskDelay(100);
 
@@ -41,6 +41,10 @@ int main() {
 		.enable();
 
 	Ax12 ax12(uart2, 0x1);
+	ax12.setEndless();
+	ax12.setSpeed(0x7ff);
+	ax12.enable();
+
 	int r = 0, b = 2, g = 4, o = 6;
 	bool state = false;
 	while(1) {

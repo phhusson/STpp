@@ -125,14 +125,6 @@ USBD_Usr_cb_TypeDef USR_cb =
 
 static uint8_t hid_buf[4];
 Usb::Usb() {
-	if(!USB_ID && USB_Vbus_det)
-		log << "Vbus and USB OTG A found... dafuk." << Log::endl;
-	else if(!USB_ID)
-		log << "Found a USB OTG A, we're host" << Log::endl;
-	else if(USB_Vbus_det)
-		log << "Found vbus, we're guest" << Log::endl;
-	else
-		log << "Found neither VBus nor OTG A..." << Log::endl;
 
 	Tim6
 		.setPrescaler(1)
@@ -162,6 +154,14 @@ Usb::Usb() {
 		.setResistor(Gpio::PULL_UP)
 		.setAlternate(Gpio::OTG_FS_HS);
 
+	if(!USB_ID && USB_Vbus_det)
+		log << "Vbus and USB OTG A found... dafuk." << Log::endl;
+	else if(!USB_ID)
+		log << "Found a USB OTG A, we're host" << Log::endl;
+	else if(USB_Vbus_det)
+		log << "Found vbus, we're guest" << Log::endl;
+	else
+		log << "Found neither VBus nor OTG A..." << Log::endl;
 
 	USBD_Init(&USB_OTG_dev,
 			USB_OTG_FS_CORE_ID,

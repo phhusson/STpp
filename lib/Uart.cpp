@@ -151,8 +151,6 @@ Uart& Uart::disable() {
 }
 
 char Uart::waitForNext() {
-	//while( ! (base->SR & (1<<5)));
-	//return base->DR;
 	char c;
 	xQueueReceive(uart_queue_rx[number], &c, portMAX_DELAY);
 	return c;
