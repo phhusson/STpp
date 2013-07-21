@@ -57,10 +57,10 @@ Gpio& Gpio::setOpenDrain() {
 void Gpio::updateModeR() {
 	if(direction==ANALOG)
 		me->MODER = me->MODER | 3 << (2*number);
-	else if(direction==INPUT)
-		me->MODER = me->MODER & ~(3 << (2*number));
 	else if(function != GPIO)
 		me->MODER = (me->MODER & ~(3 << (2*number))) | 2 << (2*number);
+	else if(direction==INPUT)
+		me->MODER = me->MODER & ~(3 << (2*number));
 	else
 		me->MODER = (me->MODER & ~(3 << (2*number))) | 1 << (2*number);
 }

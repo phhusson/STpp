@@ -21,6 +21,8 @@ class Uart {
 		Uart& disableTransmitter();
 		Uart& enable();
 		Uart& disable();
+		Uart& sendBreak();
+		Uart& setHalfDuplex(bool);
 };
 
 #endif /* _UART_H */

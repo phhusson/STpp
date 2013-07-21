@@ -1,11 +1,52 @@
+#include <FreeRTOS.h>
+#include <queue.h>
 #include <Uart.h>
 #include <Log.h>
 #include <Irq.h>
 #include <stm32f4xx.h>
 
 extern "C" {
+	void USART1_IRQHandler(void);
 	void USART2_IRQHandler(void);
+	void USART3_IRQHandler(void);
+	void UART4_IRQHandler(void);
+	void UART5_IRQHandler(void);
+	void USART6_IRQHandler(void);
 };
+
+static xQueueHandle uart_queue_rx[7];
+static xQueueHandle uart_queue_tx[7];
+
+static void irq_handler(volatile USART_TypeDef* b, int i) {
+	if(b->SR & USART_SR_RXNE) {
+		char val = b->DR;
+		xQueueSendFromISR(uart_queue_rx[i], &val, NULL);
+	}
+}
+
+void USART1_IRQHandler() {
+	irq_handler(USART2, 1);
+}
+
+void USART2_IRQHandler() {
+	irq_handler(USART2, 2);
+}
+
+void USART3_IRQHandler() {
+	irq_handler(USART3, 3);
+}
+
+void UART4_IRQHandler() {
+	irq_handler(UART4, 4);
+}
+
+void UART5_IRQHandler() {
+	irq_handler(UART5, 5);
+}
+
+void USART6_IRQHandler() {
+	irq_handler(USART6, 6);
+}
 
 Uart::Uart(int n) :
 	number(n) {
@@ -26,6 +67,7 @@ Uart::Uart(int n) :
 			base = (volatile USART_TypeDef*)0x40011400;
 			break;
 	}
+	uart_queue_rx[n] = xQueueCreate(32, 1);
 }
 
 Uart& Uart::configGpio(Gpio& p) {
@@ -46,6 +88,8 @@ Uart& Uart::configGpio(Gpio& p) {
 Uart& Uart::put(char c) {
 	while(! (base->SR & (1<<7)));
 	base->DR = c;
+	while(! (base->SR & (1<<7)));
+
 	return *this;
 }
 
@@ -85,13 +129,19 @@ Uart& Uart::disableTransmitter() {
 }
 
 Uart& Uart::enable() {
+#if 1
 	//Enable IRQ
-	base->CR1 |= 1<<13;
+	//On TX
+	//base->CR1 |= 1<<6;
+	//On RX
+	base->CR1 |= 1<<5;
+
 	Irq(USART2_IRQn)
 		.setPriority(230)
 		.enable();
+#endif
 
-	base->CR1 |= 1<<5;
+	base->CR1 |= 1<<13;
 	return *this;
 }
 
@@ -101,6 +151,22 @@ Uart& Uart::disable() {
 }
 
 char Uart::waitForNext() {
-	while( ! (base->SR & (1<<5)));
-	return base->DR;
+	//while( ! (base->SR & (1<<5)));
+	//return base->DR;
+	char c;
+	xQueueReceive(uart_queue_rx[number], &c, portMAX_DELAY);
+	return c;
+}
+
+Uart& Uart::sendBreak() {
+	base->CR1 |= 1;
+	while( base->CR1 & 1);
+}
+
+Uart& Uart::setHalfDuplex(bool b) {
+	if(b) {
+		base->CR3 |= 1<<3;
+	} else {
+		base->CR3 &= ~(1<<3);
+	}
 }
