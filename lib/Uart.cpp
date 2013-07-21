@@ -1,5 +1,11 @@
-#include "Uart.h"
+#include <Uart.h>
+#include <Log.h>
+#include <Irq.h>
 #include <stm32f4xx.h>
+
+extern "C" {
+	void USART2_IRQHandler(void);
+};
 
 Uart::Uart(int n) :
 	number(n) {
@@ -71,12 +77,21 @@ Uart& Uart::enableTransmitter() {
 }
 
 Uart& Uart::disableTransmitter() {
+	//Wait for transmission complete
+	while(! (base->SR & (1<<6)));
+
 	base->CR1 &= ~(1<<3);
 	return *this;
 }
 
 Uart& Uart::enable() {
+	//Enable IRQ
 	base->CR1 |= 1<<13;
+	Irq(USART2_IRQn)
+		.setPriority(230)
+		.enable();
+
+	base->CR1 |= 1<<5;
 	return *this;
 }
 

@@ -1,5 +1,6 @@
 #ifndef _GPIO_H
 #define _GPIO_H
+#include <stm32f4xx.h>
 
 class GpioPort;
 class Gpio {
@@ -69,12 +70,12 @@ class Gpio {
 
 class GpioPort {
 	private:
-		volatile void *base;
+		volatile GPIO_TypeDef *base;
 	public:
 		Gpio operator[](int n) {
 			return Gpio(this, n);
 		}
-		GpioPort(volatile void* b);
+		GpioPort(volatile GPIO_TypeDef* b);
 		friend class Gpio;
 		int getPortNumber();
 };

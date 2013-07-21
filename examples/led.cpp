@@ -10,24 +10,26 @@ extern "C" void USB_OTG_BSP_mDelay(uint32_t);
 int main() {
 	log << "startup" << Log::endl;
 
-	GpioA[2]
+	auto uart2_tx = GpioA[2];
+	auto uart2_rx = GpioA[3];
+	uart2_tx
 		.setPushPull()
 		.setAlternate(Gpio::USART1_3)
 		.setDirection(Gpio::OUTPUT)
-		.setFunction(Gpio::ALTERNATE);
+		.setSpeed(Gpio::SPEED_100MHz);
 
-	GpioA[3]
+	uart2_rx
 		.setDirection(Gpio::INPUT)
 		.setAlternate(Gpio::USART1_3)
 		.setResistor(Gpio::PULL_DOWN);
 
 	Uart uart2(2);
 	uart2
-		.setMantissa(13)
-		.setFraction(0)
+		.enable()
+		.setMantissa(234)
+		.setFraction(6)
 		.enableReceive()
-		.enableTransmitter()
-		.enable();
+		.enableTransmitter();
 
 	Tim4
 		.setPrescaler(42)
@@ -36,9 +38,16 @@ int main() {
 
 	int r = 0, b = 2, g = 4, o = 6;
 	while(1) {
-#if 0
-		uart2.put('t');
-		uart2.put('t');
+#if 1
+		uart2
+			.put('t')
+			.put('t')
+			.put('t')
+			.put('t')
+			.put('t')
+			.put('t')
+			.put('t')
+			.put('t');
 		char c = uart2.waitForNext();
 		for(;;);
 #endif

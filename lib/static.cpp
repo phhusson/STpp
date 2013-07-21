@@ -6,3 +6,6 @@
 
 #include "Board.static.h"
 #include "Usb.static.h"
+
+//Easy access to registers through gdb
+#include "Debug.static.h"

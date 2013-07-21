@@ -77,7 +77,7 @@ Gpio& Gpio::setFunction(Gpio::Function f) {
 	return *this;
 }
 
-GpioPort::GpioPort(volatile void* b) : base(b) {
+GpioPort::GpioPort(volatile GPIO_TypeDef* b) : base(b) {
 	//Get the number of the GPIO port based on base
 	int n = (((unsigned long)b) >> 10) & 0xf;
 	RCC->AHB1ENR |= 1 << n;
