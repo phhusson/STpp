@@ -85,6 +85,10 @@ void init(void) {
 	SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_CLKSOURCE_Msk;
 
 	vTaskStartScheduler();
+
+	//Known dead code, but it's to use vTaskDelete, to include it
+	//This is needed for openocd to detect we're using FreeRTOS
+	vTaskDelete(&handle_main);
 }
 
 void abort() {
