@@ -1,4 +1,5 @@
 #include <Timer.h>
+#include <Log.h>
 
 Timer::Timer(volatile TIM_TypeDef* b, int n) :
 	base(b), number(n) {
@@ -150,9 +151,17 @@ Timer& Timer::setChannelComparator(int chan, unsigned short v) {
 }
 
 Timer& Timer::wait() {
-	int v = base->CNT, w;
-	do {
-		w = base->CNT;
-	} while(v < w);
-	return *this;
+	while(*this);
+}
+
+Timer& Timer::setOneShot(bool v) {
+	if(v) {
+		base->CR1 |= 1<<3;
+	} else {
+		base->CR1 &= ~(1<<3);
+	}
+}
+
+Timer::operator bool() {
+	return !!(base->CR1 & 1);
 }

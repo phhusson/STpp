@@ -26,10 +26,10 @@ void init(void) {
 
 	// PLLP = 2, PLLQ = 7, fVCO = 168*2=336MHz
 	// Clock source = HSE
-	// HSE = 24MHz crystal; 336=24*14
-	// PLLN = 14, PLLM = 1
+	// HSE = 8MHz crystal; 336=24*42
+	// PLLN = 42, PLLM = 1
 	// PLLM must be >=2
-	// PLLN = 28, PLLM=2,
+	// PLLN = 84, PLLM=2,
 
 	// real registers values:
 	// PLLQ=7, PLLSRC=1, PLLP=0, PLLN=28, PLLM=2
@@ -37,7 +37,7 @@ void init(void) {
 		/* PLLQ */ 7 << 24 |
 		/* PLLSRC */ 1 << 22 |
 		/* PLLP */ 0 << 16 |
-		/* PLLN */ 28 << 6 |
+		/* PLLN */ 84 << 6 |
 		/* PLLM */ 2 << 0;
 
 	//PLLON

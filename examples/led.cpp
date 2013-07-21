@@ -6,6 +6,7 @@
 #include "Usb.h"
 
 extern "C" void vTaskDelay(int);
+extern "C" void USB_OTG_BSP_mDelay(uint32_t);
 int main() {
 	log << "startup" << Log::endl;
 
@@ -35,12 +36,13 @@ int main() {
 
 	int r = 0, b = 2, g = 4, o = 6;
 	while(1) {
-		/*
+#if 0
 		uart2.put('t');
 		uart2.put('t');
 		char c = uart2.waitForNext();
 		for(;;);
-		*/
+#endif
+
 		++r;
 		++g;
 		++b;
@@ -54,7 +56,6 @@ int main() {
 		LedG.setComparator(1<<g);
 		LedB.setComparator(1<<b);
 		LedR.setComparator(1<<r);
-
 		vTaskDelay(20);
 	}
 }

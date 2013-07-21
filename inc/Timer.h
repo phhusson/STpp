@@ -45,6 +45,8 @@ class Timer {
 		Timer& setChannelMode(int,ChannelMode);
 		Timer& setChannelOutput(int,bool);
 		Timer& setChannelComparator(int,unsigned short);
+
+		operator bool();
 };
 
 extern Timer Tim1;

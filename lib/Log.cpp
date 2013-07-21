@@ -34,6 +34,7 @@ Log& Log::operator<<(int i) {
 Log& Log::operator<<(Log::endl_type e) {
 	log[line][position]=0;
 	line++;
+	line%=sizeof(log)/sizeof(log[0]);
 	position = 0;
 	return *this;
 }

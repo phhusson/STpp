@@ -50,11 +50,12 @@ void USB_OTG_BSP_ConfigVBUS(uint32_t speed)
 
 void USB_OTG_BSP_uDelay (const uint32_t usec)
 {
+#if 1
 	Tim6.setAutoReload(usec*42);
 	Tim6.enable();
 	Tim6.wait();
 	Tim6.disable();
-#if 0
+#else
   uint32_t count = 0;
   const uint32_t utime = (120 * usec / 7);
   do
@@ -68,11 +69,12 @@ void USB_OTG_BSP_uDelay (const uint32_t usec)
 #endif
 }
 
-void USB_OTG_BSP_mDelay (const uint32_t msec)
+void USB_OTG_BSP_mDelay (uint32_t msec)
 {
-
-    USB_OTG_BSP_uDelay(msec * 1000);    
-
+	while(msec) {
+		USB_OTG_BSP_uDelay(1000);
+		msec--;
+	}
 }
 
 void USB_OTG_BSP_TimerIRQ (void)
@@ -132,6 +134,12 @@ Usb::Usb() {
 	else
 		log << "Found neither VBus nor OTG A..." << Log::endl;
 
+	Tim6
+		.setPrescaler(1)
+		.setAutoReloadBuffered(true)
+		.setOneShot(true);
+	log << "Tim6 configured" << Log::endl;
+
 	USB_Vbus_en
 		.setSpeed(Gpio::SPEED_100MHz)
 		.setPushPull()
@@ -165,10 +173,6 @@ Usb::Usb() {
 		.setDirection(Gpio::INPUT)
 		.setResistor(Gpio::PULL_DOWN);
 
-	Tim6
-		.setPrescaler(1)
-		.setAutoReload(42)
-		.setAutoReloadBuffered(false);
 
 	Exti(UserButton)
 		.enableRising()
