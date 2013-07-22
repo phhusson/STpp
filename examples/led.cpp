@@ -5,6 +5,7 @@
 #include <Exti.h>
 #include <Uart.h>
 #include <Usb.h>
+#include <Watchdog.h>
 
 extern "C" void vTaskDelay(int);
 int main() {
@@ -26,13 +27,17 @@ int main() {
 		.enable();
 
 	Ax12 ax12(Uart(2), 0x1);
-	ax12.setEndless();
-	ax12.setSpeed(0x7ff);
-	ax12.enable();
+	//ax12.setEndless();
+	//ax12.setSpeed(0x7ff);
+	//ax12.enable();
+	Watchdog watcher(64, 0xfff);
+	watcher
+		.start()
+		.stopOnDebug();
 
 	int r = 0, b = 2, g = 4, o = 6;
-	bool state = false;
 	while(1) {
+		watcher.reset();
 		++r;
 		++g;
 		++b;
