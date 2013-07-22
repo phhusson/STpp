@@ -2,14 +2,31 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
+void call_constructors() {
+	extern unsigned long __init_array_start;
+	extern unsigned long __init_array_end;
+	unsigned long *ptr;
+	typedef void (*fptr)();
+	fptr p;
+	for (ptr = &__init_array_start; ptr < &__init_array_end; ++ptr) {
+		p = (fptr)(*ptr);
+		p();
+	}
+}
+
 void init(void) {
+	//Wait 7 cpu cycles for every flash access
+	//(could be pessimist, but safe.)
 	FLASH->ACR|=7;
+
+	//Copy data segment from rom to ram
 	extern char _sdata,_edata,_sldata;
 	char *b=&_sdata;
 	char *a=&_sldata;
 	while( b < &_edata)
 		*a++ = *b++;
 
+	//Initialize bss in ram to 0
 	extern char _sbss,_ebss;
 	b=&_sbss;
 	while( b < &_ebss)
@@ -68,15 +85,7 @@ void init(void) {
 	//Set priority mode 4.4
 	SCB->AIRCR = (SCB->AIRCR & SCB_AIRCR_PRIGROUP_Msk) | 3 << SCB_AIRCR_PRIGROUP_Pos;
 
-	extern unsigned long __init_array_start;
-	extern unsigned long __init_array_end;
-	unsigned long *ptr;
-	typedef void (*fptr)();
-	fptr p;
-	for (ptr = &__init_array_start; ptr < &__init_array_end; ++ptr) {
-		p = (fptr)(*ptr);
-		p();
-	}
+	call_constructors();
 
 	xTaskHandle handle_main;
 	extern void main(void);
