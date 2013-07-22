@@ -13,15 +13,21 @@ Ax12::Ax12(Uart u, int i) :
 		.setHalfDuplex(true)
 		.enableReceive()
 		.enableTransmitter();
+	deferred = false;
+}
+
+Ax12& Ax12::defer() {
+	deferred = true;
+	return *this;
 }
 
 Ax12& Ax12::setCWLimit(unsigned short v) {
-	writeReg(0x06, (unsigned short)v);
+	writeReg(0x06, v);
 	return *this;
 }
 
 Ax12& Ax12::setCCWLimit(unsigned short v) {
-	writeReg(0x08, (unsigned short)v);
+	writeReg(0x08, v);
 	return *this;
 }
 
@@ -78,8 +84,8 @@ void Ax12::putChecksum() {
 void Ax12::readReg(char reg) {
 	prelude();
 	//N args
-	put(4);
-	//Write
+	put(3);
+	//Read
 	put(0x02);
 	put(reg);
 	putChecksum();
@@ -92,12 +98,29 @@ void Ax12::writeReg(char reg, char val) {
 	//N args
 	put(4);
 	//Write
-	put(0x03);
+	put(deferred ? 0x04 : 0x03);
 	put(reg);
 	put(val);
 	putChecksum();
 	getMsg();
 	getMsg();
+	deferred = false;
+}
+
+Ax12& Ax12::action(bool broadcast) {
+	checksum = 0;
+	uart
+		.put(0xff)
+		.put(0xff);
+	put(broadcast ? 0xfe : id);
+	put(2);
+	put(0x05);
+	putChecksum();
+	getMsg();
+	if(!broadcast)
+		getMsg();
+
+	return *this;
 }
 
 void Ax12::writeReg(char reg, unsigned short val) {
@@ -125,6 +148,8 @@ Ax12& Ax12::ping() {
 	put(1);
 	putChecksum();
 	getMsg();
+
+	return *this;
 }
 
 void Ax12::getMsg() {

@@ -7,7 +7,7 @@ Log& Log::operator<<(char c) {
 }
 
 Log& Log::operator<<(const char* str) {
-	int i;
+	unsigned int i;
 	for(i=0;str[i] && (i+position) < sizeof(log[0]);++i) {
 		log[line][i+position]=str[i];
 	}

@@ -152,6 +152,7 @@ Timer& Timer::setChannelComparator(int chan, unsigned short v) {
 
 Timer& Timer::wait() {
 	while(*this);
+	return *this;
 }
 
 Timer& Timer::setOneShot(bool v) {
@@ -160,6 +161,7 @@ Timer& Timer::setOneShot(bool v) {
 	} else {
 		base->CR1 &= ~(1<<3);
 	}
+	return *this;
 }
 
 Timer::operator bool() {

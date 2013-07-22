@@ -15,7 +15,7 @@ extern "C" {
 };
 
 static xQueueHandle uart_queue_rx[7];
-static xQueueHandle uart_queue_tx[7];
+//static xQueueHandle uart_queue_tx[7];
 
 static void irq_handler(volatile USART_TypeDef* b, int i) {
 	if(b->SR & USART_SR_RXNE) {
@@ -159,6 +159,7 @@ char Uart::waitForNext() {
 Uart& Uart::sendBreak() {
 	base->CR1 |= 1;
 	while( base->CR1 & 1);
+	return *this;
 }
 
 Uart& Uart::setHalfDuplex(bool b) {
@@ -167,4 +168,5 @@ Uart& Uart::setHalfDuplex(bool b) {
 	} else {
 		base->CR3 &= ~(1<<3);
 	}
+	return *this;
 }

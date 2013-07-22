@@ -15,10 +15,14 @@ class Ax12 {
 		void put(char v);
 		char checksum;
 		void getMsg();
+		bool deferred;
 	public:
 		Ax12(Uart u, int i);
 		Ax12& setLed(bool);
 		Ax12& ping();
+
+		Ax12& defer();
+		Ax12& action(bool broadcast = false);
 
 		Ax12& setID(char);
 		char getID();

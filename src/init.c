@@ -62,8 +62,8 @@ void init(void) {
 	//Wait for SWS=2
 	while( (RCC->CFGR & RCC_CFGR_SWS) != (2<<2) );
 
-	extern void g_pfnVectors;
-	SCB->VTOR = &g_pfnVectors;
+	extern uint32_t g_pfnVectors;
+	SCB->VTOR = (uint32_t)&g_pfnVectors;
 
 	//Set priority mode 4.4
 	SCB->AIRCR = (SCB->AIRCR & SCB_AIRCR_PRIGROUP_Msk) | 3 << SCB_AIRCR_PRIGROUP_Pos;
@@ -71,15 +71,16 @@ void init(void) {
 	extern unsigned long __init_array_start;
 	extern unsigned long __init_array_end;
 	unsigned long *ptr;
-	void (*p)();
+	typedef void (*fptr)();
+	fptr p;
 	for (ptr = &__init_array_start; ptr < &__init_array_end; ++ptr) {
-		p = (*ptr);
+		p = (fptr)(*ptr);
 		p();
 	}
 
 	xTaskHandle handle_main;
 	extern void main(void);
-	xTaskCreate(main, (const signed char*)"Main thread", 512, NULL, tskIDLE_PRIORITY+1, &handle_main);
+	xTaskCreate((pdTASK_CODE)main, (const signed char*)"Main thread", 512, NULL, tskIDLE_PRIORITY+1, &handle_main);
 
 	SysTick->LOAD = 168000;
 	SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_CLKSOURCE_Msk;
