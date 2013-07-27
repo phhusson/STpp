@@ -23,6 +23,7 @@ class Timer {
 
 		Timer& enable();
 		Timer& disable();
+		bool enabled();
 
 		int getNumber();
 
@@ -45,6 +46,7 @@ class Timer {
 		Timer& setChannelMode(int,ChannelMode);
 		Timer& setChannelOutput(int,bool);
 		Timer& setChannelComparator(int,unsigned short);
+		Timer& update();
 
 		operator bool();
 };

@@ -15,7 +15,6 @@ Pwm LedB(GpioD[15], Tim4, 4);
 //Rising edge
 Gpio UserButton(GpioA[0]);
 
-
 Gpio USB_Vbus_OC(GpioD[5]);
 Gpio USB_Vbus_en(GpioC[0]);
 Gpio USB_Vbus_det(GpioA[9]);

@@ -84,6 +84,10 @@ Timer& Timer::enable() {
 	return *this;
 }
 
+bool Timer::enabled() {
+	return !!(base->CR1&TIM_CR1_CEN);
+}
+
 Timer& Timer::disable() {
 	base->CR1 &= ~TIM_CR1_CEN;
 	return *this;
@@ -105,7 +109,7 @@ Timer& Timer::setChannelDirection(int chan, Direction d) {
 
 Timer& Timer::setChannelMode(int chan, ChannelMode m) {
 	chan--;
-	int v;
+	int v = 1;
 	switch(m) {
 		case MatchHigh:
 			v=1;
@@ -166,4 +170,8 @@ Timer& Timer::setOneShot(bool v) {
 
 Timer::operator bool() {
 	return !!(base->CR1 & 1);
+}
+
+Timer& Timer::update() {
+	base->EGR |= 1;
 }

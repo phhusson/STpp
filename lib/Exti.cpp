@@ -2,6 +2,7 @@
 #include "Board.h"
 #include "Exti.h"
 #include "Irq.h"
+#include "Log.h"
 
 void exti_handler(int v) {
 }
@@ -55,7 +56,7 @@ extern "C" {
 };
 
 int Exti::irq_n() {
-	int irq;
+	int irq = 40;
 	switch(chan) {
 		case 0:
 		case 1:
@@ -147,6 +148,7 @@ Exti::Exti(int c, Port p) :
 Exti::Exti(const Gpio& p) {
 	chan = p.number;
 	port = (Exti::Port)p.port->getPortNumber();
+	setGpioPort((int)port);
 }
 
 void Exti::callTopCB(int nr) {

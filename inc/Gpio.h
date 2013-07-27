@@ -56,7 +56,7 @@ class Gpio {
 		};
 		Gpio& setAlternate(int);
 		Gpio& setAlternate(AF);
-		operator bool();
+		inline operator bool() { return getState(); };
 	private:
 		GpioPort *port;
 		int number;
@@ -89,5 +89,6 @@ extern GpioPort GpioF;
 extern GpioPort GpioG;
 extern GpioPort GpioH;
 extern GpioPort GpioI;
+inline bool Gpio::getState() { return !!(port->base->IDR&(1<<number)); };
 
 #endif /* _GPIO_H */

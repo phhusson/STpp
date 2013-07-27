@@ -20,12 +20,14 @@ Gpio& Gpio::setState(bool v) {
 	return *this;
 }
 
+#if 0
 bool Gpio::getState() {
 	return !! (me->IDR & (1 << number));
 }
+#endif
 
 Gpio& Gpio::setSpeed(Gpio::Speed s) {
-	int v;
+	int v = 0;
 	switch(s) {
 		case SPEED_2MHz:
 			v = 0;
@@ -79,12 +81,12 @@ Gpio& Gpio::setFunction(Gpio::Function f) {
 
 GpioPort::GpioPort(volatile GPIO_TypeDef* b) : base(b) {
 	//Get the number of the GPIO port based on base
-	int n = (((unsigned long)b) >> 10) & 0xf;
+	int n = getPortNumber();
 	RCC->AHB1ENR |= 1 << n;
 }
 
 Gpio& Gpio::setResistor(Resistor r) {
-	int v;
+	int v = 0;
 	switch(r) {
 		case NONE:
 			v=0;
@@ -122,8 +124,4 @@ Gpio& Gpio::setAlternate(AF a) {
 int GpioPort::getPortNumber() {
 	int n = (((unsigned long)base) >> 10) & 0xf;
 	return n;
-}
-
-Gpio::operator bool() {
-	return getState();
 }

@@ -18,7 +18,7 @@ endif
 PREFIX?=arm-none-eabi-
 CXXFLAGS=-mcpu=cortex-m4 -g -mthumb -mfpu=vfpv4-d16 -mfloat-abi=hard
 ASFLAGS:=$(CXXFLAGS)
-CXXFLAGS+=-Iinc $(FREERTOS_INC) $(STM32_INC) $(USB_INC) -Wall -fno-stack-protector -Werror
+CXXFLAGS+=-Iinc $(FREERTOS_INC) $(STM32_INC) $(USB_INC) -Wall -fno-stack-protector -O3
 CFLAGS:=$(CXXFLAGS)
 CXXFLAGS+=-fno-rtti -fno-exceptions -std=c++11
 LIB_SRC=$(wildcard lib/*.cpp)
