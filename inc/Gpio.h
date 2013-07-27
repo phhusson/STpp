@@ -5,6 +5,9 @@
 class GpioPort;
 class Gpio {
 	public:
+		Gpio();
+		Gpio& operator=(Gpio&);
+
 		enum Direction {
 			INPUT,
 			OUTPUT,

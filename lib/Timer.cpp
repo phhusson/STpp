@@ -174,4 +174,5 @@ Timer::operator bool() {
 
 Timer& Timer::update() {
 	base->EGR |= 1;
+	return *this;
 }
