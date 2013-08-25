@@ -1,0 +1,23 @@
+#include <Board.h>
+#include <tr1/functional>
+#include <Log.h>
+#include <Ax12.h>
+#include <Exti.h>
+#include <Uart.h>
+#include <Usb.h>
+#include <Watchdog.h>
+
+extern "C" void vTaskDelay(int);
+int main() {
+	Tim4
+		.setPrescaler(42)
+		.setAutoReload(1000)
+		.setOneShot(true)
+		.enable();
+
+	log << "Waiting for end of timer 4" << Log::endl;
+	while(Tim4);
+	log << "Timer4 done" << Log::endl;
+	while(1)
+		vTaskDelay(1000);
+}
