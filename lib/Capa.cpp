@@ -13,7 +13,7 @@ extern "C" void vTaskDelay(int);
 Capa::Capa() : n(0) {
 	Tim7
 		.setPrescaler(0x0)
-		.setAutoReload(65535)
+		.setAutoReload(20000)
 		.setCounter(0x0)
 		.setOneShot(true)
 		.update();
@@ -28,6 +28,7 @@ Capa& Capa::add(Gpio g) {
 		.enableFalling()
 		.setTopCB([=](int) {
 			values[i] = Tim7.getCounter();
+			prepare(i);
 		})
 		.enableIRQ();
 
@@ -38,6 +39,7 @@ void Capa::prepare(int i) {
 	pins[i]
 		.setFunction(Gpio::GPIO)
 		.setDirection(Gpio::OUTPUT)
+		.setSpeed(Gpio::SPEED_100MHz)
 		.setState(true);
 }
 
@@ -53,6 +55,8 @@ Capa& Capa::measure() {
 	int i;
 	Tim7
 		.setCounter(0)
+		.setOneShot(true)
+		.update()
 		.enable();
 
 	//Set pins to input
@@ -77,15 +81,21 @@ Capa& Capa::measure() {
 	if(!Tim7.enabled())
 		log << "Timed out" << Log::endl;
 
+	Tim7
+		.setCounter(0)
+		.disable();
 	for(i=0;i<n;++i) {
 		values[i]-=offset[i];
 	}
 	return *this;
 }
 
+extern "C" void USB_OTG_BSP_uDelay(int);
+extern "C" void USB_OTG_BSP_mDelay(int);
 Capa& Capa::update() {
 	prepare();
-	vTaskDelay(20);
+	//USB_OTG_BSP_mDelay(2);
+	vTaskDelay(10);
 	measure();
 	return *this;
 }
