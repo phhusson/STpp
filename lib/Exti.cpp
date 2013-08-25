@@ -131,7 +131,7 @@ Exti& Exti::setBottomCB(Callback cb) {
 
 void Exti::setGpioPort(int port) {
 	//SYSCFG_EXTICR1..4
-	RCC->APB1ENR |= 1 << 14;
+	RCC->APB2ENR |= 1 << 14;
 	volatile uint32_t *base = SYSCFG->EXTICR;
 	base += chan/4;
 	int c = chan%4;

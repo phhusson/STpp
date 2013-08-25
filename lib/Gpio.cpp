@@ -125,3 +125,16 @@ int GpioPort::getPortNumber() {
 	int n = (((unsigned long)base) >> 10) & 0xf;
 	return n;
 }
+
+Gpio& Gpio::operator=(Gpio& g) {
+	number = g.number;
+	port = g.port;
+	function = g.function;
+	direction = g.direction;
+
+	return *this;
+}
+
+Gpio::Gpio() {
+	number = -1;
+}
