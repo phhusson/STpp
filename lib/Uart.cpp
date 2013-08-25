@@ -60,7 +60,7 @@ Uart::Uart(int n) :
 		case 4:
 		case 5:
 			RCC->APB1ENR |= 1<<(15+n);
-			base = (volatile USART_TypeDef*)(0x40004400+(n-2)*0x100);
+			base = (volatile USART_TypeDef*)(0x40004400+(n-2)*0x400);
 			break;
 		case 6:
 			RCC->APB2ENR |= 1<<5;
