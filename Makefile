@@ -34,7 +34,7 @@ SRC:=$(wildcard src/*.c) $(wildcard src/*.s)
 SRC_OBJS:=$(subst .c,.o,$(SRC))
 SRC_OBJS:=$(subst .s,.o,$(SRC_OBJS))
 
-all: examples/led.ram examples/led.flash examples/capa.ram
+all: examples/led.ram examples/led.flash examples/capa.ram examples/ax12.ram examples/button.ram
 
 .SECONDARY: $(LIB_OBJS) $(FREERTOS_OBJS) $(SRC_OBJS) $(USB_OBJS)
 

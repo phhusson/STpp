@@ -154,6 +154,8 @@ Ax12& Ax12::ping() {
 
 void Ax12::getMsg() {
 	//12 should be enough... right ?
+	if(id == 0xfe)
+		return;
 	char msg[12];
 	msg[3]=0xff;
 	int i;
