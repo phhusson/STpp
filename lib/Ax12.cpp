@@ -2,8 +2,14 @@
 #include <Log.h>
 
 extern "C" void vTaskDelay(int);
-Ax12::Ax12(Uart u, int i) :
+Ax12::Ax12(Gpio g, Uart u, int i) :
 	uart(u), id(i) {
+	g
+		.setPushPull()
+		.setAlternate(Gpio::USART1_3)
+		.setDirection(Gpio::OUTPUT)
+		.setSpeed(Gpio::SPEED_100MHz)
+		.setResistor(Gpio::PULL_UP);
 
 	uart
 		.enable()

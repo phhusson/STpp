@@ -17,7 +17,7 @@ class Ax12 {
 		void getMsg();
 		bool deferred;
 	public:
-		Ax12(Uart u, int i);
+		Ax12(Gpio g, Uart u, int i);
 		Ax12& setLed(bool);
 		Ax12& ping();
 
