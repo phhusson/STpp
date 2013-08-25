@@ -1,11 +1,7 @@
 #include <Board.h>
 #include <tr1/functional>
 #include <Log.h>
-#include <Ax12.h>
 #include <Exti.h>
-#include <Uart.h>
-#include <Usb.h>
-#include <Watchdog.h>
 
 extern "C" void vTaskDelay(int);
 int main() {

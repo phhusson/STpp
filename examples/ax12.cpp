@@ -10,15 +10,15 @@ int main() {
 	//Configure the pin
 	auto ax12_pin = GpioB[10];
 
-	Ax12 ax12(ax12_pin, Uart(3), 0xfe);
-	ax12.setEndless();
+	Ax12 ax12_broadcast(ax12_pin, Uart(3), 0xfe);
+	ax12_broadcast.setEndless();
 	//Enable torque
-	ax12.enable();
+	ax12_broadcast.enable();
 
 	while(1) {
-		ax12.setSpeed(0x7ff);
+		ax12_broadcast.setSpeed(0x7ff);
 		vTaskDelay(200);
-		ax12.setSpeed(0x3ff);
+		ax12_broadcast.setSpeed(0x3ff);
 		vTaskDelay(200);
 	}
 }
