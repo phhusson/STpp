@@ -7,6 +7,7 @@ class Gpio {
 	public:
 		Gpio();
 		Gpio& operator=(Gpio&);
+		bool operator=(bool);
 
 		enum Direction {
 			INPUT,

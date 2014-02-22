@@ -20,6 +20,11 @@ Gpio& Gpio::setState(bool v) {
 	return *this;
 }
 
+bool Gpio::operator=(bool v) {
+	setState(v);
+	return v;
+}
+
 #if 0
 bool Gpio::getState() {
 	return !! (me->IDR & (1 << number));
