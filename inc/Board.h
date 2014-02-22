@@ -8,6 +8,13 @@ extern Pwm LedR;
 
 extern Gpio UserButton;
 
+extern Gpio Lcd_RS;
+extern Gpio Lcd_E;
+extern Gpio Lcd_DB4;
+extern Gpio Lcd_DB5;
+extern Gpio Lcd_DB6;
+extern Gpio Lcd_DB7;
+
 //Drived by on-board logic...
 //You'd better let it that way
 extern Gpio USB_LedG;

@@ -11,6 +11,12 @@ Pwm LedO(GpioD[13], Tim4, 2);
 Pwm LedR(GpioD[14], Tim4, 3);
 Pwm LedB(GpioD[15], Tim4, 4);
 
+Gpio Lcd_RS(GpioA[1]);
+Gpio Lcd_E(GpioA[2]);
+Gpio Lcd_DB4(GpioB[11]);
+Gpio Lcd_DB5(GpioB[12]);
+Gpio Lcd_DB6(GpioB[13]);
+Gpio Lcd_DB7(GpioB[14]);
 
 //Rising edge
 Gpio UserButton(GpioA[0]);
