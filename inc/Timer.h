@@ -47,6 +47,13 @@ class Timer {
 		Timer& setChannelOutput(int,bool);
 		Timer& setChannelComparator(int,unsigned short);
 		Timer& update();
+		Timer& setCaptureCompare1Sel(int);
+		Timer& setCaptureCompare2Sel(int);
+		Timer& setCaptureCompare1Polarity(bool, int);
+		Timer& setCaptureCompare2Polarity(bool, int);
+		Timer& setInputCapture1Filter(int);
+		Timer& setInputCapture2Filter(int);	
+		Timer& setSlaveModeSelection(int);
 
 		operator bool();
 };

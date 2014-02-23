@@ -19,6 +19,11 @@ Gpio Lcd_DB5(GpioB[12]);
 Gpio Lcd_DB6(GpioB[13]);
 Gpio Lcd_DB7(GpioB[14]);
 
+// Motor control
+Pwm Prop0_PWM(GpioB[11], Tim2, 4);
+Gpio Prop0A(GpioB[15]);
+Gpio Prop0B(GpioB[13]);
+
 //Rising edge
 Gpio UserButton(GpioA[0]);
 

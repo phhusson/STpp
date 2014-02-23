@@ -176,3 +176,56 @@ Timer& Timer::update() {
 	base->EGR |= 1;
 	return *this;
 }
+
+Timer& Timer::setCaptureCompare1Sel(int v){
+	base->CCMR1 &= ~TIM_CCMR1_CC1S;
+	base->CCMR1 |= v%4;
+	return *this;
+}
+
+Timer& Timer::setCaptureCompare2Sel(int v){
+	base->CCMR1 &= ~TIM_CCMR1_CC2S;
+	base->CCMR1 |= (v%4) << 8;
+	return *this;
+}
+
+Timer& Timer::setCaptureCompare1Polarity(bool in, int v){
+	base->CCER &= TIM_CCER_CC1P;
+	base->CCER |= (v&0x1) << 1;
+	// CC1NP is only allowed to be changed in input mode	
+	if(in){
+		base->CCER &= TIM_CCER_CC1NP;
+		base->CCER |= (v&0x2) << 3;
+	} 
+	return *this;
+}
+
+Timer& Timer::setCaptureCompare2Polarity(bool in, int v){
+	base->CCER &= TIM_CCER_CC2P;
+	base->CCER |= (v&0x1) << 5;
+	// CC2NP is only allowed to be changed in input mode	
+	if(in){
+		base->CCER &= TIM_CCER_CC2NP;
+		base->CCER |= (v&0x2) << 7;
+	} 
+	return *this;
+}
+
+Timer& Timer::setInputCapture1Filter(int v){
+	base->CCMR1 &= ~TIM_CCMR1_IC1F;
+	base->CCMR1 |= (v%16) << 4;
+	return *this;
+}
+
+Timer& Timer::setInputCapture2Filter(int v){
+	base->CCMR1 &= ~TIM_CCMR1_IC2F;
+	base->CCMR1 |= (v%16) << 12;
+	return *this;
+}
+
+Timer& Timer::setSlaveModeSelection(int v){
+	base->SMCR &= ~TIM_SMCR_SMS;
+	base->SMCR |= (v%8);
+	return *this;
+}
+
