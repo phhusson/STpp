@@ -22,7 +22,7 @@ CXXFLAGS+=-Iinc $(FREERTOS_INC) $(STM32_INC) $(USB_INC) -Wall -fno-stack-protect
 CFLAGS:=$(CXXFLAGS)
 CXXFLAGS+=-fno-rtti -fno-exceptions -std=c++11
 LIB_SRC=$(wildcard lib/*.cpp)
-LIB_OBJS=$(subst cpp,o,$(LIB_SRC))
+LIB_OBJS=$(subst cpp,o,$(LIB_SRC)) lib/debug.o
 LIB_INCS=$(wildcard inc/*.h)
 
 CC=$(PREFIX)gcc
