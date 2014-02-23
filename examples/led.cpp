@@ -3,7 +3,7 @@
 
 extern "C" void vTaskDelay(int);
 int main() {
-	log << "startup" << Log::endl;
+	log << "startup" << endl;
 
 	int r = 0, b = 2, g = 4, o = 6;
 	while(1) {

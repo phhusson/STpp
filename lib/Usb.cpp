@@ -84,31 +84,31 @@ void USB_OTG_BSP_TimerIRQ (void)
 
 
 void USBD_USR_Init() {
-	log << "USBD initing" << Log::endl;
+	log << "USBD initing" << endl;
 }
 
 void USBD_USR_DeviceReset(uint8_t speed ) {
-	log << "USBD resting" << Log::endl;
+	log << "USBD resting" << endl;
 }
 
 void USBD_USR_DeviceConfigured (void) {
-	log << "HID interface started" << Log::endl;
+	log << "HID interface started" << endl;
 }
 
 void USBD_USR_DeviceConnected (void) {
-	log << "HID interface starting" << Log::endl;
+	log << "HID interface starting" << endl;
 }
 
 void USBD_USR_DeviceDisconnected (void) {
-	log << "HID interface stopped" << Log::endl;
+	log << "HID interface stopped" << endl;
 }
 
 void USBD_USR_DeviceSuspended() {
-	log << "USB suspend" << Log::endl;
+	log << "USB suspend" << endl;
 }
 
 void USBD_USR_DeviceResumed() {
-	log << "Device woke up" << Log::endl;
+	log << "Device woke up" << endl;
 }
 
 USBD_Usr_cb_TypeDef USR_cb =
@@ -130,7 +130,7 @@ Usb::Usb() {
 		.setPrescaler(1)
 		.setAutoReloadBuffered(true)
 		.setOneShot(true);
-	log << "Tim6 configured" << Log::endl;
+	log << "Tim6 configured" << endl;
 
 	USB_Vbus_en
 		.setSpeed(Gpio::SPEED_100MHz)
@@ -155,13 +155,13 @@ Usb::Usb() {
 		.setAlternate(Gpio::OTG_FS_HS);
 
 	if(!USB_ID && USB_Vbus_det)
-		log << "Vbus and USB OTG A found... dafuk." << Log::endl;
+		log << "Vbus and USB OTG A found... dafuk." << endl;
 	else if(!USB_ID)
-		log << "Found a USB OTG A, we're host" << Log::endl;
+		log << "Found a USB OTG A, we're host" << endl;
 	else if(USB_Vbus_det)
-		log << "Found vbus, we're guest" << Log::endl;
+		log << "Found vbus, we're guest" << endl;
 	else
-		log << "Found neither VBus nor OTG A..." << Log::endl;
+		log << "Found neither VBus nor OTG A..." << endl;
 
 	USBD_Init(&USB_OTG_dev,
 			USB_OTG_FS_CORE_ID,

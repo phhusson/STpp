@@ -170,3 +170,8 @@ Uart& Uart::setHalfDuplex(bool b) {
 	}
 	return *this;
 }
+
+Uart& Uart::endl() {
+	put('\r');
+	put('\n');
+}

@@ -15,9 +15,9 @@ int main() {
 		.setOneShot(true)
 		.enable();
 
-	log << "Waiting for end of timer 4" << Log::endl;
+	log << "Waiting for end of timer 4" << endl;
 	while(Tim4);
-	log << "Timer4 done" << Log::endl;
+	log << "Timer4 done" << endl;
 	while(1)
 		vTaskDelay(1000);
 }

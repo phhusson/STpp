@@ -3,8 +3,9 @@
 
 #include "Gpio.h"
 #include <stm32f4xx.h>
+#include "OStream.h"
 
-class Uart {
+class Uart : public OStream {
 	private:
 		int number;
 		volatile USART_TypeDef *base;
@@ -12,7 +13,6 @@ class Uart {
 		Uart(int);
 		Uart& configGpio(Gpio& p);
 		char waitForNext();
-		Uart& put(char);
 		Uart& setMantissa(int);
 		Uart& setFraction(int);
 		Uart& enableReceive();
@@ -23,6 +23,9 @@ class Uart {
 		Uart& disable();
 		Uart& sendBreak();
 		Uart& setHalfDuplex(bool);
+	public:
+		virtual Uart& put(char);
+		virtual Uart& endl();
 };
 
 #endif /* _UART_H */

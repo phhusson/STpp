@@ -175,5 +175,5 @@ void Ax12::getMsg() {
 	for(j=2;j<(i-1);++j)
 		checksum+=msg[j];
 	checksum=~checksum;
-	log << "end (found " << (int)checksum << Log::endl;
+	log << "end (found " << (int)checksum << endl;
 }

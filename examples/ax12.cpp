@@ -5,7 +5,7 @@
 
 extern "C" void vTaskDelay(int);
 int main() {
-	log << "startup" << Log::endl;
+	log << "startup" << endl;
 
 	//Configure the pin
 	auto ax12_pin = GpioB[10];

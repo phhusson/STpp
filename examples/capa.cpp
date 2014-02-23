@@ -14,7 +14,7 @@ extern "C" void vTaskDelay(int);
 Capa capa;
 
 int main() {
-	log << "startup" << Log::endl;
+	log << "startup" << endl;
 
 	capa
 		.add(GpioD[0])
@@ -67,7 +67,7 @@ int main() {
 				log << " Slow " << slow[i];
 				log << " Delta " << d;
 				log << " Len " << len[i];
-				log << " Instant " << capa[i] << Log::endl;
+				log << " Instant " << capa[i] << endl;
 				switch(i) {
 					case 0:
 						LedG.setDutyCycle(0);
@@ -85,7 +85,7 @@ int main() {
 					log << " Slow " << slow[i];
 					log << " Delta " << d;
 					log << " Len " << len[i];
-					log << " Instant " << capa[i] << Log::endl;
+					log << " Instant " << capa[i] << endl;
 				}
 				len[i] = 0;
 			}

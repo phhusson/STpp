@@ -1,19 +1,15 @@
 #ifndef _LOG_H
 #define _LOG_H
+#include "OStream.h"
 
-class Log {
-	class endl_type {
-	};
+class Log : public OStream {
 	private:
 		char log[32][128];
 		int line;
 		int position;
 	public:
-		static endl_type endl;
-		Log& operator<<(char);
-		Log& operator<<(const char*);
-		Log& operator<<(int);
-		Log& operator<<(endl_type);
+		virtual Log& put(char);
+		virtual Log& endl();
 };
 
 extern Log log;
