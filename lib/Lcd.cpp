@@ -91,7 +91,7 @@ Lcd& Lcd::displaySet(bool on, bool cursor, bool blink) {
 Lcd& Lcd::setDirection(bool increment, bool display) {
 	int cmd = 0b00000100;
 	cmd |= display ? 1 : 0;
-	cmd |= increment ? 1 : 0;
+	cmd |= increment ? 2 : 0;
 	write(0, cmd);
 	return *this;
 }
