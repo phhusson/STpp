@@ -1,3 +1,6 @@
+#ifndef LOCK_H
+#define LOCK_H
+
 extern "C" {
 #include <FreeRTOS.h>
 #include <semphr.h>
@@ -19,3 +22,5 @@ class AutoLock {
 		AutoLock(Mutex m);
 		~AutoLock();
 };
+
+#endif /* LOCK_H */

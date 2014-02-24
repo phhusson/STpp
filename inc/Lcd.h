@@ -1,15 +1,36 @@
 #ifndef LCD_H
 #define LCD_H
 #include <Gpio.h>
+#include <Lock.h>
+#include <OStream.h>
+
+class Lcd;
+class LcdLine : public OStream {
+	private:
+		Lcd* lcd;
+		int position;
+		int line;
+		LcdLine();
+		void set(Lcd&, int);
+		friend class Lcd;
+		bool locked;
+	public:
+		virtual LcdLine& put(char);
+		virtual LcdLine& endl();
+};
 
 class Lcd {
+	//Private methods are not locked
+	//Publics ones are.
 	private:
+		friend class LcdLine;
 		void write(int r, int val);
 		void write4(int r, int val);
 		void init();
 		void wait(bool quick);
 		Gpio RS, E, DB7, DB6, DB5, DB4;
 		bool is_4bit;
+		Mutex lock;
 	public:
 		Lcd(Gpio RS, Gpio E, Gpio DB7, Gpio DB6, Gpio DB5, Gpio DB4);
 		// 0 0 0 0 0 0 0 1
@@ -25,13 +46,17 @@ class Lcd {
 	private:
 		// 0 0 1 8 N F * *
 		Lcd& functionSet(bool is_8bits, bool is_2lines, bool font);
-	public:
 		//0 1 A5 A4 A3 A2 A1 A0
 		Lcd& setCGRAM(int addr);
 		//1 A6 A5 A4 A3 A2 A1 A0
 		Lcd& setDDRAM(int addr);
 		
-		Lcd& puts(const char* str);
-
+		Lcd& put(char c);
+		Lcd& put(const char* str);
+	public:
+		LcdLine& operator()(int);
+		LcdLine first;
+		LcdLine second;
 };
+
 #endif

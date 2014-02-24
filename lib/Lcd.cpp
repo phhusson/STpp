@@ -1,12 +1,48 @@
 #include <Lcd.h>
 extern "C" void vTaskDelay(int);
 
+LcdLine::LcdLine() {
+	lcd = NULL;
+	line = -1;
+	locked = false;
+	position = 0;
+}
+
+void LcdLine::set(Lcd& lcd, int line) {
+	this->lcd = &lcd;
+	this->line = line;
+}
+
+LcdLine& LcdLine::put(char c) {
+	if(!locked) {
+		lcd->lock.lock();
+		lcd->setDDRAM(line * 40);
+		position = 0;
+	}
+	lcd->put(c);
+	position++;
+	return *this;
+}
+
+LcdLine& LcdLine::endl() {
+	if(locked) {
+		for(int i=0; i<(40-position); ++i)
+			lcd->put(' ');
+		lcd->lock.unlock();
+	}
+	return *this;
+}
+
 Lcd::Lcd(Gpio RS, Gpio E, Gpio DB7, Gpio DB6, Gpio DB5, Gpio DB4) :
-	RS(RS), E(E), DB7(DB7), DB6(DB6), DB5(DB5), DB4(DB4), is_4bit(true) {
+	RS(RS), E(E), DB7(DB7), DB6(DB6), DB5(DB5), DB4(DB4),
+	is_4bit(true) {
 	init();
 	clearDisplay();
 	displaySet(true, true, true);
 	setDirection(true, false);
+
+	first.set(*this, 0);
+	second.set(*this, 0);
 }
 
 static void setupGpio(Gpio& a) {
@@ -75,11 +111,19 @@ Lcd& Lcd::functionSet(bool is_8bits, bool is_2lines, bool font) {
 }
 
 Lcd& Lcd::clearDisplay() {
+	AutoLock l(lock);
 	write(0, 0b00000001);
 	return *this;
 }
 
+Lcd& Lcd::returnHome() {
+	AutoLock l(lock);
+	write(0, 0b00000010);
+	return *this;
+}
+
 Lcd& Lcd::displaySet(bool on, bool cursor, bool blink) {
+	AutoLock l(lock);
 	int cmd = 0b00001000;
 	cmd |= blink ? 1 : 0;
 	cmd |= cursor ? 2 : 0;
@@ -89,6 +133,7 @@ Lcd& Lcd::displaySet(bool on, bool cursor, bool blink) {
 }
 
 Lcd& Lcd::setDirection(bool increment, bool display) {
+	AutoLock l(lock);
 	int cmd = 0b00000100;
 	cmd |= display ? 1 : 0;
 	cmd |= increment ? 2 : 0;
@@ -96,8 +141,40 @@ Lcd& Lcd::setDirection(bool increment, bool display) {
 	return *this;
 }
 
-Lcd& Lcd::puts(const char *str) {
+Lcd& Lcd::move(bool cursor, bool left) {
+	AutoLock l(lock);
+	int cmd = 0b00010000;
+	cmd |= left ? (1 << 2) : 0;
+	cmd |= cursor ? (2 << 2) : 0;
+	write(0, cmd);
+	return *this;
+}
+
+Lcd& Lcd::put(const char *str) {
 	while(*str)
 		write(1, *str++);
+	return *this;
+}
+
+Lcd& Lcd::put(char c) {
+	write(1, c);
+	return *this;
+}
+
+LcdLine& Lcd::operator()(int c) {
+	if(c == 0)
+		return first;
+	return second;
+}
+
+Lcd& Lcd::setDDRAM(int addr) {
+	addr&=0x7f;
+	write(0, addr|0x80);
+	return *this;
+}
+
+Lcd& Lcd::setCGRAM(int addr) {
+	addr&=0x3f;
+	write(0, addr|0x40);
 	return *this;
 }
