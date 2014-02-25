@@ -1,3 +1,6 @@
+#ifndef _LED_H
+#define _LED_H
+
 #include "Gpio.h"
 #include "Lock.h"
 
@@ -12,3 +15,5 @@ class Led {
 		Led& off();
 		Led& toggle();
 };
+
+#endif /* _LED_H */
