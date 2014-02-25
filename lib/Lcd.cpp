@@ -1,4 +1,5 @@
 #include <Lcd.h>
+#include <Debug.h>
 extern "C" void vTaskDelay(int);
 
 LcdLine::LcdLine() {
@@ -18,6 +19,7 @@ LcdLine& LcdLine::put(char c) {
 		lcd->lock.lock();
 		lcd->setDDRAM(line * 40);
 		position = 0;
+		locked = true;
 	}
 	lcd->put(c);
 	position++;
@@ -26,9 +28,10 @@ LcdLine& LcdLine::put(char c) {
 
 LcdLine& LcdLine::endl() {
 	if(locked) {
-		for(int i=0; i<(40-position); ++i)
+		for(int i=0; i<(16-position); ++i)
 			lcd->put(' ');
 		lcd->lock.unlock();
+		locked = false;
 	}
 	return *this;
 }
@@ -42,7 +45,7 @@ Lcd::Lcd(Gpio RS, Gpio E, Gpio DB7, Gpio DB6, Gpio DB5, Gpio DB4) :
 	setDirection(true, false);
 
 	first.set(*this, 0);
-	second.set(*this, 0);
+	second.set(*this, 1);
 }
 
 static void setupGpio(Gpio& a) {
@@ -55,9 +58,9 @@ static void setupGpio(Gpio& a) {
 void Lcd::wait(bool quick) {
 	//TODO: have proper functions
 	if(quick)
-		vTaskDelay(3);
+		vTaskDelay(1);
 	else
-		vTaskDelay(9);
+		vTaskDelay(4);
 }
 
 void Lcd::init() {
@@ -79,7 +82,7 @@ void Lcd::init() {
 	write4(0, 0b0010);
 	wait(false);
 
-	functionSet(false, false, false);
+	functionSet(false, true, false);
 }
 
 void Lcd::write4(int rs, int val) {
@@ -170,6 +173,7 @@ LcdLine& Lcd::operator()(int c) {
 Lcd& Lcd::setDDRAM(int addr) {
 	addr&=0x7f;
 	write(0, addr|0x80);
+	wait(false);
 	return *this;
 }
 
