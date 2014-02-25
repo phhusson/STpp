@@ -1,5 +1,6 @@
 #include <Led.h>
 #include <Pwm.h>
+#include <Time.h>
 
 extern Pwm LedG;
 extern Pwm LedO;
@@ -25,3 +26,5 @@ extern Gpio USB_Vbus_det;
 extern Gpio USB_ID;
 extern Gpio USB_DP;
 extern Gpio USB_DM;
+
+extern Time time;

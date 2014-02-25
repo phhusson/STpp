@@ -1,3 +1,4 @@
+#include "Board.h"
 #include "Led.h"
 #include "Pwm.h"
 
@@ -27,3 +28,5 @@ Gpio USB_Vbus_det(GpioA[9]);
 Gpio USB_ID(GpioA[10]);
 Gpio USB_DM(GpioA[11]);
 Gpio USB_DP(GpioA[12]);
+
+Time time(Tim14);
