@@ -1,5 +1,5 @@
 #include <Lcd.h>
-#include <Debug.h>
+#include <Board.h>
 extern "C" void vTaskDelay(int);
 
 LcdLine::LcdLine() {
@@ -56,9 +56,8 @@ static void setupGpio(Gpio& a) {
 }
 
 void Lcd::wait(bool quick) {
-	//TODO: have proper functions
 	if(quick)
-		vTaskDelay(1);
+		time.usleep(100);
 	else
 		vTaskDelay(4);
 }

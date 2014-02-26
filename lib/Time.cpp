@@ -5,7 +5,7 @@ Time::Time(Timer& t) :
 	timer(t) {
 
 	timer
-		.setPrescaler(42)
+		.setPrescaler(168/2)
 		.setOneShot(true);
 }
 
