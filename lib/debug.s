@@ -16,3 +16,10 @@ putstring:
 	mov r0, #4
 	bkpt 0xab
 	bx lr
+
+.global getchar
+getchar:
+	mov r1, #0
+	mov r0, #7
+	bkpt 0xab
+	bx lr

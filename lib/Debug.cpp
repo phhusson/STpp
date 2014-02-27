@@ -25,4 +25,13 @@ Debug& Debug::operator<<(const char* s) {
 	return *this;
 }
 
+extern "C" char getchar();
+int Debug::get() {
+	return getchar();
+}
+
+bool Debug::available() {
+	return true;
+}
+
 Debug debug;
