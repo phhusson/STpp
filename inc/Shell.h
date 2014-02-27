@@ -53,6 +53,8 @@ class Shell {
 		void pushValue(const char *str);
 		void call(const char *cmd);
 
+		void add(Callback cb, const char *name1, const char *name2=0);
+
 	public:
 		Shell(IStream& in, OStream& out);
 		void exec(const char* prompt="> ");

@@ -3,22 +3,28 @@
 Shell::Shell(IStream& in, OStream& out): in(in), out(out),
 	cbs_name{}, n_cbs(0) {
 
-	cbs[0]=[](Stack &s) {
-		int a = s.pop().toInt();
-		int b = s.pop().toInt();
-		s.push(a+b);
-	};
-	cbs_name[0][0] = "+";
-	cbs_name[0][1] = 0;
+	add([](Stack &s) {
+			int a = s.pop().toInt();
+			int b = s.pop().toInt();
+			s.push(a+b);
+		}, "+");
 
-	cbs[1]=[&out](Stack &s) {
-		Object& o = s.pop();
-		out << "# " << o.toInt() << endl;
-	};
-	cbs_name[1][0] = ".";
-	cbs_name[1][1] = 0;
+	add([&out](Stack &s) {
+			Object& o = s.pop();
+			out << "# " << o.toInt() << endl;
+		}, ".");
 
-	n_cbs = 2;
+	add([&out](Stack &s) {
+			Object& o = s.pop();
+			out << "? " << o.toInt() << endl;
+		}, ".", ".");
+}
+
+void Shell::add(Callback cb, const char *name1, const char *name2) {
+	cbs_name[n_cbs][0] = name1;
+	cbs_name[n_cbs][1] = name2;
+	cbs[n_cbs] = cb;
+	n_cbs++;
 }
 
 bool Shell::isValue(const char *str) {
