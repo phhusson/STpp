@@ -1,0 +1,61 @@
+#ifndef _SHELL_H
+#define _SHELL_H
+
+#include "IStream.h"
+#include "OStream.h"
+#include <tr1/functional>
+
+class Object {
+	public:
+		enum {
+			NONE,
+			INT,
+			STRING,
+			PTR
+		} type;
+		void *store;
+		inline int toInt() { if(type != INT) while(1); return (int) store; }
+		inline const char* toString() { if(type != STRING) while(1); return (const char*) store; }
+		inline void* toPtr() { if(type != PTR) while(1); return (void*) store; }
+
+		inline void operator()(int v) { type = INT; store = (void*)v; }
+		inline void operator()(const char *s) { type = STRING; store = (void*)s; }
+		inline void operator()(void *p) { type = PTR; store = (void*)p; }
+		inline void operator()() { type = NONE; }
+		inline Object() { type = NONE; }
+};
+
+class Stack {
+	private:
+		Object s[16];
+		int n;
+	public:
+		inline Stack() { n = 0; }
+		inline Object& pop() { if(n<=0) while(1); return s[--n];}
+		template<class T> void push(T v) { s[n++](v); }
+};
+
+class Shell {
+	private:
+		typedef std::tr1::function<void(Stack&)> Callback;
+		Stack s;
+
+		IStream& in;
+		OStream& out;
+#define N_FUNCTIONS 128
+		Callback cbs[N_FUNCTIONS];
+		const char *cbs_name[N_FUNCTIONS][2];
+		int n_cbs; 
+
+		bool isValue(const char *str);
+		void pushInt(const char *str);
+		void pushStr(const char *str);
+		void pushValue(const char *str);
+		void call(const char *cmd);
+
+	public:
+		Shell(IStream& in, OStream& out);
+		void exec(const char* prompt="> ");
+};
+
+#endif /* _SHELL_H */

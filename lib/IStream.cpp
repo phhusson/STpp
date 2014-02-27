@@ -16,7 +16,7 @@ IStream& operator>>(IStream& s, char* str) {
 	for(int i=0;; ++i) {
 		while(!s.available());
 		str[i] = s.get();
-		if(str[i] == '\n' || str[i] == '\r')
+		if(str[i] == '\n' || str[i] == '\r' || str[i] == ' ')
 			str[i]=0;
 		if(str[i] == 0) {
 			if(i==0)
