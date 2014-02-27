@@ -3,6 +3,9 @@
 Shell::Shell(IStream& in, OStream& out): in(in), out(out),
 	cbs_name{}, n_cbs(0) {
 
+	current_object = 0;
+	got_name = false;
+
 	add([](Stack &s) {
 			int a = s.pop().toInt();
 			int b = s.pop().toInt();
@@ -109,4 +112,14 @@ void Shell::exec(const char* prompt) {
 			call(cmd);
 		}
 	}
+}
+
+Shell& Shell::operator<<(const char* name) {
+	if(!got_name) {
+		got_name = true;
+		current_object = name;
+	} else {
+		while(1);
+	}
+	return *this;
 }

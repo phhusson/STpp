@@ -40,8 +40,6 @@ class Shell {
 		typedef std::tr1::function<void(Stack&)> Callback;
 		Stack s;
 
-		IStream& in;
-		OStream& out;
 #define N_FUNCTIONS 128
 		Callback cbs[N_FUNCTIONS];
 		const char *cbs_name[N_FUNCTIONS][2];
@@ -53,11 +51,19 @@ class Shell {
 		void pushValue(const char *str);
 		void call(const char *cmd);
 
-		void add(Callback cb, const char *name1, const char *name2=0);
 
 	public:
+		//To be used by overloaders
+		const char *current_object;
+		bool got_name;
+		void add(Callback cb, const char *name1, const char *name2=0);
+		IStream& in;
+		OStream& out;
+	public:
+
 		Shell(IStream& in, OStream& out);
 		void exec(const char* prompt="> ");
+		Shell& operator<<(const char*);
 };
 
 #endif /* _SHELL_H */
