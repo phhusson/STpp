@@ -66,29 +66,26 @@ void Shell::pushValue(const char *str) {
 		pushStr(str);
 }
 
-static bool fnc_eq(const char *str, const char **name) {
-	int j = 0, i = 0;
-	for(i=0;str[i];++i) {
-		if(!j) {
-			if(str[i] != name[0][i] && str[i] != ':')
-				return false;
-			if(str[i] == ':') {
-				j = i;
-				if(!name[1])
-					return false;
-			}
-		} else {
-			if(str[i] != name[1][i-j] && str[i] != ':')
-				return false;
-		}
+static int str_cmp_split(const char *str, const char *to, char key=':') {
+	for(int i=0;str[i] || to[i]; ++i) {
+		if(str[i] == key && to[i] == 0)
+			return i+1;
+		if(str[i] != to[i])
+			return 0;
 	}
-	if(!j) {
-		if(str[i] != name[0][i])
-			return false;
-	} else
-		if(str[i] != name[1][i-j])
-			return false;
-	return true;
+	return -1;
+}
+
+static bool fnc_eq(const char *str, const char **name) {
+	int ret;
+	ret = str_cmp_split(str, name[0]);
+	if(!ret)
+		return false;
+	if(ret == -1 && name[1] == 0)
+		return true;
+	if(!name[1])
+		return false;
+	return !!str_cmp_split(str+ret, name[1], 0);
 }
 
 void Shell::call(const char *str) {
