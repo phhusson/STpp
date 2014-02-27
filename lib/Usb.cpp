@@ -5,11 +5,14 @@
 #include <Log.h>
 #include <Exti.h>
 
+
 extern "C" {
 #include <usb_defines.h>
 #include <usb_core.h>
 #include <usbd_core.h>
 #include <usbd_hid_core.h>
+#include <usbd_msc_core.h>
+#include <usbd_cdc_core.h>
 };
 
 extern "C" {
@@ -123,8 +126,12 @@ USBD_Usr_cb_TypeDef USR_cb =
   USBD_USR_DeviceDisconnected,  
 };
 
-static uint8_t hid_buf[4];
+static bool occupied;
 Usb::Usb() {
+	if(occupied)
+		while(1);
+
+	occupied = true;
 
 	Tim6
 		.setPrescaler(1)
@@ -163,10 +170,11 @@ Usb::Usb() {
 	else
 		log << "Found neither VBus nor OTG A..." << endl;
 
+	/*
 	USBD_Init(&USB_OTG_dev,
 			USB_OTG_FS_CORE_ID,
 			&USR_desc,
-			&USBD_HID_cb,
+			&USBD_CDC_cb,
 			&USR_cb);
 
 	UserButton
@@ -178,9 +186,11 @@ Usb::Usb() {
 		.enableRising()
 		.enableIRQ()
 		.setTopCB([] (int nr) { 
+				static uint8_t hid_buf[4];
 				hid_buf[1] += 10;
 				USBD_HID_SendReport(&USB_OTG_dev,
 					hid_buf,
 					4);
-		});
+				log << "Sending " << (int)hid_buf[1] << endl;
+		});*/
 }

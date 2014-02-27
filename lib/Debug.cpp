@@ -2,13 +2,13 @@
 
 extern "C" void putchar(char);
 Debug& Debug::put(char c) {
-	putchar(c);
+	//putchar(c);
 	return *this;
 }
 
 extern "C" void putstring(const char*);
 Debug& Debug::put(const char *s) {
-	putstring(s);
+	//putstring(s);
 	return *this;
 }
 

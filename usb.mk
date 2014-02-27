@@ -10,11 +10,13 @@ USB_DEV_BASE=3rdparty/STM32_USB-Host-Device_Lib_V2.1.0/Libraries/STM32_USB_Devic
 USB_DEV_INC=-I$(USB_DEV_BASE)/Core/inc
 USB_DEV_INC+=-I$(USB_DEV_BASE)/Class/hid/inc
 USB_DEV_INC+=-I$(USB_DEV_BASE)/Class/msc/inc
+USB_DEV_INC+=-I$(USB_DEV_BASE)/Class/cdc/inc
 USB_DEV_SRC=$(USB_DEV_BASE)/Core/src/usbd_core.c
 USB_DEV_SRC+=$(USB_DEV_BASE)/Core/src/usbd_ioreq.c
 USB_DEV_SRC+=$(USB_DEV_BASE)/Core/src/usbd_req.c
 
 USB_DEV_SRC+=$(USB_DEV_BASE)/Class/hid/src/usbd_hid_core.c
+USB_DEV_SRC+=$(USB_DEV_BASE)/Class/cdc/src/usbd_cdc_core.c
 
 USB_HOST_BASE=3rdparty/STM32_USB-Host-Device_Lib_V2.1.0/Libraries/STM32_USB_HOST_Library/
 USB_HOST_INC=-I$(USB_HOST_BASE)/Core/inc/

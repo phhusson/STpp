@@ -1,13 +1,15 @@
 extern "C" {
 	char *memset(char *s, int c, int n) {
+		volatile char *p = s;
 		while(n--)
-			s[n]=c;
+			p[n]=c;
 		return s;
 	}
 
 	char *memcpy(char *d, char *s, int n){
+		char *p=d;
 		while(n--)
-			d[n]=s[n];
+			p[n]=s[n];
 		return d;
 	}
 
