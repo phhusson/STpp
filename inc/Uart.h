@@ -4,8 +4,9 @@
 #include "Gpio.h"
 #include <stm32f4xx.h>
 #include "OStream.h"
+#include "IStream.h"
 
-class Uart : public OStream {
+class Uart : public OStream, public IStream {
 	private:
 		int number;
 		volatile USART_TypeDef *base;
@@ -26,6 +27,9 @@ class Uart : public OStream {
 	public:
 		virtual Uart& put(char);
 		virtual Uart& endl();
+	public:
+		virtual int get();
+		virtual bool available();
 };
 
 #endif /* _UART_H */

@@ -174,4 +174,17 @@ Uart& Uart::setHalfDuplex(bool b) {
 Uart& Uart::endl() {
 	put('\r');
 	put('\n');
+	return *this;
+}
+
+int Uart::get() {
+	char r;
+	int res = xQueueReceive(uart_queue_rx[number], &r, 0);
+	if(!res)
+		return -1;
+	return r;
+}
+
+bool Uart::available() {
+	return !xQueueIsQueueEmptyFromISR(uart_queue_rx[number]);
 }

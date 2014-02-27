@@ -1,3 +1,5 @@
+#include <FreeRTOS.h>
+#include <queue.h>
 #include "Log.h"
 #include "UsbSerial.h"
 
@@ -68,12 +70,15 @@ static uint16_t UsbSerial_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t Len) {
 	return USBD_OK;
 }
 
+static xQueueHandle rx_queue;
 static uint16_t UsbSerial_DataRx (uint8_t* Buf, uint32_t Len) {
 	uint32_t i;
 
 	for (i = 0; i < Len; i++)
 		log << (char)Buf[i];
 	log << endl;
+	for (i = 0; i < Len; i++)
+		xQueueSendFromISR(rx_queue, Buf+i, NULL);
 
 	return USBD_OK;
 }
@@ -97,6 +102,7 @@ UsbSerial::UsbSerial() {
 			&USR_desc,
 			&USBD_CDC_cb,
 			&USR_cb);
+	rx_queue = xQueueCreate(128, 1);
 }
 
 UsbSerial& UsbSerial::put(char c) {
@@ -111,4 +117,16 @@ UsbSerial& UsbSerial::endl() {
 	put('\r');
 	put('\n');
 	return *this;
+}
+
+int UsbSerial::get() {
+	char r;
+	int res = xQueueReceive(rx_queue, &r, 0);
+	if(!res)
+		return -1;
+	return r;
+}
+
+bool UsbSerial::available() {
+	return !xQueueIsQueueEmptyFromISR(rx_queue);
 }
