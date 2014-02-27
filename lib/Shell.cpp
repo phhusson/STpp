@@ -15,7 +15,7 @@ Shell::Shell(IStream& in, OStream& out): in(in), out(out),
 		Object& o = s.pop();
 		out << "# " << o.toInt() << endl;
 	};
-	cbs_name[1][0] = ":";
+	cbs_name[1][0] = ".";
 	cbs_name[1][1] = 0;
 
 	n_cbs = 2;
@@ -43,7 +43,7 @@ void Shell::pushInt(const char *str) {
 			c = c - 'A' + 10;
 		else
 			while(1);
-		c <<= 4;
+		v <<= 4;
 		v |= c;
 	}
 	s.push(v);
@@ -64,15 +64,15 @@ static bool fnc_eq(const char *str, const char **name) {
 	int j = 0, i = 0;
 	for(i=0;str[i];++i) {
 		if(!j) {
-			if(str[i] != name[0][i] && str[i] != '.')
+			if(str[i] != name[0][i] && str[i] != ':')
 				return false;
-			if(str[i] == '.') {
+			if(str[i] == ':') {
 				j = i;
 				if(!name[1])
 					return false;
 			}
 		} else {
-			if(str[i] != name[1][i-j] && str[i] != '.')
+			if(str[i] != name[1][i-j] && str[i] != ':')
 				return false;
 		}
 	}
