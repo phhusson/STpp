@@ -190,22 +190,22 @@ Timer& Timer::setCaptureCompare2Sel(int v){
 }
 
 Timer& Timer::setCaptureCompare1Polarity(bool in, int v){
-	base->CCER &= TIM_CCER_CC1P;
+	base->CCER &= ~TIM_CCER_CC1P;
 	base->CCER |= (v&0x1) << 1;
 	// CC1NP is only allowed to be changed in input mode	
 	if(in){
-		base->CCER &= TIM_CCER_CC1NP;
+		base->CCER &= ~TIM_CCER_CC1NP;
 		base->CCER |= (v&0x2) << 3;
 	} 
 	return *this;
 }
 
 Timer& Timer::setCaptureCompare2Polarity(bool in, int v){
-	base->CCER &= TIM_CCER_CC2P;
+	base->CCER &= ~TIM_CCER_CC2P;
 	base->CCER |= (v&0x1) << 5;
 	// CC2NP is only allowed to be changed in input mode	
 	if(in){
-		base->CCER &= TIM_CCER_CC2NP;
+		base->CCER &= ~TIM_CCER_CC2NP;
 		base->CCER |= (v&0x2) << 7;
 	} 
 	return *this;

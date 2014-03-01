@@ -1,6 +1,6 @@
 #include <Pwm.h>
 
-Pwm::Pwm(Gpio p, Timer t, int n) :
+Pwm::Pwm(Gpio p, Timer t, int n, int pre, int atr) :
 	gpio(p), tim(t), chan(n) {
 	int n_tim = tim.getNumber();
 	if(n_tim<=2)
@@ -16,14 +16,21 @@ Pwm::Pwm(Gpio p, Timer t, int n) :
 	else
 		for(;;);
 
-	gpio.setSpeed(Gpio::SPEED_100MHz);
-	gpio.setFunction(Gpio::ALTERNATE);
-	gpio.setDirection(Gpio::OUTPUT);
-	gpio.setResistor(Gpio::NONE);
-	gpio.setPushPull();
-	tim.setChannelDirection(chan, Timer::OUTPUT);
-	tim.setChannelMode(chan, Timer::CompareHigh);
-	tim.setChannelOutput(chan, true);
+	gpio
+		.setSpeed(Gpio::SPEED_100MHz)
+		.setFunction(Gpio::ALTERNATE)
+		.setDirection(Gpio::OUTPUT)
+		.setResistor(Gpio::NONE)
+		.setPushPull();
+	tim
+		.setPrescaler(pre)
+		.setAutoReload(atr)
+		.setOneShot(false)
+		.setChannelComparator(chan, 0)
+		.setChannelDirection(chan, Timer::OUTPUT)
+		.setChannelMode(chan, Timer::CompareHigh)
+		.setChannelOutput(chan, true)
+		.enable();
 }
 
 Pwm& Pwm::setDutyCycle(float v) {

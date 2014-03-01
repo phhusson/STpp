@@ -9,7 +9,7 @@ class Pwm {
 		Timer tim;
 		int chan;
 	public:
-		Pwm(Gpio p, Timer t, int n);
+		Pwm(Gpio p, Timer t, int n, int pre=42, int atr=1024);
 		Pwm& setDutyCycle(float v);
 		Pwm& setDutyCycle(int percent);
 		Pwm& setComparator(unsigned int cmp);
