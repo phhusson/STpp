@@ -1,30 +1,19 @@
 #include <Board.h>
-#include <Log.h>
+#include "HBridgeST.h"
+//#include <Log.h>
 
 extern "C" void vTaskDelay(int);
 int main() {
-	log << "startup" << Log::endl;
+	//log << "startup" << Log::endl;
 
-	Tim2
-		.setPrescaler(42)
-		.setAutoReload(1024) // change name of the function
-		.setOneShot(false)
-		.enable();
+	HBridgeST motor0(Prop0A, Prop0B, Prop0_PWM, Tim2, 4);
 
 	int v(0);
-
-	Prop0A
-		.setDirection(Gpio::OUTPUT)
-		.setState(true);
-
-	Prop0B
-		.setDirection(Gpio::OUTPUT)
-		.setState(false);
 
 	while(1) {
 		v+=100;
 		v%= 1024;
-		Prop0_PWM.setComparator(v);
-		vTaskDelay(200);
+		motor0.setSpeed(v);
+		vTaskDelay(500);
 	}
 }
