@@ -16,9 +16,14 @@ extern Gpio Lcd_DB5;
 extern Gpio Lcd_DB6;
 extern Gpio Lcd_DB7;
 
+// Motor
 extern Pwm Prop0_PWM;
 extern Gpio Prop0A;
 extern Gpio Prop0B;
+
+// Rotary encoder
+extern Gpio RotaryA;
+extern Gpio RotaryB;
 
 //Drived by on-board logic...
 //You'd better let it that way

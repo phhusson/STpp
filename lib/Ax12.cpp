@@ -177,3 +177,10 @@ void Ax12::getMsg() {
 	checksum=~checksum;
 	log << "end (found " << (int)checksum << endl;
 }
+
+Ax12& Ax12::setMaxTorque(unsigned short int value, bool persist) {
+	if(persist)
+		writeReg(0x0e, value);
+	writeReg(0x22, value);
+	return *this;
+}
