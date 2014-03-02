@@ -184,3 +184,8 @@ Ax12& Ax12::setMaxTorque(unsigned short int value, bool persist) {
 	writeReg(0x22, value);
 	return *this;
 }
+
+Ax12& Ax12::setID(char id) {
+	writeReg(3, id);
+	return *this;
+}
