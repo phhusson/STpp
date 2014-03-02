@@ -50,7 +50,7 @@ class Shell {
 		void pushStr(const char *str);
 		void pushValue(const char *str);
 		void call(const char *cmd);
-
+		void completion(char *partial, int &i);
 
 	public:
 		//To be used by overloaders
