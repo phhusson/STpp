@@ -57,11 +57,11 @@ class Shell {
 		const char *current_object;
 		bool got_name;
 		void add(Callback cb, const char *name1, const char *name2=0);
-		IStream& in;
-		OStream& out;
+		IStream* in;
+		OStream* out;
 	public:
-
-		Shell(IStream& in, OStream& out);
+		Shell();
+		void setStream(IStream* in, OStream* out);
 		void exec(const char* prompt="> ");
 		Shell& operator<<(const char*);
 };

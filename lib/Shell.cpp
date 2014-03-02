@@ -1,7 +1,10 @@
 #include "Shell.h"
 
-Shell::Shell(IStream& in, OStream& out): in(in), out(out),
-	cbs_name{}, n_cbs(0) {
+static NullIStream nullis;
+static NullOStream nullos;
+
+Shell::Shell() : cbs_name{}, n_cbs(0),
+	in(&nullis), out(&nullos) {
 
 	current_object = 0;
 	got_name = false;
@@ -12,14 +15,14 @@ Shell::Shell(IStream& in, OStream& out): in(in), out(out),
 			s.push(a+b);
 		}, "+");
 
-	add([&out](Stack &s) {
+	add([this](Stack &s) {
 			Object& o = s.pop();
-			out << "# " << o.toInt() << endl;
+			*(this->out) << "# " << o.toInt() << endl;
 		}, ".");
 
-	add([&out](Stack &s) {
+	add([this](Stack &s) {
 			Object& o = s.pop();
-			out << "? " << o.toInt() << endl;
+			*(this->out) << "? " << o.toInt() << endl;
 		}, ".", ".");
 }
 
@@ -98,14 +101,14 @@ void Shell::call(const char *str) {
 			return;
 		}
 	}
-	out << "Function not found !" << endl;
+	*out << "Function not found !" << endl;
 }
 
 void Shell::exec(const char* prompt) {
 	char cmd[256];
 	while(true) {
-		out << prompt;
-		in >> cmd;
+		*out << prompt;
+		*in >> cmd;
 		if(isValue(cmd)) {
 			pushValue(cmd);
 		} else {
@@ -122,4 +125,9 @@ Shell& Shell::operator<<(const char* name) {
 		while(1);
 	}
 	return *this;
+}
+
+void Shell::setStream(IStream* _in, OStream* _out) {
+	this->in = _in;
+	this->out = _out;
 }

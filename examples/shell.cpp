@@ -8,8 +8,11 @@
 #include <ShellGpio.h>
 
 extern "C" void vTaskDelay(int);
+static Shell shell;
 int main() {
-	Shell shell(debug, debug);
+	UsbSerial usb;
+	usb << "Hello !" << endl;
+	shell.setStream(&usb, &usb);
 	shell << "UserButton" << UserButton;
 	shell.exec();
 	while(1);

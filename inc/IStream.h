@@ -7,6 +7,12 @@ class IStream {
 		virtual bool available() = 0;
 };
 
+class NullIStream : public IStream {
+	public:
+		virtual int get() { return -1; }
+		virtual bool available() { return false; }
+};
+
 IStream& operator>>(IStream& i, char &c);
 IStream& operator>>(IStream& i, int &c);
 IStream& operator>>(IStream& i, char* str);
