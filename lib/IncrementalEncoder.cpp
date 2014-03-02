@@ -1,7 +1,7 @@
 #include <IncrementalEncoder.h>
 
-IncrementalEncoder::IncrementalEncoder(Gpio a, Gpio b, Timer t, int lim, int c):
-	encoderA(a), encoderB(b), tim(t), count(c) {
+IncrementalEncoder::IncrementalEncoder(Gpio a, Gpio b, Timer t, int lim, int prescaler):
+	encoderA(a), encoderB(b), tim(t) {
 	int n_tim = tim.getNumber();
 	if(n_tim<=2){
 		encoderA.setAlternate(Gpio::TIM1_2);
@@ -13,7 +13,7 @@ IncrementalEncoder::IncrementalEncoder(Gpio a, Gpio b, Timer t, int lim, int c):
 	}
 
 	tim
-		.setPrescaler(0)
+		.setPrescaler(prescaler)
 		.setAutoReload(lim)
 		.setCaptureCompare1Sel(1)
 		.setCaptureCompare2Sel(1)

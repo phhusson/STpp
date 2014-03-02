@@ -10,9 +10,8 @@ class IncrementalEncoder {
 		Gpio encoderA;
 		Gpio encoderB;
 		Timer tim;
-		int count;
 	public:
-		IncrementalEncoder(Gpio a, Gpio B, Timer t, int lim=4096, int c=0);
+		IncrementalEncoder(Gpio a, Gpio B, Timer t, int lim=4096, int prescaler=0);
 		int getCounter();
 		operator int();
 };
