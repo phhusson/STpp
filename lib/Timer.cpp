@@ -229,3 +229,96 @@ Timer& Timer::setSlaveModeSelection(int v){
 	return *this;
 }
 
+
+//Interrupt handling
+Timer& Timer::setUIE(bool s) {
+	if(s)
+		base->DIER |= 1;
+	else
+		base->DIER &= ~1;
+	return *this;
+}
+
+Timer& Timer::setURS(bool onlyOverflow) {
+	if(onlyOverflow)
+		base->CR1 |= 4;
+	else
+		base->CR1 &= ~4;
+	return *this;
+}
+
+Timer& Timer::clearInterrupt() {
+	return *this;
+}
+
+static Timer::Callback topCBs[15];
+void Timer::callTopCb(int nr) {
+	topCBs[nr](nr);
+}
+
+Timer& Timer::setTopCB(Callback cb) {
+	topCBs[number] = cb;
+	return *this;
+}
+
+extern "C" {
+	void TIM1_BRK_TIM9_IRQHandler() {
+		TIM9->SR &= ~1;
+		Timer::callTopCb(9);
+	}
+
+	void TIM1_UP_TIM10_IRQHandler() {
+		TIM10->SR &= ~1;
+		Timer::callTopCb(10);
+	}
+
+	void TIM1_TRG_COM_TIM11_IRQHandler() {
+		TIM11->SR &= ~1;
+		Timer::callTopCb(11);
+	}
+
+	void TIM2_IRQHandler() {
+		TIM2->SR &= ~1;
+		Timer::callTopCb(2);
+	}
+
+	void TIM3_IRQHandler() {
+		TIM3->SR &= ~1;
+		Timer::callTopCb(3);
+	}
+
+	void TIM4_IRQHandler() {
+		TIM4->SR &= ~1;
+		Timer::callTopCb(4);
+	}
+
+	void TIM5_IRQHandler() {
+		TIM5->SR &= ~1;
+		Timer::callTopCb(5);
+	}
+
+	void TIM6_DAC_IRQHandler() {
+		TIM6->SR &= ~1;
+		Timer::callTopCb(6);
+	}
+
+	void TIM7_IRQHandler() {
+		TIM7->SR &= ~1;
+		Timer::callTopCb(7);
+	}
+
+	void TIM8_BRK_TIM12_IRQHandler() {
+		TIM12->SR &= ~1;
+		Timer::callTopCb(12);
+	}
+
+	void TIM8_UP_TIM13_IRQHandler() {
+		TIM13->SR &= ~1;
+		Timer::callTopCb(13);
+	}
+
+	void TIM8_TRG_COM_TIM14_IRQHandler() {
+		TIM14->SR &= ~1;
+		Timer::callTopCb(14);
+	}
+};

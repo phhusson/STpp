@@ -1,5 +1,6 @@
 #ifndef _TIMER_H
 #define _TIMER_H
+#include <tr1/functional>
 #include <stm32f4xx.h>
 
 class Timer {
@@ -56,6 +57,16 @@ class Timer {
 		Timer& setSlaveModeSelection(int);
 
 		operator bool();
+
+	//Interrupt handling
+	public:
+		typedef std::tr1::function<void(int)> Callback;
+		Timer& setUIE(bool);
+		Timer& setURS(bool);
+		static void callTopCb(int nr);
+		Timer& setTopCB(Callback cb);
+	private:
+		Timer& clearInterrupt();
 };
 
 extern Timer Tim1;
