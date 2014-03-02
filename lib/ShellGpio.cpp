@@ -11,6 +11,14 @@ Shell& operator<<(Shell& shell, Gpio& g) {
 		s.push( (g ? 1 : 0));
 	}, shell.current_object, "state");
 
+	shell.add([&g,&shell](Stack& s) {
+		Object& o = s.pop();
+		if(o.type != Object::INT) while(1);
+		int v = o.toInt();
+
+		g = v == 0 ? false : true;
+	}, shell.current_object, "set");
+
 	shell.got_name = false;
 	return shell;
 }
