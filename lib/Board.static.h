@@ -1,28 +1,18 @@
 #include "Board.h"
 #include "Led.h"
 #include "Pwm.h"
-
-/*
- *      O
- *  G        R
- *      G
- */
-Pwm LedG(GpioD[12], Tim4, 1);
-Pwm LedO(GpioD[13], Tim4, 2);
-Pwm LedR(GpioD[14], Tim4, 3);
-Pwm LedB(GpioD[15], Tim4, 4);
-
-Gpio Lcd_RS(GpioA[1]);
-Gpio Lcd_E(GpioA[2]);
-Gpio Lcd_DB4(GpioB[11]);
-Gpio Lcd_DB5(GpioB[12]);
-Gpio Lcd_DB6(GpioB[13]);
-Gpio Lcd_DB7(GpioB[14]);
+#include "HBridgeST.h"
 
 // Motor control
-Gpio Prop0_PWM(GpioB[11]);
-Gpio Prop0A(GpioB[15]);
-Gpio Prop0B(GpioB[13]);
+Gpio Prop0_PWM(GpioB[10]);
+Gpio Prop0A(GpioB[13]);
+Gpio Prop0B(GpioB[15]);
+HBridgeST HBridge0(Prop0A, Prop0B, Prop0_PWM, Tim2, 3);
+
+Gpio Prop1_PWM(GpioB[11]);
+Gpio Prop1A(GpioB[12]);
+Gpio Prop1B(GpioB[14]);
+HBridgeST HBridge1(Prop1A, Prop1B, Prop1_PWM, Tim2, 4);
 
 //Rising edge
 Gpio UserButton(GpioA[0]);
