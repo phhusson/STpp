@@ -198,6 +198,7 @@ void Shell::exec(bool echo, const char* prompt) {
 	char cmd[256];
 	while(true) {
 		*out << prompt;
+		int size = 0;
 		for(int i=0; i<(sizeof(cmd)-2); ++i) {
 			*in >> cmd[i];
 			// \r\n
@@ -231,13 +232,28 @@ void Shell::exec(bool echo, const char* prompt) {
 			} else 	if(echo) {
 				*out << cmd[i];
 			}
+			size = i+1;
 		}
 		*out << endl;
-		if(isValue(cmd)) {
-			pushValue(cmd);
-		} else {
-			call(cmd);
+
+		char *current = cmd;
+		char *pos = cmd;
+		for(; *pos; ++pos) {
+			if(*pos == ' ') {
+				*pos = 0;
+				parseWord(current);
+				current = pos+1;
+			}
 		}
+		parseWord(current);
+	}
+}
+
+void Shell::parseWord(const char* word) {
+	if(isValue(word)) {
+		pushValue(word);
+	} else {
+		call(word);
 	}
 }
 

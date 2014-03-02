@@ -64,6 +64,8 @@ class Shell {
 		void setStream(IStream* in, OStream* out);
 		void exec(bool echo = true, const char* prompt="> ");
 		Shell& operator<<(const char*);
+
+		void parseWord(const char *);
 };
 
 #endif /* _SHELL_H */
