@@ -35,3 +35,18 @@ Gpio USB_DM(GpioA[11]);
 Gpio USB_DP(GpioA[12]);
 
 Time time(Tim14);
+
+Gpio g_LedG(GpioD[12]);
+Gpio g_LedO(GpioD[13]);
+Gpio g_LedR(GpioD[14]);
+Gpio g_LedB(GpioD[15]);
+
+/*
+ *      O
+ *  G        R
+ *      G
+ */
+Pwm LedG(g_LedG, Tim4, 1);
+Pwm LedO(g_LedO, Tim4, 2);
+Pwm LedR(g_LedR, Tim4, 3);
+Pwm LedB(g_LedB, Tim4, 4);

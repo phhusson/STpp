@@ -10,7 +10,7 @@ class HBridgeST {
 		Gpio propb;
 		Pwm pwm;
 	public:
-		HBridgeST(Gpio a, Gpio b, Gpio pwm, Timer tim, int chan);
+		HBridgeST(Gpio& a, Gpio& b, Gpio& pwm, Timer& tim, int chan);
 		void setSpeed(int);
 };
 

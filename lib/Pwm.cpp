@@ -1,6 +1,6 @@
 #include <Pwm.h>
 
-Pwm::Pwm(Gpio p, Timer t, int n, int pre, int atr) :
+Pwm::Pwm(Gpio &p, Timer &t, int n, int pre, int atr) :
 	gpio(p), tim(t), chan(n) {
 	int n_tim = tim.getNumber();
 	if(n_tim<=2)

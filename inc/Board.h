@@ -1,6 +1,7 @@
 #include <Led.h>
 #include <Pwm.h>
 #include <Time.h>
+#include <HBridgeST.h>
 
 extern Pwm LedG;
 extern Pwm LedO;
@@ -20,6 +21,12 @@ extern Gpio Lcd_DB7;
 extern Gpio Prop0_PWM;
 extern Gpio Prop0A;
 extern Gpio Prop0B;
+extern HBridgeST HBridge0;
+
+extern Gpio Prop1_PWM;
+extern Gpio Prop1A;
+extern Gpio Prop1B;
+extern HBridgeST HBridge1;
 
 // Rotary encoder
 extern Gpio RotaryA;
