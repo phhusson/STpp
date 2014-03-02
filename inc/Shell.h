@@ -62,7 +62,7 @@ class Shell {
 	public:
 		Shell();
 		void setStream(IStream* in, OStream* out);
-		void exec(const char* prompt="> ");
+		void exec(bool echo = true, const char* prompt="> ");
 		Shell& operator<<(const char*);
 };
 

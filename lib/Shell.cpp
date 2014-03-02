@@ -102,13 +102,40 @@ void Shell::call(const char *str) {
 		}
 	}
 	*out << "Function not found !" << endl;
+	*out << "\t'" << str << "'" << endl;
 }
 
-void Shell::exec(const char* prompt) {
+void Shell::exec(bool echo, const char* prompt) {
 	char cmd[256];
 	while(true) {
 		*out << prompt;
-		*in >> cmd;
+		for(int i=0; i<(sizeof(cmd)-2); ++i) {
+			*in >> cmd[i];
+			// \r\n
+			if(cmd[i] == '\r' || cmd[i] == '\n') {
+				cmd[i] = 0;
+				break;
+			} else if(cmd[i] == 0) {
+				break;
+			}
+
+			//Backspace
+			if(cmd[i] == '\b') {
+				*out << "\b \b";
+				if(i!=0) {
+					cmd[i--] = 0;
+					cmd[i--] = 0;
+				}
+			//ctrl-c
+			} else if(cmd[i] == 3) {
+				*out << endl;
+				*out << prompt;
+				i = 0;
+			} else 	if(echo) {
+				*out << cmd[i];
+			}
+		}
+		*out << endl;
 		if(isValue(cmd)) {
 			pushValue(cmd);
 		} else {
