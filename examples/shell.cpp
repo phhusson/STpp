@@ -6,6 +6,9 @@
 #include <UsbSerial.h>
 #include <Shell.h>
 #include <ShellGpio.h>
+#include <ShellPwm.h>
+#include <ShellHBridgeST.h>
+#include <ShellIncrementalEncoder.h>
 
 extern "C" void vTaskDelay(int);
 static Shell shell;
@@ -13,7 +16,22 @@ int main() {
 	UsbSerial usb;
 	usb << "Hello !" << endl;
 	shell.setStream(&usb, &usb);
-	shell << "UserButton" << UserButton;
+
+	//Use _ prefix as a hideme for autocompletion
+	shell << "_UserButton" << UserButton;
+
+	shell << "_Prop0A" << Prop0A;
+	shell << "_Prop0B" << Prop0B;
+
+	shell << "_Prop1A" << Prop1A;
+	shell << "_Prop1B" << Prop1B;
+
+	shell << "HBridge0" << HBridge0;
+	shell << "HBridge1" << HBridge1;
+
+	IncrementalEncoder encoder0(GpioE[9], GpioE[11], Tim1, 65535, 7);
+
+	shell << "Encoder0" << encoder0;
 	shell.exec();
 	while(1);
 }
