@@ -9,6 +9,8 @@
 #include <ShellPwm.h>
 #include <ShellHBridgeST.h>
 #include <ShellIncrementalEncoder.h>
+#include <ShellTimer.h>
+#include <Asserv.h>
 
 extern "C" void vTaskDelay(int);
 static Shell shell;
@@ -29,9 +31,10 @@ int main() {
 	shell << "HBridge0" << HBridge0;
 	shell << "HBridge1" << HBridge1;
 
-	IncrementalEncoder encoder0(GpioE[9], GpioE[11], Tim1, 65535, 7);
+	Asserv a(Encoder0, Encoder0, Tim13);
 
-	shell << "Encoder0" << encoder0;
+	shell << "Encoder0" << Encoder0;
+	shell << "Tim1" << Tim1;
 	shell.exec();
 	while(1);
 }
