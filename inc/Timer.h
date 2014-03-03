@@ -61,6 +61,7 @@ class Timer {
 	//Interrupt handling
 	public:
 		typedef std::tr1::function<void(int)> Callback;
+		int irqNr();
 		Timer& setUIE(bool);
 		Timer& setURS(bool);
 		static void callTopCb(int nr);

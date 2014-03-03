@@ -261,6 +261,27 @@ Timer& Timer::setTopCB(Callback cb) {
 	return *this;
 }
 
+int Timer::irqNr() {
+	//Most interesting function ever.
+	switch(number) {
+		case 2:  return TIM2_IRQn;
+		case 3:  return TIM3_IRQn;
+		case 4:  return TIM4_IRQn;
+		case 5:  return TIM5_IRQn;
+		case 6:  return TIM6_DAC_IRQn;
+		case 7:  return TIM7_IRQn;
+		case 9:  return TIM1_BRK_TIM9_IRQn;
+		case 10: return TIM1_UP_TIM10_IRQn;
+		case 11: return TIM1_TRG_COM_TIM11_IRQn;
+		case 12: return TIM8_BRK_TIM12_IRQn;
+		case 13: return TIM8_UP_TIM13_IRQn;
+		case 14: return TIM8_TRG_COM_TIM14_IRQn;
+		default:
+			 while(1);
+	};
+	return 0;
+}
+
 extern "C" {
 	void TIM1_BRK_TIM9_IRQHandler() {
 		TIM9->SR &= ~1;
