@@ -4,6 +4,7 @@
 #include <IncrementalEncoder.h>
 #include <Timer.h>
 
+class Shell;
 class Asserv {
 	private:
 		Timer& tim;
@@ -20,5 +21,7 @@ class Asserv {
 		Asserv& setTargetAngle(int a);
 		Asserv& setPCorrector(int p);
 		
+
+		friend Shell& operator<<(Shell&, Asserv&);
 };
 #endif /* _ASSERV_H */
