@@ -245,12 +245,7 @@ void Shell::exec(bool echo, const char* prompt) {
 						cmd[i] = history[history_pos][i];
 					}
 					cmd[i]=0;
-					for(int j=0; j<LINE_SIZE; ++j)
-						*out << '\b';
-					for(int j=0; j<LINE_SIZE; ++j)
-						*out << ' ';
-					for(int j=0; j<LINE_SIZE; ++j)
-						*out << '\b';
+					*out << "\r\x1b[K";
 					*out << prompt;
 					*out << cmd;
 				}
