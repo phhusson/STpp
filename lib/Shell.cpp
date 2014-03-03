@@ -4,6 +4,7 @@ static NullIStream nullis;
 static NullOStream nullos;
 
 Shell::Shell() : cbs_name{}, n_cbs(0),
+	history{}, history_pos(0),
 	in(&nullis), out(&nullos) {
 
 	current_object = 0;
@@ -134,7 +135,7 @@ void Shell::completion(char *partial, int& i) {
 	for(start=i; start>=0; --start) if(partial[start]== ' ') break;
 	start++;
 
-	char longest[256];
+	char longest[LINE_SIZE];
 	longest[0] = 0;
 	int count = 0;
 	for(int j=0; j<n_cbs; ++j) {
@@ -180,8 +181,8 @@ void Shell::completion(char *partial, int& i) {
 	}
 
 	i=start;
-	for(int j=0; j<256; ++j) {
-		if( (j+start) > 256)
+	for(int j=0; j<LINE_SIZE; ++j) {
+		if( (j+start) > LINE_SIZE)
 			break;
 		partial[j+start] = longest[j];
 		if(longest[j] == 0)
@@ -195,10 +196,9 @@ void Shell::completion(char *partial, int& i) {
 }
 
 void Shell::exec(bool echo, const char* prompt) {
-	char cmd[256];
+	char cmd[LINE_SIZE];
 	while(true) {
 		*out << prompt;
-		int size = 0;
 		for(int i=0; i<(sizeof(cmd)-2); ++i) {
 			*in >> cmd[i];
 			// \r\n
@@ -211,11 +211,12 @@ void Shell::exec(bool echo, const char* prompt) {
 
 			//Backspace
 			if(cmd[i] == '\b') {
-				*out << "\b \b";
 				if(i!=0) {
+					*out << "\b \b";
 					cmd[i--] = 0;
 					cmd[i--] = 0;
 				}
+				i--;
 			//ctrl-c
 			} else if(cmd[i] == 3) {
 				*out << endl;
@@ -229,12 +230,42 @@ void Shell::exec(bool echo, const char* prompt) {
 				completion(cmd, i);
 				*out << prompt;
 				*out << cmd;
+			//Escape
+			} else if(cmd[i] == 0x1b) {
+				*in >> cmd[i];
+				//Unhandled
+				if(cmd[i] != '[')
+					while(1);
+				*in >> cmd[i];
+				if(cmd[i] == 'A') {
+					history_pos--;
+					if(history_pos < 0)
+						history_pos = 3;
+					for(i=0;history[history_pos][i];++i) {
+						cmd[i] = history[history_pos][i];
+					}
+					cmd[i]=0;
+					for(int j=0; j<LINE_SIZE; ++j)
+						*out << '\b';
+					for(int j=0; j<LINE_SIZE; ++j)
+						*out << ' ';
+					for(int j=0; j<LINE_SIZE; ++j)
+						*out << '\b';
+					*out << prompt;
+					*out << cmd;
+				}
+				--i;
 			} else 	if(echo) {
 				*out << cmd[i];
 			}
-			size = i+1;
 		}
 		*out << endl;
+		int i = 0;
+		for(i=0; cmd[i]; ++i)
+			history[history_pos][i] = cmd[i];
+		history[history_pos][i] = 0;
+		history_pos++;
+		history_pos %= 4;
 
 		char *current = cmd;
 		char *pos = cmd;

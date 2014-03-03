@@ -66,6 +66,10 @@ class Shell {
 		Shell& operator<<(const char*);
 
 		void parseWord(const char *);
+	private:
+#define LINE_SIZE 80
+		char history[4][256];
+		int history_pos;
 };
 
 #endif /* _SHELL_H */
