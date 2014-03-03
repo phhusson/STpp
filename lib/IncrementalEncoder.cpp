@@ -1,6 +1,6 @@
 #include <IncrementalEncoder.h>
 
-IncrementalEncoder::IncrementalEncoder(Gpio a, Gpio b, Timer t, int lim, int prescaler):
+IncrementalEncoder::IncrementalEncoder(Gpio& a, Gpio& b, Timer& t, int prescaler):
 	encoderA(a), encoderB(b), tim(t) {
 	int n_tim = tim.getNumber();
 	if(n_tim<=2){
@@ -14,7 +14,7 @@ IncrementalEncoder::IncrementalEncoder(Gpio a, Gpio b, Timer t, int lim, int pre
 
 	tim
 		.setPrescaler(prescaler)
-		.setAutoReload(lim)
+		.setAutoReload(0xffff)
 		.setCaptureCompare1Sel(1)
 		.setCaptureCompare2Sel(1)
 		.setCaptureCompare1Polarity(1,0)
@@ -31,13 +31,39 @@ IncrementalEncoder::IncrementalEncoder(Gpio a, Gpio b, Timer t, int lim, int pre
 		.setSpeed(Gpio::SPEED_100MHz)
 		.setDirection(Gpio::INPUT)
 		.setResistor(Gpio::PULL_UP);
+
+	counter = 0;
+	last_value = 0;
+}
+
+int IncrementalEncoder::operator=(int v) {
+	counter = v;
+	return counter;
+}
+
+IncrementalEncoder& IncrementalEncoder::update() {
+	int v = tim.getCounter();
+
+	//Assume we increased value
+	int d = v - last_value;
+	if(d <= 0)
+		d+=65536;
+	if(d>=32768) {
+		//We're too far, we were wrong
+		d = d - 65536;
 	}
+	counter += d;
+
+	last_value = v;
+	return *this;
+}
 
 int IncrementalEncoder::getCounter(){
-	return tim.getCounter();
+	update();
+	return counter;
 }
 
 IncrementalEncoder::operator int() {
-	return tim.getCounter();
+	return getCounter();
 }
 

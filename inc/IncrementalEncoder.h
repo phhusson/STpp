@@ -7,12 +7,18 @@
 // #TODO add support for the zero pin of the encoder
 class IncrementalEncoder {
 	private:
-		Gpio encoderA;
-		Gpio encoderB;
-		Timer tim;
+		Gpio& encoderA;
+		Gpio& encoderB;
+		Timer& tim;
+
+		int counter;
+		int last_value;
 	public:
-		IncrementalEncoder(Gpio a, Gpio B, Timer t, int lim=4096, int prescaler=0);
+		//Must be called often enough (less than half a timer cycle has been made since last update)
+		IncrementalEncoder& update();
+		IncrementalEncoder(Gpio& a, Gpio& b, Timer& t, int prescaler=0);
 		int getCounter();
 		operator int();
+		int operator=(int);
 };
 #endif /* _INCREMENTAL_ENCODER_H */
