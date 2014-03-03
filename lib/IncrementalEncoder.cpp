@@ -43,15 +43,19 @@ int IncrementalEncoder::operator=(int v) {
 	return -counter;
 }
 
+//Compute absolute coder's position, assuming the previous position is less than half a timer's cycle away
 IncrementalEncoder& IncrementalEncoder::update() {
 	int v = tim.getCounter();
 
-	//Assume we increased value
+	//Assume we're going forward
 	int d = v - last_value;
 	if(d <= 0)
 		d+=65536;
+
+
 	if(d>=32768) {
 		//We're too far, we were wrong
+		//Meaning we're actally going backward
 		d = d - 65536;
 	}
 	counter += d;
