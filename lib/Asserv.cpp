@@ -39,6 +39,6 @@ Asserv::Asserv(IncrementalEncoder& left, IncrementalEncoder& right,
 
 Asserv& Asserv::setTargetDist(int t){
 	dist = t;
-	return this;
+	return *this;
 }
 
