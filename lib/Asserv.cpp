@@ -42,3 +42,11 @@ Asserv& Asserv::setTargetDist(int t){
 	return *this;
 }
 
+Asserv& Asserv::setAngleDist(int t){
+	angl = t;
+	return *this;
+}
+
+Asserv& Asserv::setPCorrector(int t){
+	ki = t;
+}
