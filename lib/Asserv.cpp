@@ -42,7 +42,7 @@ Asserv& Asserv::setTargetDist(int t){
 	return *this;
 }
 
-Asserv& Asserv::setAngleDist(int t){
+Asserv& Asserv::setTargetAngle(int t){
 	angl = t;
 	return *this;
 }

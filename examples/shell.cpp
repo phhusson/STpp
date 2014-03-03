@@ -10,7 +10,7 @@
 #include <ShellHBridgeST.h>
 #include <ShellIncrementalEncoder.h>
 #include <ShellTimer.h>
-#include <Asserv.h>
+#include <ShellAsserv.h>
 
 extern "C" void vTaskDelay(int);
 static Shell shell;
@@ -34,6 +34,8 @@ int main() {
 	Asserv a(Encoder0, Encoder0, Tim13, HBridge0, HBridge0);
 
 	a.setTargetDist(40960);
+	shell << "Asserv" << a;
+
 	shell << "Encoder0" << Encoder0;
 	shell << "Tim1" << Tim1;
 	shell.exec();
