@@ -12,7 +12,7 @@ HBridgeST HBridge0(Prop0A, Prop0B, Prop0_PWM, Tim2, 3);
 
 Gpio Enc0A(GpioE[9]);
 Gpio Enc0B(GpioE[11]);
-IncrementalEncoder Encoder0(Enc0A, Enc0B, Tim1, 3);
+IncrementalEncoder Encoder0(Enc0A, Enc0B, Tim1, 3, true);
 
 Gpio Prop1_PWM(GpioB[11]);
 Gpio Prop1A(GpioB[12]);

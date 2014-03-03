@@ -13,10 +13,11 @@ class IncrementalEncoder {
 
 		int counter;
 		int last_value;
+		bool reverse;
 	public:
 		//Must be called often enough (less than half a timer cycle has been made since last update)
 		IncrementalEncoder& update();
-		IncrementalEncoder(Gpio& a, Gpio& b, Timer& t, int prescaler=0);
+		IncrementalEncoder(Gpio& a, Gpio& b, Timer& t, int prescaler=0, bool reverse=false);
 		int getCounter();
 		operator int();
 		int operator=(int);
