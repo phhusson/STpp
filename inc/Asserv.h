@@ -10,16 +10,16 @@ class Asserv {
 		Timer& tim;
 		IncrementalEncoder& left;
 		IncrementalEncoder& right;
-		HBridgeST& motor1;
-		HBridgeST& motor2;
+		HBridgeST& motorl;
+		HBridgeST& motorr;
 		int angl, dist;
-		int ki;
+		int kr, kl, rr, rl;
 
 	public:
 		Asserv(IncrementalEncoder& left, IncrementalEncoder& right, Timer& tim, HBridgeST mot1, HBridgeST mot2);
 		Asserv& setTargetDist(int t);
 		Asserv& setTargetAngle(int a);
-		Asserv& setPCorrector(int p);
+		Asserv& setPCorrectors(int l, int r);
 		
 
 		friend Shell& operator<<(Shell&, Asserv&);
