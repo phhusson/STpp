@@ -24,14 +24,25 @@ Shell& operator<<(Shell& shell, Asserv& a) {
 		if(o.type != Object::INT) while(1);
 		int v = o.toInt();
 
-		a.setPCorrector(v);
-	}, shell.current_object, "setPCorrector");
+		a.setPCorrectors(v, v);
+	}, shell.current_object, "setPCorrectors");
+	
+	shell.add([&a,&shell](Stack& s) {
+		Object& o = s.pop();
+		if(o.type != Object::INT) while(1);
+		int v = o.toInt();
+
+		a.setMaxEngine(v);
+	}, shell.current_object, "setMaxEngine");
 
 	shell.add([&a,&shell](Stack& s) {
 			OStream& o = *(shell.out);
 
 			o << "Asserv" << endl;
-			o << " ki = " << a.ki << endl;
+			o << " kr = " << a.kr << endl;
+			o << " kl = " << a.kl << endl;
+			o << " rr = " << a.rr << endl;
+			o << " rl = " << a.rl << endl;
 			o << " Target Angle = " << a.angl << endl;
 			o << " Target Distance = " << a.dist << endl;
 			o << " Left = " << a.left << endl;

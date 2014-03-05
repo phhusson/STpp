@@ -20,6 +20,10 @@ extern Gpio Prop1A;
 extern Gpio Prop1B;
 extern HBridgeST HBridge1;
 
+extern Gpio Enc1A;
+extern Gpio Enc0B;
+extern IncrementalEncoder Encoder1;
+
 //USB
 extern Gpio USB_Vbus_OC;
 extern Gpio USB_Vbus_en;

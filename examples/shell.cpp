@@ -31,12 +31,14 @@ int main() {
 	shell << "HBridge0" << HBridge0;
 	shell << "HBridge1" << HBridge1;
 
-	Asserv a(Encoder0, Encoder0, Tim13, HBridge0, HBridge0);
+	Asserv a(Encoder0, Encoder1, Tim13, HBridge0, HBridge1);
 
-	a.setTargetDist(40960);
+	a.setTargetDist(0);
 	shell << "Asserv" << a;
 
 	shell << "Encoder0" << Encoder0;
+	shell << "Encoder1" << Encoder1;
+
 	shell << "Tim1" << Tim1;
 	shell.exec();
 	while(1);
