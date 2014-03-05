@@ -23,6 +23,8 @@ class Asserv {
 		Asserv& setPCorrectors(int l, int r);
 		Asserv& setMaxEngine(int l);
 
+		Asserv& reset();
+
 		friend Shell& operator<<(Shell&, Asserv&);
 };
 #endif /* _ASSERV_H */

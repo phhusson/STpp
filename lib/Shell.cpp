@@ -22,9 +22,12 @@ Shell::Shell() : cbs_name{}, n_cbs(0),
 		}, ".");
 
 	add([this](Stack &s) {
-			Object& o = s.pop();
-			*(this->out) << "? " << o.toInt() << endl;
-		}, ".", ".");
+			s.push(1);
+		}, "on");
+
+	add([this](Stack &s) {
+			s.push(0);
+		}, "off");
 }
 
 void Shell::add(Callback cb, const char *name1, const char *name2) {
@@ -32,6 +35,8 @@ void Shell::add(Callback cb, const char *name1, const char *name2) {
 	cbs_name[n_cbs][1] = name2;
 	cbs[n_cbs] = cb;
 	n_cbs++;
+	if(n_cbs == N_FUNCTIONS)
+		while(1);
 }
 
 bool Shell::isValue(const char *str) {

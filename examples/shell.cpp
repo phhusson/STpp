@@ -5,12 +5,14 @@
 #include <Exti.h>
 #include <UsbSerial.h>
 #include <Shell.h>
+#include <ShellAsserv.h>
+#include <ShellAx12.h>
 #include <ShellGpio.h>
-#include <ShellPwm.h>
 #include <ShellHBridgeST.h>
 #include <ShellIncrementalEncoder.h>
+#include <ShellPwm.h>
+#include <ShellStrategie.h>
 #include <ShellTimer.h>
-#include <ShellAsserv.h>
 
 extern "C" void vTaskDelay(int);
 static Shell shell;
@@ -31,15 +33,24 @@ int main() {
 	shell << "HBridge0" << HBridge0;
 	shell << "HBridge1" << HBridge1;
 
-	Asserv a(Encoder0, Encoder1, Tim13, HBridge0, HBridge1);
+	Asserv asserv(Encoder0, Encoder1, Tim13, HBridge0, HBridge1);
 
-	a.setTargetDist(0);
-	shell << "Asserv" << a;
+	shell << "Asserv" << asserv;
 
 	shell << "Encoder0" << Encoder0;
 	shell << "Encoder1" << Encoder1;
 
-	shell << "Tim1" << Tim1;
+	Ax12 mamoutor(GpioA[0], Uart(1), 0xfe);
+	shell << "Mamoutor" << mamoutor;
+
+	Strategie strategie(mamoutor, asserv);
+	shell << "Strategie" << strategie;
+
+	shell.add([&asserv,&mamoutor](Stack& s) {
+		asserv.reset();
+		mamoutor.disable();
+		Encoder0 = Encoder1 = 0;
+	}, "reset");
 	shell.exec();
 	while(1);
 }

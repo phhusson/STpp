@@ -36,6 +36,10 @@ Shell& operator<<(Shell& shell, Asserv& a) {
 	}, shell.current_object, "setMaxEngine");
 
 	shell.add([&a,&shell](Stack& s) {
+		a.reset();
+	}, shell.current_object, "reset");
+
+	shell.add([&a,&shell](Stack& s) {
 			OStream& o = *(shell.out);
 
 			o << "Asserv" << endl;

@@ -59,3 +59,10 @@ Asserv& Asserv::setMaxEngine(int l) {
 	max_engine = l;
 	return *this;
 }
+
+Asserv& Asserv::reset() {
+	tim.disable();
+	motorl.setSpeed(0);
+	motorr.setSpeed(0);
+	return *this;
+}
