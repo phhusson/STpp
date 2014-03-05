@@ -20,9 +20,9 @@ void Strategie::reset() {
 }
 
 void Strategie::resetMamoutor() {
-	mamoutor_servo.goTo(0x200);
+	mamoutor_servo.goTo(0x000);
 }
 
 void Strategie::mamoutor() {
-	mamoutor_servo.goTo(0x200);
+	mamoutor_servo.goTo(0x280);
 }
