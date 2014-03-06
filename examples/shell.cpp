@@ -33,22 +33,19 @@ int main() {
 	shell << "HBridge0" << HBridge0;
 	shell << "HBridge1" << HBridge1;
 
-	Asserv asserv(Encoder0, Encoder1, Tim13, HBridge0, HBridge1);
+	Asserv asserv(Encoder1, Encoder0, Tim13, HBridge1, HBridge0);
 
 	shell << "Asserv" << asserv;
 
 	shell << "Encoder0" << Encoder0;
 	shell << "Encoder1" << Encoder1;
 
-	Ax12 mamoutor(GpioA[0], Uart(1), 0xfe);
-	shell << "Mamoutor" << mamoutor;
+	//Strategie strategie(mamoutor, asserv);
+	//shell << "Strategie" << strategie;
 
-	Strategie strategie(mamoutor, asserv);
-	shell << "Strategie" << strategie;
-
-	shell.add([&asserv,&mamoutor](Stack& s) {
+	shell.add([&asserv/*,&mamoutor*/](Stack& s) {
 		asserv.reset();
-		mamoutor.disable();
+		//mamoutor.disable();
 		Encoder0 = Encoder1 = 0;
 	}, "reset");
 	shell.exec();

@@ -235,6 +235,10 @@ void Shell::exec(bool echo, const char* prompt) {
 				completion(cmd, i);
 				*out << prompt;
 				*out << cmd;
+			//ctrl-d
+			} else if(cmd[i] == 0x4) {
+				parseWord("reset");
+				--i;
 			//Escape
 			} else if(cmd[i] == 0x1b) {
 				*in >> cmd[i];

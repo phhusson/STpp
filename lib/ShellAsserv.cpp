@@ -24,8 +24,32 @@ Shell& operator<<(Shell& shell, Asserv& a) {
 		if(o.type != Object::INT) while(1);
 		int v = o.toInt();
 
-		a.setPCorrectors(v, v);
-	}, shell.current_object, "setPCorrectors");
+		a.setProportionnalDistance(v);
+	}, shell.current_object, "setProportionnalDistance");
+
+	shell.add([&a,&shell](Stack& s) {
+		Object& o = s.pop();
+		if(o.type != Object::INT) while(1);
+		int v = o.toInt();
+
+		a.setProportionnalAngle(v);
+	}, shell.current_object, "setProportionnalAngle");
+
+	shell.add([&a,&shell](Stack& s) {
+		Object& o = s.pop();
+		if(o.type != Object::INT) while(1);
+		int v = o.toInt();
+
+		a.setIntegralDistance(v);
+	}, shell.current_object, "setIntegralDistance");
+
+	shell.add([&a,&shell](Stack& s) {
+		Object& o = s.pop();
+		if(o.type != Object::INT) while(1);
+		int v = o.toInt();
+
+		a.setIntegralAngle(v);
+	}, shell.current_object, "setIntegralAngle");
 	
 	shell.add([&a,&shell](Stack& s) {
 		Object& o = s.pop();
@@ -40,15 +64,19 @@ Shell& operator<<(Shell& shell, Asserv& a) {
 	}, shell.current_object, "reset");
 
 	shell.add([&a,&shell](Stack& s) {
+		a.start();
+	}, shell.current_object, "start");
+
+	shell.add([&a,&shell](Stack& s) {
 			OStream& o = *(shell.out);
 
 			o << "Asserv" << endl;
-			o << " kr = " << a.kr << endl;
-			o << " kl = " << a.kl << endl;
-			o << " rr = " << a.rr << endl;
-			o << " rl = " << a.rl << endl;
-			o << " Target Angle = " << a.angl << endl;
-			o << " Target Distance = " << a.dist << endl;
+			o << " Current Angle = " << a.getAngle() << endl;
+			o << " Current Distance = " << a.getDist() << endl;
+			o << " Target Angle = " << a.targetAngle << endl;
+			o << " Target Distance = " << a.targetDist << endl;
+			o << " Integral Angle = " << a.intAngle << endl;
+			o << " Integral Distance = " << a.intDist << endl;
 			o << " Left = " << a.left << endl;
 			o << " Right = " << a.right << endl;
 	}, shell.current_object);

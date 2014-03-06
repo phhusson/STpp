@@ -12,19 +12,28 @@ class Asserv {
 		IncrementalEncoder& right;
 		HBridgeST& motorl;
 		HBridgeST& motorr;
-		int angl, dist;
-		int kr, kl, rr, rl;
-		int max_engine;
+		int targetAngle, targetDist;
+		int c_propDist, c_propAngle, c_intDist, c_intAngle;
+		int intDist, intAngle;
+
+		int maxEngine, minEngine;
 
 	public:
 		Asserv(IncrementalEncoder& left, IncrementalEncoder& right, Timer& tim, HBridgeST mot1, HBridgeST mot2);
 		Asserv& setTargetDist(int t);
 		Asserv& setTargetAngle(int a);
-		Asserv& setPCorrectors(int l, int r);
 		Asserv& setMaxEngine(int l);
 
-		Asserv& reset();
+		Asserv& setProportionnalDistance(int c);
+		Asserv& setProportionnalAngle(int c);
+		Asserv& setIntegralDistance(int c);
+		Asserv& setIntegralAngle(int c);
 
+		Asserv& reset();
+		Asserv& start();
+
+		int getAngle();
+		int getDist();
 		friend Shell& operator<<(Shell&, Asserv&);
 };
 #endif /* _ASSERV_H */

@@ -12,7 +12,7 @@ HBridgeST HBridge0(Prop0A, Prop0B, Prop0_PWM, Tim2, 3);
 
 Gpio Enc0A(GpioE[9]);
 Gpio Enc0B(GpioE[11]);
-IncrementalEncoder Encoder0(Enc0A, Enc0B, Tim1, 3, true);
+IncrementalEncoder Encoder0(Enc0A, Enc0B, Tim1, 0, true);
 
 Gpio Prop1_PWM(GpioB[11]);
 Gpio Prop1A(GpioB[12]);
@@ -21,7 +21,7 @@ HBridgeST HBridge1(Prop1A, Prop1B, Prop1_PWM, Tim2, 4);
 
 Gpio Enc1A(GpioB[4]);
 Gpio Enc1B(GpioB[5]);
-IncrementalEncoder Encoder1(Enc1A, Enc1B, Tim3, 3);
+IncrementalEncoder Encoder1(Enc1A, Enc1B, Tim3, 0, true);
 
 //USB
 Gpio USB_Vbus_OC(GpioD[5]);

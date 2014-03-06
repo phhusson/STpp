@@ -16,6 +16,9 @@ Ax12::Ax12(Gpio g, Uart u, int i) :
 		//~1Mbps
 		.setMantissa(2)
 		.setFraction(0xb)
+		//a,b,c
+		//setMantissa(0x16)
+		//.setFraction(0x9)
 		.setHalfDuplex(true)
 		.enableReceive()
 		.enableTransmitter();
