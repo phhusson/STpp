@@ -2,9 +2,9 @@
 #include <Log.h>
 #include "Asserv.h"
 
-Asserv::Asserv(IncrementalEncoder& left, IncrementalEncoder& right,
+Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 	Timer& tim, HBridgeST mot1, HBridgeST mot2) :
-	left(left), right(right),
+	eLeft(_left), eRight(_right),
 	tim(tim),
 	motorl(mot1), motorr(mot2),
 	c_propDist(600), c_propAngle(600),
@@ -24,9 +24,12 @@ Asserv::Asserv(IncrementalEncoder& left, IncrementalEncoder& right,
 		.enable();
 
 	tim
-		.setTopCB([&left, &right, this](int timer_id) {
-			left.update();
-			right.update();
+		.setTopCB([this](int timer_id) {
+			eLeft.update();
+			eRight.update();
+
+			left(eLeft);
+			right(eRight);
 
 			int angle = (left-right)/2;
 			int dist = (left+right)/2;
@@ -113,6 +116,11 @@ Asserv& Asserv::setIntegralAngle(int c) {
 
 Asserv& Asserv::setMaxEngine(int l) {
 	maxEngine = l;
+	return *this;
+}
+
+Asserv& Asserv::setMinEngine(int l) {
+	minEngine = l;
 	return *this;
 }
 
