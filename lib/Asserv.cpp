@@ -11,7 +11,8 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 	c_intDist(200), c_intAngle(200),
 	intDist(0), intAngle(0),
 	maxEngine(0x3ff), minEngine(0x30),
-	targetAngle(0), targetDist(0) {
+	targetAngle(0), targetDist(0),
+	infos(left, right, eLeft, eRight) {
 	tim
 		.setPrescaler(42)
 		.setAutoReload(1000)
@@ -25,33 +26,20 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 
 	tim
 		.setTopCB([this](int timer_id) {
-			eLeft.update();
-			eRight.update();
-
-			left(eLeft);
-			right(eRight);
-
-			int angle = (left-right)/2;
-			int dist = (left+right)/2;
-
-			int deltaAngle = targetAngle - angle;
-			int deltaDist = targetDist - dist;
-
-			intDist = deltaDist/16 + (15*intDist)/16;
-			intAngle = deltaAngle/16 + (15*intAngle)/16;
+			infos.compute(targetDist, targetAngle);
 
 			int dl = 0, dr = 0;
-			dl += c_propDist * deltaDist;
-			dr += c_propDist * deltaDist;
+			dl += c_propDist * infos.getDeltaDist();
+			dr += c_propDist * infos.getDeltaDist();
 
-			dl += c_intDist * intDist;
-			dr += c_intDist * intDist;
+			dl += c_intDist * infos.getIntegralDist();
+			dr += c_intDist * infos.getIntegralDist();
 
-			dl += c_propAngle * deltaAngle;
-			dr -= c_propAngle * deltaAngle;
+			dl += c_propAngle * infos.getDeltaAngle();
+			dr -= c_propAngle * infos.getDeltaAngle();
 
-			dl += c_intAngle * intAngle;
-			dr -= c_intAngle * intAngle;
+			dl += c_intAngle * infos.getIntegralAngle();
+			dr -= c_intAngle * infos.getIntegralAngle();
 
 
 			dl/=1024;

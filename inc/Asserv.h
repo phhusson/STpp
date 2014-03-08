@@ -6,23 +6,46 @@
 
 class Shell;
 
-class VelocityAccelCompute {
+class VelocityAccelPerEncoderCompute {
 	private:
-		int lastInt;
 		int last;
 		int lastVelocity;
 		int lastAccel;
 
 	public:
-		VelocityAccelCompute();
+		VelocityAccelPerEncoderCompute();
 		void compute(int value);
-		int getIntegral();
 		int getVelocity();
 		int getAccel();
 		int getCurrent();
 		operator int();
 		void operator()(int);
 		int operator=(int);
+};
+
+class VelocityAccel {
+	private:
+		VelocityAccelPerEncoderCompute &left, right;
+		IncrementalEncoder& eLeft, eRight;
+		int intDist, intAngle;
+		int targetDist, targetAngle;
+	public:
+		VelocityAccel(VelocityAccelPerEncoderCompute& left, VelocityAccelPerEncoderCompute &right, IncrementalEncoder& eLeft, IncrementalEncoder& eRight);
+		void compute(int dist, int angle);
+
+		int getIntegralAngle();
+		int getIntegralDist();
+
+		int getAngle();
+		int getDeltaAngle();
+		int getDist();
+		int getDeltaDist();
+
+		int getVelocityAngle();
+		int getVelocityDist();
+
+		int getAccelerationAngle();
+		int getAccelerationDist();
 };
 
 class Asserv {
@@ -33,8 +56,10 @@ class Asserv {
 		HBridgeST& motorl;
 		HBridgeST& motorr;
 
-		VelocityAccelCompute left;
-		VelocityAccelCompute right;
+		VelocityAccelPerEncoderCompute left;
+		VelocityAccelPerEncoderCompute right;
+
+		VelocityAccel infos;
 
 		int targetAngle, targetDist;
 		int c_propDist, c_propAngle, c_intDist, c_intAngle;

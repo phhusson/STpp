@@ -50,4 +50,4 @@ lib/%.o: lib/%.cpp $(LIB_INCS)
 	$(LD) $^ -o $@ $(LDFLAGS) -Tsrc/flash.lds
 
 clean:
-	-rm -f examples/*.flash examples/*.ram} $(FREERTOS_OBJS) $(LIB_OBJS) $(SRC_OBJS) $(USB_OBJS)
+	-rm -f examples/*.flash examples/*.ram $(FREERTOS_OBJS) $(LIB_OBJS) $(SRC_OBJS) $(USB_OBJS)

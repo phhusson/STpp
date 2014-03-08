@@ -1,12 +1,10 @@
 #include "Asserv.h"
 
-VelocityAccelCompute::VelocityAccelCompute() {
+VelocityAccelPerEncoderCompute::VelocityAccelPerEncoderCompute() {
 	*this = 0;
 }
 
-void VelocityAccelCompute::compute(int v) {
-	lastInt = v/16 + (15 * lastInt) / 16;
-
+void VelocityAccelPerEncoderCompute::compute(int v) {
 	int velocity = v - last;
 
 	lastAccel = velocity - lastVelocity;
@@ -14,32 +12,94 @@ void VelocityAccelCompute::compute(int v) {
 	last = v;
 }
 
-int VelocityAccelCompute::getIntegral() {
-	return lastInt;
-}
-
-int VelocityAccelCompute::getVelocity() {
+int VelocityAccelPerEncoderCompute::getVelocity() {
 	return lastVelocity;
 }
 
-int VelocityAccelCompute::getAccel() {
+int VelocityAccelPerEncoderCompute::getAccel() {
 	return lastAccel;
 }
 
-int VelocityAccelCompute::getCurrent() {
+int VelocityAccelPerEncoderCompute::getCurrent() {
 	return last;
 }
 
-VelocityAccelCompute::operator int() {
+VelocityAccelPerEncoderCompute::operator int() {
 	return last;
 }
 
-void VelocityAccelCompute::operator()(int v) {
+void VelocityAccelPerEncoderCompute::operator()(int v) {
 	compute(v);
 }
 
-int VelocityAccelCompute::operator=(int v) {
+int VelocityAccelPerEncoderCompute::operator=(int v) {
 	if(v != 0) while(1);
-	last = lastInt = lastVelocity = lastAccel = 0;
+	last = lastVelocity = lastAccel = 0;
 	return v;
+}
+
+VelocityAccel::VelocityAccel(VelocityAccelPerEncoderCompute &left, VelocityAccelPerEncoderCompute& right,
+	IncrementalEncoder& eLeft, IncrementalEncoder& eRight) :
+	left(left), right(right),
+	eLeft(eLeft), eRight(eRight),
+	intDist(0), intAngle(0),
+	targetDist(0), targetAngle(0) {
+}
+
+void VelocityAccel::compute(int targetDist, int targetAngle) {
+	eLeft.update();
+	eRight.update();
+
+	left.compute(eLeft);
+	right.compute(eRight);
+
+	if(this->targetDist != targetDist)
+		intDist = 0;
+	this->targetDist = targetDist;
+
+	if(this->targetAngle != targetAngle)
+		intAngle = 0;
+	this->targetAngle = targetAngle;
+}
+
+int VelocityAccel::getIntegralAngle() {
+	intAngle = getDeltaAngle()/16 + intAngle*15/16;
+	return intAngle;
+}
+
+int VelocityAccel::getIntegralDist() {
+	intDist = getDeltaDist()/16 + intDist*15/16;
+	return intDist;
+}
+
+int VelocityAccel::getAngle() {
+	return (left-right)/2;
+}
+
+int VelocityAccel::getDist() {
+	return (left+right)/2;
+}
+
+int VelocityAccel::getDeltaAngle() {
+	return targetAngle - getAngle();
+}
+
+int VelocityAccel::getDeltaDist() {
+	return targetDist - getDist();
+}
+
+int VelocityAccel::getVelocityAngle() {
+	return (left.getVelocity() - right.getVelocity())/2;
+}
+
+int VelocityAccel::getVelocityDist() {
+	return (left.getVelocity() + right.getVelocity())/2;
+}
+
+int VelocityAccel::getAccelerationAngle() {
+	return (left.getAccel() - right.getAccel())/2;
+}
+
+int VelocityAccel::getAccelerationDist() {
+	return (left.getAccel() + right.getAccel())/2;
 }
