@@ -47,11 +47,9 @@ bool Shell::isValue(const char *str) {
 	return false;
 }
 
-void Shell::pushInt(const char *str) {
-	if(str[0] != '0' || str[1] != 'x')
-		while(1);
+static int parseHex(const char *str) {
 	int v = 0;
-	for(int i = 2; str[i]; ++i) {
+	for(int i = 0; str[i]; ++i) {
 		char c = str[i];
 		if(c >= '0' && c <= '9')
 			c = c - '0';
@@ -64,6 +62,56 @@ void Shell::pushInt(const char *str) {
 		v <<= 4;
 		v |= c;
 	}
+	return v;
+}
+
+static int parseDec(const char *str) {
+	int v = 0;
+	for(int i = 0; str[i]; ++i) {
+		char c = str[i];
+		if(c >= '0' && c <= '9')
+			c = c - '0';
+		else
+			while(1);
+		v *= 10;
+		v += c;
+	}
+	return v;
+}
+
+static int parseOct(const char *str) {
+	int v = 0;
+	for(int i = 0; str[i]; ++i) {
+		char c = str[i];
+		if(c >= '0' && c <= '7')
+			c = c - '0';
+		else
+			while(1);
+		v <<= 3;
+		v |= c;
+	}
+	return v;
+}
+
+void Shell::pushInt(const char *str) {
+	bool opposite = false;
+	if(str[0]=='-') {
+		opposite=true;
+		str++;
+	}
+	int v = 0;
+	if(str[0] == '0') {
+		//Could be octal or hexa
+		if(str[1] == 'x')
+			v = parseHex(str+2);
+		else
+			v = parseOct(str+1);
+
+	} else {
+		v = parseDec(str);
+	}
+	if(opposite)
+		v = -v;
 	s.push(v);
 }
 
