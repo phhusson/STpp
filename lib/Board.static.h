@@ -7,8 +7,8 @@
 
 // Motor control
 Gpio Prop0_PWM(GpioB[10]);
-Gpio Prop0A(GpioB[15]);
-Gpio Prop0B(GpioB[13]);
+Gpio Prop0A(GpioB[13]);
+Gpio Prop0B(GpioB[15]);
 HBridgeST HBridge0(Prop0A, Prop0B, Prop0_PWM, Tim2, 3);
 
 Gpio Enc0A(GpioE[9]);
@@ -16,8 +16,8 @@ Gpio Enc0B(GpioE[11]);
 IncrementalEncoder Encoder0(Enc0A, Enc0B, Tim1, 0, true);
 
 Gpio Prop1_PWM(GpioB[11]);
-Gpio Prop1A(GpioB[12]);
-Gpio Prop1B(GpioB[14]);
+Gpio Prop1A(GpioB[14]);
+Gpio Prop1B(GpioB[12]);
 HBridgeST HBridge1(Prop1A, Prop1B, Prop1_PWM, Tim2, 4);
 
 Gpio Enc1A(GpioB[4]);
@@ -27,12 +27,12 @@ IncrementalEncoder Encoder1(Enc1A, Enc1B, Tim3, 0, true);
 Gpio Prop2_PWM(GpioC[7]);
 Gpio Prop2A(GpioC[8]);
 Gpio Prop2B(GpioC[12]);
-HBridgeST Hbridge2(Prop2A, Prop2B, Prop2_PWM, Tim3, 2);
+HBridgeST Hbridge2(Prop2A, Prop2B, Prop2_PWM, Tim8, 2);
 
 Gpio Prop3_PWM(GpioC[6]);
 Gpio Prop3A(GpioC[9]);
 Gpio Prop3B(GpioC[13]);
-HBridgeST Hbridge3(Prop3A, Prop3B, Prop3_PWM, Tim3, 1);
+HBridgeST Hbridge3(Prop3A, Prop3B, Prop3_PWM, Tim8, 1);
 
 //USB
 Gpio USB_Vbus_OC(GpioD[5]);
