@@ -97,10 +97,10 @@ int VelocityAccel::getVelocityDist() {
 	return (left.getVelocity() + right.getVelocity())/2;
 }
 
-int VelocityAccel::getAccelerationAngle() {
+int VelocityAccel::getAccelAngle() {
 	return (left.getAccel() - right.getAccel())/2;
 }
 
-int VelocityAccel::getAccelerationDist() {
+int VelocityAccel::getAccelDist() {
 	return (left.getAccel() + right.getAccel())/2;
 }

@@ -46,8 +46,8 @@ class VelocityAccel {
 		int getVelocityAngle();
 		int getVelocityDist();
 
-		int getAccelerationAngle();
-		int getAccelerationDist();
+		int getAccelAngle();
+		int getAccelDist();
 };
 
 class Asserv {
@@ -64,23 +64,30 @@ class Asserv {
 		VelocityAccel infos;
 
 		int targetAngle, targetDist;
-		int c_propDist, c_propAngle, c_intDist, c_intAngle;
-		int intDist, intAngle;
+		int c_propDist, c_propAngle;
+		int c_intDist, c_intAngle;
+		int c_velDist, c_velAngle;
 
 		int maxEngine, minEngine;
+		int maxAccel;
+
+		bool waiting;
 
 	public:
 		Asserv(IncrementalEncoder& left, IncrementalEncoder& right, Timer& tim, HBridgeST mot1, HBridgeST mot2);
 		Asserv& setTargetDist(int t);
 		Asserv& setTargetAngle(int a);
 
+		Asserv& setMaxAcceleration(int l);
 		Asserv& setMaxEngine(int l);
 		Asserv& setMinEngine(int l);
 
-		Asserv& setProportionnalDistance(int c);
+		Asserv& setProportionnalDist(int c);
 		Asserv& setProportionnalAngle(int c);
-		Asserv& setIntegralDistance(int c);
+		Asserv& setIntegralDist(int c);
 		Asserv& setIntegralAngle(int c);
+		Asserv& setVelocityDist(int c);
+		Asserv& setVelocityAngle(int c);
 
 		Asserv& reset();
 		Asserv& start();
