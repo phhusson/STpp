@@ -1,7 +1,6 @@
 #include <Ax12.h>
 #include <Log.h>
 
-extern "C" void vTaskDelay(int);
 Ax12::Ax12(Gpio g, Uart u, int i) :
 	uart(u), id(i) {
 	g

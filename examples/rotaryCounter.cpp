@@ -4,9 +4,8 @@
 #include <Exti.h>
 #include <Uart.h>
 #include <Usb.h>
-#include <Watchdog.h>
+#include <Time.h>
 
-extern "C" void vTaskDelay(int);
 int main() {
 	Tim2
 		.setAutoReload(1024)
@@ -31,7 +30,7 @@ int main() {
  *****************************************************************/
 
 	while(1){
-		vTaskDelay(200);
-		log << "Counter alue : " << Tim4.getCounter() << Log::endl;
+		time.msleep(200);
+		log << "Counter alue : " << Tim4.getCounter() << endl;
 	}
 }

@@ -14,7 +14,6 @@
 #include <ShellStrategie.h>
 #include <ShellTimer.h>
 
-extern "C" void vTaskDelay(int);
 static Shell shell;
 int main() {
 	UsbSerial usb;

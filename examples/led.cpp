@@ -1,7 +1,6 @@
 #include <Board.h>
 #include <Log.h>
 
-extern "C" void vTaskDelay(int);
 int main() {
 	log << "startup" << endl;
 
@@ -20,6 +19,6 @@ int main() {
 		LedG.setComparator(1<<g);
 		LedB.setComparator(1<<b);
 		LedR.setComparator(1<<r);
-		vTaskDelay(20);
+		time.msleep(20);
 	}
 }

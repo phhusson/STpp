@@ -7,9 +7,9 @@
 #include <Exti.h>
 #include <Uart.h>
 #include <Usb.h>
+#include <Time.h>
 #include <Watchdog.h>
 
-extern "C" void vTaskDelay(int);
 Capa::Capa() : n(0) {
 	Tim7
 		.setPrescaler(0x0)
@@ -95,7 +95,7 @@ extern "C" void USB_OTG_BSP_mDelay(int);
 Capa& Capa::update() {
 	prepare();
 	//USB_OTG_BSP_mDelay(2);
-	vTaskDelay(10);
+	time.msleep(10);
 	measure();
 	return *this;
 }

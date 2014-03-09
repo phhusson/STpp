@@ -10,7 +10,6 @@
 #include <Usb.h>
 #include <Watchdog.h>
 
-extern "C" void vTaskDelay(int);
 Capa capa;
 
 int main() {

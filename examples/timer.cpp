@@ -7,7 +7,6 @@
 #include <Usb.h>
 #include <Watchdog.h>
 
-extern "C" void vTaskDelay(int);
 int main() {
 	Tim4
 		.setPrescaler(42)
@@ -19,5 +18,5 @@ int main() {
 	while(Tim4);
 	log << "Timer4 done" << endl;
 	while(1)
-		vTaskDelay(1000);
+		time.msleep(2000);
 }

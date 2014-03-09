@@ -7,12 +7,11 @@
 #include <Watchdog.h>
 #include <IncrementalEncoder.h> 
 
-extern "C" void vTaskDelay(int);
 int main() {
 	IncrementalEncoder codeuse1(GpioE[9], GpioE[11], Tim1);
 
 	while(1){
-		vTaskDelay(200);
+		time.msleep(200);
 		log << "Counter value : " << codeuse1 << Log::endl;
 	}
 

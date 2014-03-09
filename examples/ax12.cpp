@@ -3,7 +3,6 @@
 #include <Ax12.h>
 #include <Uart.h>
 
-extern "C" void vTaskDelay(int);
 int main() {
 	log << "startup" << endl;
 
@@ -17,8 +16,8 @@ int main() {
 
 	while(1) {
 		ax12_broadcast.goTo(0x0);
-		vTaskDelay(2000);
+		time.msleep(2000);
 		ax12_broadcast.goTo(0x280);
-		vTaskDelay(2000);
+		time.msleep(2000);
 	}
 }

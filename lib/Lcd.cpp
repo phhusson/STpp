@@ -1,6 +1,5 @@
 #include <Lcd.h>
 #include <Board.h>
-extern "C" void vTaskDelay(int);
 
 LcdLine::LcdLine() {
 	lcd = NULL;
@@ -59,7 +58,7 @@ void Lcd::wait(bool quick) {
 	if(quick)
 		time.usleep(100);
 	else
-		vTaskDelay(4);
+		time.msleep(4);
 }
 
 void Lcd::init() {

@@ -5,7 +5,6 @@
 #include <Exti.h>
 #include <UsbSerial.h>
 
-extern "C" void vTaskDelay(int);
 int main() {
 	bool v = false;
 	UsbSerial usb;
@@ -21,5 +20,5 @@ int main() {
 		.enableIRQ();
 
 	while(1)
-		vTaskDelay(1000);
+		time.msleep(10000);
 }
