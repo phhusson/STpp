@@ -1,63 +1,31 @@
 #include "ShellAsserv.h"
 
+OStream& operator<<(OStream& o, VelocityAccel& i) {
+	o << " Current Angle = " << i.getAngle() << endl;
+	o << " Current Distance = " << i.getDist() << endl;
+	o << " Target Angle = " << i.targetAngle << endl;
+	o << " Target Distance = " << i.targetDist << endl;
+	o << " Integral Angle = " << i.getIntegralAngle() << endl;
+	o << " Integral Distance = " << i.getIntegralDist() << endl;
+	return o;
+}
+
 Shell& operator<<(Shell& shell, Asserv& a) {
 	if(!shell.got_name) while(1);
 
-	shell.add([&a,&shell](Stack& s) {
-		Object& o = s.pop();
-		if(o.type != Object::INT) while(1);
-		int v = o.toInt();
+	addSetter(shell, a, setTargetAngle);
+	addSetter(shell, a, setTargetDist);
 
-		a.setTargetDist(v);
-	}, shell.current_object, "setTargetDist");
+	addSetter(shell, a, setVelocityAngle);
+	addSetter(shell, a, setVelocityDist);
+	addSetter(shell, a, setProportionnalAngle);
+	addSetter(shell, a, setProportionnalDist);
+	addSetter(shell, a, setIntegralAngle);
+	addSetter(shell, a, setIntegralDist);
 
-	shell.add([&a,&shell](Stack& s) {
-		Object& o = s.pop();
-		if(o.type != Object::INT) while(1);
-		int v = o.toInt();
-
-		a.setTargetAngle(v);
-	}, shell.current_object, "setTargetAngle");
-
-	shell.add([&a,&shell](Stack& s) {
-		Object& o = s.pop();
-		if(o.type != Object::INT) while(1);
-		int v = o.toInt();
-
-		a.setProportionnalDistance(v);
-	}, shell.current_object, "setProportionnalDistance");
-
-	shell.add([&a,&shell](Stack& s) {
-		Object& o = s.pop();
-		if(o.type != Object::INT) while(1);
-		int v = o.toInt();
-
-		a.setProportionnalAngle(v);
-	}, shell.current_object, "setProportionnalAngle");
-
-	shell.add([&a,&shell](Stack& s) {
-		Object& o = s.pop();
-		if(o.type != Object::INT) while(1);
-		int v = o.toInt();
-
-		a.setIntegralDistance(v);
-	}, shell.current_object, "setIntegralDistance");
-
-	shell.add([&a,&shell](Stack& s) {
-		Object& o = s.pop();
-		if(o.type != Object::INT) while(1);
-		int v = o.toInt();
-
-		a.setIntegralAngle(v);
-	}, shell.current_object, "setIntegralAngle");
-	
-	shell.add([&a,&shell](Stack& s) {
-		Object& o = s.pop();
-		if(o.type != Object::INT) while(1);
-		int v = o.toInt();
-
-		a.setMaxEngine(v);
-	}, shell.current_object, "setMaxEngine");
+	addSetter(shell, a, setMaxEngine);
+	addSetter(shell, a, setMinEngine);
+	addSetter(shell, a, setMaxAcceleration);
 
 	shell.add([&a,&shell](Stack& s) {
 		a.reset();
@@ -68,17 +36,10 @@ Shell& operator<<(Shell& shell, Asserv& a) {
 	}, shell.current_object, "start");
 
 	shell.add([&a,&shell](Stack& s) {
-			OStream& o = *(shell.out);
+		OStream& o = *(shell.out);
 
-			o << "Asserv" << endl;
-			o << " Current Angle = " << a.getAngle() << endl;
-			o << " Current Distance = " << a.getDist() << endl;
-			o << " Target Angle = " << a.targetAngle << endl;
-			o << " Target Distance = " << a.targetDist << endl;
-			o << " Integral Angle = " << a.intAngle << endl;
-			o << " Integral Distance = " << a.intDist << endl;
-			o << " Left = " << a.left << endl;
-			o << " Right = " << a.right << endl;
+		o << "Asserv" << endl;
+		o << a.infos;
 	}, shell.current_object);
 
 	shell.got_name = false;

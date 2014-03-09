@@ -72,4 +72,14 @@ class Shell {
 		int history_pos;
 };
 
+//Helpers
+#define addSetter(SHELL, OBJ, FUNC) { \
+	SHELL.add([&OBJ,&SHELL](Stack& s) { \
+		Object& o = s.pop(); \
+		if(o.type != Object::INT) while(1); \
+		int v = o.toInt(); \
+		OBJ.FUNC(v); \
+	}, SHELL.current_object, #FUNC); \
+}
+
 #endif /* _SHELL_H */

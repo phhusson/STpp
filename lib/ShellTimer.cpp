@@ -4,12 +4,10 @@ Shell& operator<<(Shell& shell, Timer& tim) {
 	if(!shell.got_name) while(1);
 
 	shell.add([&tim,&shell](Stack& s) {
-		Object& o = s.pop();
-		if(o.type != Object::INT) while(1);
-		int v = o.toInt();
+		s.push((int)tim);
+	}, shell.current_object, "get");
 
-		tim.setCounter(v);
-	}, shell.current_object, "set");
+	addSetter(shell, tim, setCounter);
 
 	shell.got_name = false;
 	return shell;

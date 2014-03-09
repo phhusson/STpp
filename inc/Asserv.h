@@ -2,6 +2,7 @@
 #define _ASSERV_H
 #include <HBridgeST.h>
 #include <IncrementalEncoder.h>
+#include <OStream.h>
 #include <Timer.h>
 
 class Shell;
@@ -48,6 +49,7 @@ class VelocityAccel {
 
 		int getAccelAngle();
 		int getAccelDist();
+		friend OStream& operator<<(OStream&, VelocityAccel&);
 };
 
 class Asserv {
