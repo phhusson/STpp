@@ -24,6 +24,16 @@ extern Gpio Enc1A;
 extern Gpio Enc0B;
 extern IncrementalEncoder Encoder1;
 
+extern Gpio Prop2_PWM;
+extern Gpio Prop2A;
+extern Gpio Prop2B;
+extern HBridgeST Hbridge2;
+
+extern Gpio Prop3_PWM;
+extern Gpio Prop3A;
+extern Gpio Prop3B;
+extern HBridgeST Hbridge3;
+
 //USB
 extern Gpio USB_Vbus_OC;
 extern Gpio USB_Vbus_en;
