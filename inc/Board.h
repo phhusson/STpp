@@ -21,7 +21,7 @@ extern Gpio Prop1B;
 extern HBridgeST HBridge1;
 
 extern Gpio Enc1A;
-extern Gpio Enc0B;
+extern Gpio Enc1B;
 extern IncrementalEncoder Encoder1;
 
 extern Gpio Prop2_PWM;
