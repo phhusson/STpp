@@ -12,7 +12,7 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 	intDist(0), intAngle(0),
 	maxEngine(0x3ff), minEngine(0x30),
 	targetAngle(0), targetDist(0),
-	infos(left, right, eLeft, eRight) {
+	infos(left, right, eLeft, eRight, 1, 1),
 	tim
 		.setPrescaler(42)
 		.setAutoReload(1000)

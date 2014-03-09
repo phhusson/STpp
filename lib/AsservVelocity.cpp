@@ -39,11 +39,12 @@ int VelocityAccelPerEncoderCompute::operator=(int v) {
 }
 
 VelocityAccel::VelocityAccel(VelocityAccelPerEncoderCompute &left, VelocityAccelPerEncoderCompute& right,
-	IncrementalEncoder& eLeft, IncrementalEncoder& eRight) :
+	IncrementalEncoder& eLeft, IncrementalEncoder& eRight, int N, int D) :
 	left(left), right(right),
 	eLeft(eLeft), eRight(eRight),
 	intDist(0), intAngle(0),
-	targetDist(0), targetAngle(0) {
+	targetDist(0), targetAngle(0),
+	N(N), D(D) {
 }
 
 void VelocityAccel::compute(int targetDist, int targetAngle) {
@@ -51,7 +52,7 @@ void VelocityAccel::compute(int targetDist, int targetAngle) {
 	eRight.update();
 
 	left.compute(eLeft);
-	right.compute(eRight);
+	right.compute( (N*eRight)/D );
 
 	if(this->targetDist != targetDist)
 		intDist = 0;

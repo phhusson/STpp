@@ -29,8 +29,10 @@ class VelocityAccel {
 		IncrementalEncoder& eLeft, eRight;
 		int intDist, intAngle;
 		int targetDist, targetAngle;
+
+		int N, D;
 	public:
-		VelocityAccel(VelocityAccelPerEncoderCompute& left, VelocityAccelPerEncoderCompute &right, IncrementalEncoder& eLeft, IncrementalEncoder& eRight);
+		VelocityAccel(VelocityAccelPerEncoderCompute& left, VelocityAccelPerEncoderCompute &right, IncrementalEncoder& eLeft, IncrementalEncoder& eRight, int N_LR, int D_LR);
 		void compute(int dist, int angle);
 
 		int getIntegralAngle();
