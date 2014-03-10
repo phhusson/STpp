@@ -50,6 +50,10 @@ class VelocityAccel {
 		int getAccelAngle();
 		int getAccelDist();
 		friend OStream& operator<<(OStream&, VelocityAccel&);
+		friend class Asserv;
+	public:
+		int maxAccel,minAccel;
+		int maxVel,minVel;
 };
 
 class Asserv {
@@ -69,16 +73,21 @@ class Asserv {
 		int c_propDist, c_propAngle;
 		int c_intDist, c_intAngle;
 		int c_velDist, c_velAngle;
+		int c_accelDist, c_accelAngle;
 
 		int maxEngine, minEngine;
 		int maxAccel;
 
 		bool waiting;
+		int beenZero;
 
 	public:
 		Asserv(IncrementalEncoder& left, IncrementalEncoder& right, Timer& tim, HBridgeST mot1, HBridgeST mot2);
 		Asserv& setTargetDist(int t);
 		Asserv& setTargetAngle(int a);
+
+		Asserv& angle(int a);
+		Asserv& dist(int t);
 
 		Asserv& setMaxAcceleration(int l);
 		Asserv& setMaxEngine(int l);
@@ -90,6 +99,8 @@ class Asserv {
 		Asserv& setIntegralAngle(int c);
 		Asserv& setVelocityDist(int c);
 		Asserv& setVelocityAngle(int c);
+		Asserv& setAccelDist(int c);
+		Asserv& setAccelAngle(int c);
 
 		Asserv& reset();
 		Asserv& start();

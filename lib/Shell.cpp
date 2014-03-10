@@ -40,7 +40,7 @@ void Shell::add(Callback cb, const char *name1, const char *name2) {
 }
 
 bool Shell::isValue(const char *str) {
-	if(*str >= '0' && *str <= '9')
+	if((*str >= '0' && *str <= '9') || *str =='-')
 		return true;
 	if(*str == '"')
 		return true;
@@ -120,7 +120,7 @@ void Shell::pushStr(const char *str) {
 }
 
 void Shell::pushValue(const char *str) {
-	if(*str >= '0' && *str <= '9')
+	if((*str >= '0' && *str <= '9') || *str == '-')
 		pushInt(str);
 	else if(*str == '"')
 		pushStr(str);
@@ -267,9 +267,8 @@ void Shell::exec(bool echo, const char* prompt) {
 				if(i!=0) {
 					*out << "\b \b";
 					cmd[i--] = 0;
-					cmd[i--] = 0;
 				}
-				i--;
+				cmd[i--] = 0;
 			//ctrl-c
 			} else if(cmd[i] == 3) {
 				*out << endl;

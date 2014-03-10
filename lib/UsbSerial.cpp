@@ -75,9 +75,6 @@ static uint16_t UsbSerial_DataRx (uint8_t* Buf, uint32_t Len) {
 	uint32_t i;
 
 	for (i = 0; i < Len; i++)
-		log << (char)Buf[i];
-	log << endl;
-	for (i = 0; i < Len; i++)
 		xQueueSendFromISR(rx_queue, Buf+i, NULL);
 
 	return USBD_OK;

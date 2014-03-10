@@ -1,4 +1,5 @@
 #include "Asserv.h"
+#include <Log.h>
 
 VelocityAccelPerEncoderCompute::VelocityAccelPerEncoderCompute() {
 	*this = 0;
@@ -7,8 +8,8 @@ VelocityAccelPerEncoderCompute::VelocityAccelPerEncoderCompute() {
 void VelocityAccelPerEncoderCompute::compute(int v) {
 	int velocity = v - last;
 
-	lastAccel = velocity - lastVelocity;
-	lastVelocity = velocity;
+	lastAccel = (velocity*16 - lastVelocity) + (lastAccel*15)/16;
+	lastVelocity = velocity + lastVelocity*15/16;
 	last = v;
 }
 
@@ -45,6 +46,9 @@ VelocityAccel::VelocityAccel(VelocityAccelPerEncoderCompute &left, VelocityAccel
 	intDist(0), intAngle(0),
 	targetDist(0), targetAngle(0),
 	N(N), D(D) {
+
+		minAccel = maxAccel = 0;
+		minVel = maxVel = 0;
 }
 
 void VelocityAccel::compute(int targetDist, int targetAngle) {
@@ -61,15 +65,35 @@ void VelocityAccel::compute(int targetDist, int targetAngle) {
 	if(this->targetAngle != targetAngle)
 		intAngle = 0;
 	this->targetAngle = targetAngle;
+
+	if(getAccelDist() > maxAccel)
+		maxAccel = getAccelDist();
+	if(getAccelDist() < minAccel)
+		minAccel = getAccelDist();
+
+	if(getVelocityDist() > maxVel)
+		maxVel = getVelocityDist();
+	if(getVelocityDist() < minVel)
+		minVel = getVelocityDist();
+
+	//Inversion of sign...
+	//Cancel out integral
+	if( (intAngle * getDeltaAngle()) < 0)
+		intAngle = 0;
+	else
+		intAngle = getDeltaAngle() + intAngle*255/256;
+	if( (intDist * getDeltaDist()) < 0) {
+		log << "Remise a 0 de l'integrale" <<endl;
+		intDist = 0;
+	} else
+		intDist = getDeltaDist() + intDist*255/256;
 }
 
 int VelocityAccel::getIntegralAngle() {
-	intAngle = getDeltaAngle()/16 + intAngle*15/16;
 	return intAngle;
 }
 
 int VelocityAccel::getIntegralDist() {
-	intDist = getDeltaDist()/16 + intDist*15/16;
 	return intDist;
 }
 

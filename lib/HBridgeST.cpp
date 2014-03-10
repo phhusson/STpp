@@ -12,7 +12,6 @@ HBridgeST::HBridgeST(Gpio& a, Gpio& b, Gpio& p,
 }
 
 void HBridgeST::setSpeed(int s){
-	log << s << endl;
 	if (s<0) {
 		propa.setState(true);
 		propb.setState(false);
