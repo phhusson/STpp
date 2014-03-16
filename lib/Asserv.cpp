@@ -7,10 +7,10 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 	eLeft(_left), eRight(_right),
 	tim(tim),
 	motorl(mot1), motorr(mot2),
-	c_propDist(0x1000), c_propAngle(0x80),
-	c_intDist(0xa), c_intAngle(0x3),
-	c_velDist(0x80), c_velAngle(0),
-	c_accelDist(0x10), c_accelAngle(0),
+	c_propDist(0x800), c_propAngle(0xb00),
+	c_intDist(0), c_intAngle(0x0),
+	c_velDist(0x0), c_velAngle(0),
+	c_accelDist(0x0), c_accelAngle(0),
 	maxEngine(0x3ff), minEngine(0x80),
 	targetAngle(0), targetDist(0),
 	infos(left, right, eLeft, eRight, 1, 1),
@@ -22,11 +22,11 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 		.setUIE(true)
 		.setURS(true);
 
-	int throttle = 100;
-
 	Irq(tim.irqNr())
 		.setPriority(15)
 		.enable();
+
+	throttle = 100;
 
 	tim
 		.setTopCB([&tim, this](int timer_id) {
@@ -83,18 +83,33 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 				dr = 0;
 			}
 
+			//Check if we're near the destination
+#if 1
+			int x0 = (1000*infos.getVelocityDist()*infos.getVelocityDist())/(16*maxAccel);
+			x0 = abs(x0);
+			if(abs(infos.getDeltaDist()) < x0) {
+				//Brrrrrrrrrrrrrrrrrrrrrrrrrraaaaaaaaaaakkkkkeeeeeeeee
+				dl = 0;
+				dr = 0;
+			}
+#endif
+
+
 			//ABS/ESP
 			if(infos.getAccelDist() > maxAccel || infos.getAccelDist() < -maxAccel) {
-				log << "Got max acceleration ! " << endl;
-				must_throttle = true;
 				if(throttle > 0) {
 					throttle -= 10;
 				}
+				log << "Throttle at " << throttle << endl;
+				log << " Accel = " << infos.getAccelDist() << endl;
 			} else {
-				if(throttle < 100)
+				if(throttle < 100) {
+					log << "Throttle at " << throttle << endl;
 					throttle += 10;
+				}
 			}
 			int ref = 0;
+#if 1
 			if( (infos.getAccelDist() * infos.getVelocityDist()) > 0) {
 				//We are accelerating
 				//Throttling means reducing power
@@ -102,16 +117,20 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 			} else if( (infos.getAccelDist() * infos.getVelocityDist()) < 0) {
 				//We are braking
 				//Throttling means increasing power
-				ref = 200;
-			}
 
+				ref = signof(infos.getVelocityDist(), 4096);
+			}
+#endif
+
+			dl = ref * (100-throttle) + throttle * dl;
+			dr = ref * (100-throttle) + throttle * dr;
 			//We're not moving, and we're not telling the motors to move
 			//Sounds ok ?
 			waiting = (dl == 0) && (dr == 0) &&
 				(infos.getVelocityDist() == 0) && (infos.getVelocityAngle() == 0);
 
-			motorl.setSpeed( (ret*dl)/100 );
-			motorr.setSpeed( (ret*dr)/100 );
+			motorl.setSpeed(dl);
+			motorr.setSpeed(dr);
 		})
 		.enable();
 }

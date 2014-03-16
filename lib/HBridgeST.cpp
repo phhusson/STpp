@@ -2,7 +2,7 @@
 #include "Log.h"
 
 HBridgeST::HBridgeST(Gpio& a, Gpio& b, Gpio& p,
-		Timer& tim, int chan) : propa(a), propb(b), pwm(p, tim, chan, 42, 1024){
+		Timer& tim, int chan) : propa(a), propb(b), pwm(p, tim, chan, 3, 1024){
 	propa
 		.setDirection(Gpio::OUTPUT)
 		.setState(false);

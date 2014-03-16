@@ -69,6 +69,8 @@ class Asserv {
 
 		VelocityAccel infos;
 
+		int deadZone1, deadZone2;
+
 		int targetAngle, targetDist;
 		int c_propDist, c_propAngle;
 		int c_intDist, c_intAngle;
@@ -80,6 +82,8 @@ class Asserv {
 
 		bool waiting;
 		int beenZero;
+
+		int throttle;
 
 	public:
 		Asserv(IncrementalEncoder& left, IncrementalEncoder& right, Timer& tim, HBridgeST mot1, HBridgeST mot2);

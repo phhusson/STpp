@@ -8,7 +8,7 @@ VelocityAccelPerEncoderCompute::VelocityAccelPerEncoderCompute() {
 void VelocityAccelPerEncoderCompute::compute(int v) {
 	int velocity = v - last;
 
-	lastAccel = (velocity*16 - lastVelocity) + (lastAccel*15)/16;
+	lastAccel = velocity*16 - lastVelocity;
 	lastVelocity = velocity + lastVelocity*15/16;
 	last = v;
 }
