@@ -1,5 +1,9 @@
 #include "Debug.h"
 #include "Time.h"
+extern "C" {
+#include <FreeRTOS.h>
+#include <task.h>
+};
 
 Time::Time(Timer& t) :
 	timer(t) {
@@ -16,7 +20,6 @@ void Time::usleep(int t) {
 	while(timer);
 }
 
-extern "C" void vTaskDelay(int);
 void Time::msleep(int t) {
 	vTaskDelay(t);
 }

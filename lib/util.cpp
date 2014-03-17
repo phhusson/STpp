@@ -1,4 +1,6 @@
 extern "C" {
+#include "FreeRTOS.h"
+#include "portable.h"
 	char *memset(char *s, int c, int n) {
 		volatile char *p = s;
 		while(n--)
@@ -22,8 +24,6 @@ extern "C" {
 		}
 		return d;
 	}	
-	void* pvPortMalloc(unsigned int);
-	void vPortFree(void*);
 };
 
 void *operator new (unsigned int n)  throw() {

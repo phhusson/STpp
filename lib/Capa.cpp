@@ -90,11 +90,8 @@ Capa& Capa::measure() {
 	return *this;
 }
 
-extern "C" void USB_OTG_BSP_uDelay(int);
-extern "C" void USB_OTG_BSP_mDelay(int);
 Capa& Capa::update() {
 	prepare();
-	//USB_OTG_BSP_mDelay(2);
 	time.msleep(10);
 	measure();
 	return *this;
