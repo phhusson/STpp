@@ -2,6 +2,7 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
+void *__dso_handle = 0;
 void call_constructors() {
 	extern unsigned long __init_array_start;
 	extern unsigned long __init_array_end;

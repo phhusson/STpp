@@ -9,7 +9,6 @@ void exti_handler(int v) {
 
 Exti::Callback Exti::top_cb[15];
 Exti::Callback Exti::bottom_cb[15];
-void *__dso_handle = 0;
 
 void exti_handler() {
 	int i = 0;
