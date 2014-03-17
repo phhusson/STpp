@@ -34,13 +34,13 @@ SRC:=$(wildcard src/*.c) $(wildcard src/*.s)
 SRC_OBJS:=$(subst .c,.o,$(SRC))
 SRC_OBJS:=$(subst .s,.o,$(SRC_OBJS))
 
-lib/static.o: lib/static.cpp lib/Board.static.h
 TARGETS:=led capa ax12 button timer shell
 EXECS:=$(addprefix examples/,$(TARGETS))
 EXECS:=$(addsuffix .flash,$(EXECS)) $(addsuffix .ram,$(EXECS))
 
 all: $(EXECS)
 
+lib/static.o: lib/static.cpp lib/Board.static.h
 
 .SECONDARY: $(LIB_OBJS) $(FREERTOS_OBJS) $(SRC_OBJS) $(USB_OBJS)
 
