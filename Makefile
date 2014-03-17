@@ -35,8 +35,12 @@ SRC_OBJS:=$(subst .c,.o,$(SRC))
 SRC_OBJS:=$(subst .s,.o,$(SRC_OBJS))
 
 lib/static.o: lib/static.cpp lib/Board.static.h
+TARGETS:=led capa ax12 button timer shell
+EXECS:=$(addprefix examples/,$(TARGETS))
+EXECS:=$(addsuffix .flash,$(EXECS)) $(addsuffix .ram,$(EXECS))
 
-all: examples/led.ram examples/led.flash examples/capa.ram examples/ax12.ram examples/button.ram examples/timer.ram
+all: $(EXECS)
+
 
 .SECONDARY: $(LIB_OBJS) $(FREERTOS_OBJS) $(SRC_OBJS) $(USB_OBJS)
 
