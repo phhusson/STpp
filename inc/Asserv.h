@@ -84,6 +84,8 @@ class Asserv {
 		int beenZero;
 
 		int throttle;
+		int dateStart;
+		int date;
 
 	public:
 		Asserv(IncrementalEncoder& left, IncrementalEncoder& right, Timer& tim, HBridgeST mot1, HBridgeST mot2);

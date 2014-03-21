@@ -7,14 +7,15 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 	eLeft(_left), eRight(_right),
 	tim(tim),
 	motorl(mot1), motorr(mot2),
-	c_propDist(0x800), c_propAngle(0xb00),
-	c_intDist(0), c_intAngle(0x0),
+	c_propDist(0x800), c_propAngle(0x800),
+	c_intDist(0), c_intAngle(0x00),
 	c_velDist(0x0), c_velAngle(0),
 	c_accelDist(0x0), c_accelAngle(0),
 	maxEngine(0x3ff), minEngine(0x80),
 	targetAngle(0), targetDist(0),
 	infos(left, right, eLeft, eRight, 1, 1),
-	maxAccel(0x80), waiting(false) {
+	maxAccel(0x80), waiting(false),
+	date(0), dateStart(0) {
 	tim
 		.setPrescaler(42)
 		.setAutoReload(1000)
@@ -30,6 +31,7 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 
 	tim
 		.setTopCB([&tim, this](int timer_id) {
+			++date;
 			infos.compute(targetDist, targetAngle);
 
 			int d_d = 0, d_a = 0;
@@ -72,13 +74,19 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 			}
 
 			//Check we're not blocked
-			if(infos.getVelocityDist() == 0 && infos.getVelocityAngle() == 0)
+			if(infos.getVelocityDist() == 0 && infos.getVelocityAngle() == 0) {
 				beenZero++;
-			else
+			} else
 				beenZero = 0;
 
 			//150ms
 			if(beenZero > 150) {
+				if(dateStart) {
+					log << "At " << date << ", we finished command from " << dateStart << endl;
+					int res = date - dateStart;
+					log << "That makes time of " << res/1000 << "s" << res%1000 << "ms" << endl;
+					dateStart = 0;
+				}
 				dl = 0;
 				dr = 0;
 			}
@@ -136,6 +144,7 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 }
 
 Asserv& Asserv::setTargetDist(int t) {
+	dateStart = date;
 	beenZero = 0;
 	targetDist = t;
 	return *this;
