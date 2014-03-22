@@ -17,7 +17,7 @@ serial = open("/dev/ttyACM0", "r")
 def to_xy(rho, theta):
     #Assume height is shortest
     rho = int(rho, 16)
-    theta = int(theta, 16)
+    theta = -int(theta, 16)+180
     rho = rho*(height/2)/4000
     x = width/2 + rho*cos(theta*pi/180)
     y = height/2 + rho*sin(theta*pi/180)
