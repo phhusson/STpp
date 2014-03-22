@@ -32,7 +32,7 @@ while 1:
         if event.type == pygame.QUIT: sys.exit()
 
     screen.fill(black)
-    got = {}
+    center = width/2, height/2
     for i in range(0, 360):
         line = serial.readline()
         res = re.match('#(0x[0-9a-f]{8}),(0x[0-9a-f]{8})(.*)', line)
@@ -42,10 +42,8 @@ while 1:
 
         if res:
             xy = to_xy(res.group(2), res.group(1))
-            screen_array[xy] = white
-            got[int(res.group(1), 16)] = True
-
-    print got
+            pygame.draw.line(screen, white, center, xy)
+            #screen_array[xy] = white
 
     pygame.display.flip()
     print "New frame !!!!!!!!"
