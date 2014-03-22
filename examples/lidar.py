@@ -33,7 +33,7 @@ while 1:
 
     screen.fill(black)
     got = {}
-    for i in range(1, 360):
+    for i in range(0, 360):
         line = serial.readline()
         res = re.match('#(0x[0-9a-f]{8}),(0x[0-9a-f]{8})(.*)', line)
         if not res:
