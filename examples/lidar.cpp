@@ -27,10 +27,10 @@ int main() {
 		lidar_neato_t packet;
 		Lidar >> packet;
 
-		if(packet.index == 0xa9) {
+#if 0
 		usb << "["
-				  /*<< (int)packet.index
-				  << "]"*/
+				  << (int)packet.index
+				  << "]"
 				  << "@"
 				  << (int)packet.speed
 				  /*
@@ -41,7 +41,18 @@ int main() {
 				  << "," << (int)packet.data[3]*/
 				  << "=" << (int)(packet.data[0]&0x7fff)
 				  << ";" << endl;
+#else
+		usb << "@" << (int) packet.speed << endl;
+		for(int i=0; i<4; ++i) {
+			usb
+				<< "#"
+				<< ((int)(packet.index-0xa0))*4+i
+				<< ","
+				<< ((int)packet.data[i]&0x3fff)
+				<< ((packet.data[i]&0x4000) ? "!" : "")
+				<< endl;
 		}
+#endif
 	}
 
 	while(1);

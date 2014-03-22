@@ -20,10 +20,10 @@ LINE_CODING linecoding = { 115200, 0, 0, 8 };
 
 /* These are external variables imported from CDC core to be used for IN 
    transfer management. */
-extern uint8_t  APP_Rx_Buffer []; /* Write CDC received data in this buffer.
+extern volatile uint8_t  APP_Rx_Buffer []; /* Write CDC received data in this buffer.
                                      These data will be sent over USB IN endpoint
                                      in the CDC core functions. */
-extern uint32_t APP_Rx_ptr_in;    /* Increment this pointer or roll it back to
+extern volatile uint32_t APP_Rx_ptr_in;    /* Increment this pointer or roll it back to
                                      start address when writing received data
                                      in the buffer APP_Rx_Buffer. */
 
@@ -102,9 +102,18 @@ UsbSerial::UsbSerial() {
 	rx_queue = xQueueCreate(128, 1);
 }
 
+extern volatile uint32_t APP_Rx_ptr_out;
 UsbSerial& UsbSerial::put(char c) {
 	APP_Rx_Buffer[APP_Rx_ptr_in] = c;
 	APP_Rx_ptr_in++;
+
+	while(1) {
+		uint32_t delta = APP_Rx_ptr_in - APP_Rx_ptr_out;
+		if(delta<0)
+			delta += APP_RX_DATA_SIZE;
+		if(delta < APP_RX_DATA_SIZE/4)
+			break;
+	}
 
 	APP_Rx_ptr_in %= APP_RX_DATA_SIZE;
 	return *this;
