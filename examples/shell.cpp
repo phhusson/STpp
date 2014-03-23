@@ -13,10 +13,27 @@
 #include <ShellPwm.h>
 #include <ShellStrategie.h>
 #include <ShellTimer.h>
+#include <Lidar.h>
+#include <Lidar.h>
+#include <Tasks.h>
 
 static Shell shell;
+
+static lidar_neato_t lidar_packet;
+
 int main() {
 	UsbSerial usb;
+
+	Mutex lidar_lock;
+	Task lidar_task([]() {
+		Gpio LidarRX(GpioA[3]);
+		Uart Lidar(2);
+		LidarNeato lidar(LidarRX, Lidar);
+		while(true) {
+			Lidar >> lidar_packet;
+		}
+	}, "Lidar reader");
+
 	usb << "Hello !" << endl;
 	shell.setStream(&usb, &usb);
 
@@ -47,6 +64,20 @@ int main() {
 		//mamoutor.disable();
 		Encoder0 = Encoder1 = 0;
 	}, "reset");
+
+	shell.add([&usb, &lidar_lock](Stack& s) {
+		AutoLock l(lidar_lock);
+		usb << "@" << (int) lidar_packet.speed << endl;
+		for(int i=0; i<4; ++i) {
+			usb
+				<< "#"
+				<< ((int)(lidar_packet.index-0xa0))*4+i
+				<< ","
+				<< ((int)lidar_packet.data[i]&0x3fff)
+				<< ((lidar_packet.data[i]&0x4000) ? "!" : "")
+				<< endl;
+		}
+	}, "lidar");
 	shell.exec();
 	while(1);
 }
