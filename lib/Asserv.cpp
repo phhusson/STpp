@@ -14,7 +14,8 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 	maxEngine(0x3ff), minEngine(0x80),
 	targetAngle(0), targetDist(0),
 	infos(left, right, eLeft, eRight, 1, 1),
-	maxAccel(0x80), waiting(false),
+	maxForwardAccel(0x80), maxBackwardAccel(0x100),
+	waiting(false),
 	date(0), dateStart(0) {
 	tim
 		.setPrescaler(42)
@@ -93,6 +94,7 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 
 			//Check if we're near the destination
 #if 1
+			int maxAccel = infos.getVelocityDist() > 0 ? maxBackwardAccel : maxForwardAccel;
 			int x0 = (1000*infos.getVelocityDist()*infos.getVelocityDist())/(16*maxAccel);
 			x0 = abs(x0);
 			if(abs(infos.getDeltaDist()) < x0) {
@@ -104,7 +106,7 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 
 
 			//ABS/ESP
-			if(infos.getAccelDist() > maxAccel || infos.getAccelDist() < -maxAccel) {
+			if(infos.getAccelDist() > maxForwardAccel || infos.getAccelDist() < -maxForwardAccel) {
 				if(throttle > 0) {
 					throttle -= 10;
 				}
@@ -197,7 +199,7 @@ Asserv& Asserv::setAccelAngle(int c) {
 }
 
 Asserv& Asserv::setMaxAcceleration(int l) {
-	maxAccel = l;
+	maxForwardAccel = l;
 	return *this;
 }
 

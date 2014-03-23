@@ -52,7 +52,7 @@ class VelocityAccel {
 		friend OStream& operator<<(OStream&, VelocityAccel&);
 		friend class Asserv;
 	public:
-		int maxAccel,minAccel;
+		int maxAccel, minAccel;
 		int maxVel,minVel;
 };
 
@@ -78,7 +78,7 @@ class Asserv {
 		int c_accelDist, c_accelAngle;
 
 		int maxEngine, minEngine;
-		int maxAccel;
+		int maxForwardAccel, maxBackwardAccel;
 
 		bool waiting;
 		int beenZero;
