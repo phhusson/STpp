@@ -78,6 +78,11 @@ int main() {
 				<< endl;
 		}
 	}, "lidar");
+
+	shell.add([&usb, &asserv](Stack& s) {
+		usb << asserv.getPosition();
+	}, "whereami");
+
 	shell.exec();
 	while(1);
 }

@@ -70,7 +70,7 @@ class Position {
 		float getX();
 		float getY();
 		float getTheta();
-
+		friend OStream& operator<<(OStream&, Position&);
 };
 
 class Asserv {
@@ -112,6 +112,7 @@ class Asserv {
 
 		Asserv& angle(int a);
 		Asserv& dist(int t);
+		Position& getPosition();
 
 		Asserv& setMaxAcceleration(int l);
 		Asserv& setMaxEngine(int l);

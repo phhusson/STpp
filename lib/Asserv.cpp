@@ -246,3 +246,7 @@ Asserv& Asserv::dist(int t) {
 	setTargetDist(targetDist+t);
 	return *this;
 }
+
+Position& Asserv::getPosition() {
+	return position;
+}

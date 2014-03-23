@@ -19,6 +19,13 @@ OStream& operator<<(OStream& o, VelocityAccel& i) {
 	return o;
 }
 
+OStream& operator<<(OStream& o, Position& p) {
+	o << "X = " << (int)(p.x*1000) << " mm" << endl;
+	o << "Y = " << (int)(p.y*1000) << " mm" << endl;
+	o << "Theta = " << (int)(p.theta*10) << " deciDegres" << endl;
+	return o;
+}
+
 Shell& operator<<(Shell& shell, Asserv& a) {
 	if(!shell.got_name) while(1);
 
@@ -68,6 +75,9 @@ Shell& operator<<(Shell& shell, Asserv& a) {
 
 		o << "     Acceleration" << endl;
 		o << a.c_accelDist << " " << a.c_accelAngle << endl;
+
+		o << "     Position" << endl;
+		o << a.position;
 	}, shell.current_object);
 
 	shell.got_name = false;
