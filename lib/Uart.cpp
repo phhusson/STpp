@@ -136,7 +136,14 @@ Uart& Uart::enable() {
 	//On RX
 	base->CR1 |= 1<<5;
 
-	Irq(USART2_IRQn)
+	int irqnr = 0;
+	if(number < 4)
+		irqnr = USART1_IRQn + number - 1;
+	else if(number < 6)
+		irqnr = UART4_IRQn + number - 4;
+	else if(number == 6)
+		irqnr = USART6_IRQn;
+	Irq(irqnr)
 		.setPriority(230)
 		.enable();
 #endif
