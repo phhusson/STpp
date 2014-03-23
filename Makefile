@@ -18,12 +18,17 @@ endif
 PREFIX?=arm-none-eabi-
 CXXFLAGS=-mcpu=cortex-m4 -g -mthumb -mfpu=vfpv4-d16 -mfloat-abi=hard
 ASFLAGS:=$(CXXFLAGS)
-CXXFLAGS+=-Iinc $(FREERTOS_INC) $(STM32_INC) $(USB_INC) -Wall -fno-stack-protector -O3 -DARM_MATH_CM4 -D__FPU_PRESENT=1
+CXXFLAGS+=-Iinc -Iplat-inc $(FREERTOS_INC) $(STM32_INC) $(USB_INC) -Wall -fno-stack-protector -O3 -DARM_MATH_CM4 -D__FPU_PRESENT=1
 CFLAGS:=$(CXXFLAGS)
 CXXFLAGS+=-fno-rtti -fno-exceptions -std=c++11
 LIB_SRC=$(wildcard lib/*.cpp)
 LIB_OBJS=$(subst cpp,o,$(LIB_SRC)) lib/debug.o
 LIB_INCS=$(wildcard inc/*.h)
+
+PLAT?=stm
+PLAT_SRC=$(wildcard plat-$(PLAT)/*.cpp)
+PLAT_OBJS=$(subst cpp,o,$(PLAT_SRC))
+PLAT_INCS=$(wildcard plat-inc/*.h)
 
 CC=$(PREFIX)gcc
 CXX=$(PREFIX)g++
@@ -42,16 +47,19 @@ all: $(EXECS)
 
 lib/static.o: lib/static.cpp lib/Board.static.h
 
-.SECONDARY: $(LIB_OBJS) $(FREERTOS_OBJS) $(SRC_OBJS) $(USB_OBJS)
+.SECONDARY: $(LIB_OBJS) $(FREERTOS_OBJS) $(SRC_OBJS) $(USB_OBJS) $(PLAT_OBJS)
 
-lib/%.o: lib/%.cpp $(LIB_INCS)
+#lib/%.o: lib/%.cpp $(LIB_INCS) $(PLAT_INCS)
+#	$(CXX) -c $< -o $@ $(CXXFLAGS)
+
+%.o: lib/%.cpp $(LIB_INCS) $(PLAT_INCS)
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
 
-%.ram: %.o $(LIB_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS) $(USB_OBJS)
+%.ram: %.o $(LIB_OBJS) $(PLAT_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS) $(USB_OBJS)
 	$(LD) $^ -o $@ $(LDFLAGS) -Tsrc/ram.lds
 
-%.flash: %.o $(LIB_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS) $(USB_OBJS)
+%.flash: %.o $(LIB_OBJS) $(PLAT_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS) $(USB_OBJS)
 	$(LD) $^ -o $@ $(LDFLAGS) -Tsrc/flash.lds
 
 clean:
-	-rm -f examples/*.flash examples/*.ram $(FREERTOS_OBJS) $(LIB_OBJS) $(SRC_OBJS) $(USB_OBJS)
+	-rm -f examples/*.flash examples/*.ram $(FREERTOS_OBJS) $(LIB_OBJS) $(SRC_OBJS) $(USB_OBJS) $(PLAT_OBJS)
