@@ -56,6 +56,23 @@ class VelocityAccel {
 		int maxVel,minVel;
 };
 
+class Position {
+	private:
+		VelocityAccel& infos;
+		float x;
+		float y;
+		float theta;
+		int previousEDist;
+		float wheelSize, wheelDist;
+	public:
+		Position(VelocityAccel& infos, float wheelSize, float wheelDist);
+		void update();
+		float getX();
+		float getY();
+		float getTheta();
+
+};
+
 class Asserv {
 	private:
 		Timer& tim;
@@ -68,6 +85,7 @@ class Asserv {
 		VelocityAccelPerEncoderCompute right;
 
 		VelocityAccel infos;
+		Position position;
 
 		int deadZone1, deadZone2;
 
