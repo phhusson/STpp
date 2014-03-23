@@ -188,3 +188,8 @@ int Uart::get() {
 bool Uart::available() {
 	return !xQueueIsQueueEmptyFromISR(uart_queue_rx[number]);
 }
+
+void Uart::wait() {
+	char c;
+	xQueuePeek(uart_queue_rx[number], &c, portMAX_DELAY);
+}

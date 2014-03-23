@@ -1,7 +1,7 @@
 #include <IStream.h>
 
 IStream& operator>>(IStream& i, char &c) {
-	while(!i.available());
+	i.wait();
 	c = i.get();
 	return i;
 }
@@ -14,7 +14,7 @@ IStream& operator>>(IStream& i, int &c) {
 
 IStream& operator>>(IStream& s, char* str) {
 	for(int i=0;; ++i) {
-		while(!s.available());
+		s.wait();
 		str[i] = s.get();
 		if(str[i] == '\n' || str[i] == '\r' || str[i] == ' ')
 			str[i]=0;
@@ -26,4 +26,8 @@ IStream& operator>>(IStream& s, char* str) {
 		}
 	}
 	return s;
+}
+
+void IStream::wait() {
+	while(!available());
 }

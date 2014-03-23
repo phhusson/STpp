@@ -136,3 +136,8 @@ int UsbSerial::get() {
 bool UsbSerial::available() {
 	return !xQueueIsQueueEmptyFromISR(rx_queue);
 }
+
+void UsbSerial::wait() {
+	char c;
+	xQueuePeek(rx_queue, &c, portMAX_DELAY);
+}

@@ -17,6 +17,7 @@ class UsbSerial : public OStream, public IStream {
 		//IStream
 		virtual int get();
 		virtual bool available();
+		virtual void wait();
 };
 #endif
 

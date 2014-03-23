@@ -30,6 +30,7 @@ class Uart : public OStream, public IStream {
 	public:
 		virtual int get();
 		virtual bool available();
+		virtual void wait();
 };
 
 #endif /* _UART_H */

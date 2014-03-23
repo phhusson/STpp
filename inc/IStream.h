@@ -5,6 +5,7 @@ class IStream {
 	public:
 		virtual int get() = 0;
 		virtual bool available() = 0;
+		virtual void wait();
 };
 
 class NullIStream : public IStream {
