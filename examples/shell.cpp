@@ -26,8 +26,8 @@ int main() {
 
 	Mutex lidar_lock;
 	Task lidar_task([]() {
-		Gpio LidarRX(GpioA[3]);
-		Uart Lidar(2);
+		Gpio LidarRX(GpioD[9]);
+		Uart Lidar(3);
 		LidarNeato lidar(LidarRX, Lidar);
 		while(true) {
 			Lidar >> lidar_packet;
