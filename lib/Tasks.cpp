@@ -5,7 +5,7 @@ static void callFn(void *t) {
 	f->f();
 }
 
-Task::Task(Function& f, const char *name, int priority, int stackSize): f(f) {
+Task::Task(Function f, const char *name, int priority, int stackSize): f(f) {
 	int ret = xTaskCreate(callFn, (const signed char*)name, stackSize, this, priority, &_id);
 	if(ret != pdPASS)
 		while(1);

@@ -13,7 +13,7 @@ class Task {
 		typedef std::tr1::function<void(void)> Function;
 		Function f;
 		xTaskHandle _id;
-		Task(Function& f, const char *name, int priority = tskIDLE_PRIORITY+2, int stackSize = 256);
+		Task(Function f, const char *name, int priority = tskIDLE_PRIORITY+2, int stackSize = 256);
 		void suspend();
 		void resume();
 		static void yield();
