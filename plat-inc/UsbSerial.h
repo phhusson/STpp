@@ -10,6 +10,7 @@ class UsbSerial : public OStream, public IStream {
 		Usb u;
 	public:
 		UsbSerial();
+		~UsbSerial();
 		//OStream
 		virtual UsbSerial& put(char);
 		virtual UsbSerial& endl();

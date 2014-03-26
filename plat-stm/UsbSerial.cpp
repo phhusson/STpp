@@ -141,3 +141,7 @@ void UsbSerial::wait() {
 	char c;
 	xQueuePeek(rx_queue, &c, portMAX_DELAY);
 }
+
+UsbSerial::~UsbSerial() {
+	//Lol.
+}
