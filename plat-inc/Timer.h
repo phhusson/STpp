@@ -47,6 +47,7 @@ class Timer {
 		Timer& setChannelMode(int,ChannelMode);
 		Timer& setChannelOutput(int,bool);
 		Timer& setChannelComparator(int,unsigned short);
+		unsigned short getChannelComparator(int);
 		Timer& update();
 		Timer& setCaptureCompare1Sel(int);
 		Timer& setCaptureCompare2Sel(int);

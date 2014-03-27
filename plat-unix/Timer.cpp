@@ -1,8 +1,15 @@
 #include <Timer.h>
 #include <Log.h>
+#include <stdlib.h>
 
-Timer::Timer(volatile TIM_TypeDef* b, int n) :
-	base(b), number(n) {
+class TimerInfos {
+	public:
+		int ccmp[4];
+		int value;
+};
+
+Timer::Timer(volatile TIM_TypeDef* b, int n): number(n) {
+	base = (volatile TIM_TypeDef*) new TimerInfos;
 }
 
 int Timer::getNumber() {
@@ -26,11 +33,12 @@ Timer& Timer::setAutoReloadBuffered(bool v) {
 }
 
 Timer& Timer::setCounter(unsigned short v) {
+	((TimerInfos*)base)->value = v;
 	return *this;
 }
 
 unsigned short Timer::getCounter() {
-	return 0;
+	return ((TimerInfos*)base)->value;
 }
 
 Timer& Timer::enable() {
@@ -58,7 +66,12 @@ Timer& Timer::setChannelOutput(int chan, bool o) {
 }
 
 Timer& Timer::setChannelComparator(int chan, unsigned short v) {
+	((TimerInfos*)base)->ccmp[--chan] = v;
 	return *this;
+}
+
+unsigned short Timer::getChannelComparator(int chan) {
+	return ((TimerInfos*)base)->ccmp[--chan];
 }
 
 Timer& Timer::wait() {

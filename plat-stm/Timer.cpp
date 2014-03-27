@@ -154,6 +154,13 @@ Timer& Timer::setChannelComparator(int chan, unsigned short v) {
 	return *this;
 }
 
+unsigned short Timer::getChannelComparator(int chan) {
+	chan--;
+	volatile unsigned int *b=(volatile unsigned int*)&(base->CCR1);
+	b+=chan;
+	return *b;
+}
+
 Timer& Timer::wait() {
 	while(*this);
 	return *this;
