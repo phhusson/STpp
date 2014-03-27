@@ -15,6 +15,11 @@ void call_constructors() {
 	}
 }
 
+void postScheduler() {
+	call_constructors();
+	main();
+}
+
 void init(void) {
 	//Wait 7 cpu cycles for every flash access
 	//(could be pessimist, but safe.)
@@ -86,11 +91,9 @@ void init(void) {
 	//Set priority mode 4.4
 	SCB->AIRCR = (SCB->AIRCR & SCB_AIRCR_PRIGROUP_Msk) | 3 << SCB_AIRCR_PRIGROUP_Pos;
 
-	call_constructors();
-
 	xTaskHandle handle_main;
 	extern void main(void);
-	xTaskCreate((pdTASK_CODE)main, (const signed char*)"Main thread", 512, NULL, tskIDLE_PRIORITY+1, &handle_main);
+	xTaskCreate((pdTASK_CODE)postScheduler, (const signed char*)"Main thread", 1024, NULL, tskIDLE_PRIORITY+1, &handle_main);
 
 	SysTick->LOAD = 168000;
 	SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_CLKSOURCE_Msk;
