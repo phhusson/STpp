@@ -2,7 +2,7 @@
 #include <Uart.h>
 #include <Lidar.h>
 
-LidarNeato::LidarNeato(Gpio& rx, Uart& u) {
+LidarNeato::LidarNeato(Gpio& rx, Uart& u): uart(u) {
 	u
 		.configGpio(rx)
 		.enable()
@@ -15,7 +15,8 @@ LidarNeato::LidarNeato(Gpio& rx, Uart& u) {
 
 }
 
-IStream& operator>>(IStream& uart, lidar_neato_t& packet) {
+LidarNeato& operator>>(LidarNeato& lidar, lidar_neato_t& packet) {
+	Uart& uart = lidar.uart;
 	char c = 0;
 	while(c != 0xfa) {
 		uart >> c;
@@ -48,6 +49,20 @@ IStream& operator>>(IStream& uart, lidar_neato_t& packet) {
 
 	uart >> c;
 	packet.checksum |= c << 8;
+	{
+		AutoLock a(lidar.distancesLock);
+		for(int i=0; i<4; ++i) {
+			int pos = (packet.index-0xa0)*4 + i;
+			//Should be reported
+			if(pos < 0 || pos >= 360)
+				continue;
+			lidar.distances[ pos ] = packet.data[i] & 0x3fff;
+		}
+	}
 
-	return uart;
+	return lidar;
+}
+uint16_t LidarNeato::getDistance(int angle) {
+	AutoLock a(distancesLock);
+	return distances[angle];
 }
