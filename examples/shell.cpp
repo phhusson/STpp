@@ -21,16 +21,17 @@ static Shell shell;
 
 static lidar_neato_t lidar_packet;
 
+static Gpio LidarRX(GpioD[9]);
+static Uart Lidar(3);
+static LidarNeato lidar(LidarRX, Lidar);
+
 int main() {
 	UsbSerial usb;
+	Asserv asserv(Encoder1, Encoder0, Tim13, HBridge1, HBridge0);
 
-	Mutex lidar_lock;
 	Task lidar_task([]() {
-		Gpio LidarRX(GpioD[9]);
-		Uart Lidar(3);
-		LidarNeato lidar(LidarRX, Lidar);
 		while(true) {
-			Lidar >> lidar_packet;
+			lidar >> lidar_packet;
 		}
 	}, "Lidar reader");
 
@@ -49,8 +50,6 @@ int main() {
 	shell << "HBridge0" << HBridge0;
 	shell << "HBridge1" << HBridge1;
 
-	Asserv asserv(Encoder1, Encoder0, Tim13, HBridge1, HBridge0);
-
 	shell << "Asserv" << asserv;
 
 	shell << "Encoder0" << Encoder0;
@@ -65,22 +64,19 @@ int main() {
 		Encoder0 = Encoder1 = 0;
 	}, "reset");
 
-	shell.add([&usb, &lidar_lock](Stack& s) {
-		AutoLock l(lidar_lock);
-		usb << "@" << (int) lidar_packet.speed << endl;
-		for(int i=0; i<4; ++i) {
-			usb
-				<< "#"
-				<< ((int)(lidar_packet.index-0xa0))*4+i
-				<< ","
-				<< ((int)lidar_packet.data[i]&0x3fff)
-				<< ((lidar_packet.data[i]&0x4000) ? "!" : "")
-				<< endl;
-		}
+	shell.add([&usb](Stack& s) {
+		int angle = s.pop().toInt();
+		usb << "Lidar distance " << lidar.getDistance(angle) << endl;
 	}, "lidar");
 
-	shell.add([&usb, &asserv](Stack& s) {
-		usb << asserv.getPosition();
+	shell.add([&usb](Stack& s) {
+		for(int angle=0; angle<360; ++angle)
+			usb << lidar.getDistance(angle) << ", ";
+		usb << endl;
+	}, "lidar", "dump");
+
+	shell.add([&usb](Stack& s) {
+		//usb << asserv.getPosition();
 	}, "whereami");
 
 	shell.exec();
