@@ -16,8 +16,8 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 	infos(left, right, eLeft, eRight, 1, 1),
 	maxForwardAccel(0x80), maxBackwardAccel(0x80),
 	waiting(false),
-	date(0), dateStart(0)/*,
-	position(infos, 1000, 1000)*/ {
+	date(0), dateStart(0),
+	position(infos, 1000, 1000) {
 	tim
 		.setPrescaler(42)
 		.setAutoReload(1000)
@@ -35,7 +35,7 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 		.setTopCB([&tim, this](int timer_id) {
 			++date;
 			infos.compute(targetDist, targetAngle);
-			//position.update();
+			position.update();
 
 			int d_d = 0, d_a = 0;
 			//Distance
@@ -249,8 +249,6 @@ Asserv& Asserv::dist(int t) {
 	return *this;
 }
 
-#if 0
 Position& Asserv::getPosition() {
 	return position;
 }
-#endif

@@ -85,7 +85,7 @@ class Asserv {
 		VelocityAccelPerEncoderCompute right;
 
 		VelocityAccel infos;
-		//Position position;
+		Position position;
 
 		int deadZone1, deadZone2;
 
@@ -112,7 +112,7 @@ class Asserv {
 
 		Asserv& angle(int a);
 		Asserv& dist(int t);
-		//Position& getPosition();
+		Position& getPosition();
 
 		Asserv& setMaxAcceleration(int l);
 		Asserv& setMaxEngine(int l);

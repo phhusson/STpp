@@ -77,7 +77,7 @@ Shell& operator<<(Shell& shell, Asserv& a) {
 		o << a.c_accelDist << " " << a.c_accelAngle << endl;
 
 		o << "     Position" << endl;
-		//o << a.position;
+		o << a.position;
 	}, shell.current_object);
 
 	shell.got_name = false;
