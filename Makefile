@@ -22,7 +22,7 @@ PREFIX?=arm-none-eabi-
 SRC:=$(wildcard src/*.c) $(wildcard src/*.s)
 SRC_OBJS:=$(subst .c,.o,$(SRC))
 SRC_OBJS:=$(subst .s,.o,$(SRC_OBJS))
-CXXFLAGS=-mcpu=cortex-m4 -g -mthumb -mfpu=vfpv4-d16 -mfloat-abi=hard
+CXXFLAGS=-mcpu=cortex-m4 -g -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 else
 ARCH_CFLAGS=-DARCH=unix
 CXXFLAGS=-g
@@ -53,6 +53,7 @@ EXECS:=$(addprefix examples/,$(TARGETS))
 ifeq ($(PLAT),stm)
 EXECS:=$(addsuffix .flash,$(EXECS)) $(addsuffix .ram,$(EXECS))
 endif
+LDLIBS:=$(shell $(PREFIX)gcc -print-libgcc-file-name)
 
 all: $(EXECS)
 
@@ -69,10 +70,10 @@ lib/%.o: lib/%.cpp $(LIB_INCS) $(PLAT_INCS)
 
 ifeq ($(PLAT),stm)
 %.ram: %.o $(LIB_OBJS) $(PLAT_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS) $(USB_OBJS)
-	$(LD) $^ -o $@ $(LDFLAGS) -Tsrc/ram.lds
+	$(LD) $^ -o $@ $(LDFLAGS) -Tsrc/ram.lds $(LDLIBS)
 
 %.flash: %.o $(LIB_OBJS) $(PLAT_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS) $(USB_OBJS)
-	$(LD) $^ -o $@ $(LDFLAGS) -Tsrc/flash.lds
+	$(LD) $^ -o $@ $(LDFLAGS) -Tsrc/flash.lds $(LDLIBS)
 else
 examples/%: examples/%.o $(LIB_OBJS) $(PLAT_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS) $(USB_OBJS)
 	g++ $^ -o $@ $(LDFLAGS)
