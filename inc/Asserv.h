@@ -106,7 +106,7 @@ class Asserv {
 		int date;
 
 	public:
-		Asserv(IncrementalEncoder& left, IncrementalEncoder& right, Timer& tim, HBridgeST mot1, HBridgeST mot2);
+		Asserv(IncrementalEncoder& left, IncrementalEncoder& right, Timer& tim, HBridgeST& mot1, HBridgeST& mot2);
 		Asserv& setTargetDist(int t);
 		Asserv& setTargetAngle(int a);
 

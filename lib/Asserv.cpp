@@ -3,18 +3,18 @@
 #include "Asserv.h"
 
 Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
-	Timer& tim, HBridgeST mot1, HBridgeST mot2) :
+	Timer& tim, HBridgeST &mot1, HBridgeST &mot2) :
 	eLeft(_left), eRight(_right),
 	tim(tim),
 	motorl(mot1), motorr(mot2),
-	c_propDist(0x800), c_propAngle(0x800),
-	c_intDist(0), c_intAngle(0x00),
+	c_propDist(0x20000), c_propAngle(0x800),
+	c_intDist(0), c_intAngle(0x12),
 	c_velDist(0x0), c_velAngle(0),
 	c_accelDist(0x0), c_accelAngle(0),
 	maxEngine(0x3ff), minEngine(0x80),
 	targetAngle(0), targetDist(0),
 	infos(left, right, eLeft, eRight, 1, 1),
-	maxForwardAccel(0x80), maxBackwardAccel(0x100),
+	maxForwardAccel(0x80), maxBackwardAccel(0x80),
 	waiting(false),
 	date(0), dateStart(0)/*,
 	position(infos, 1000, 1000)*/ {
@@ -135,7 +135,9 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 #endif
 
 			dl = ref * (100-throttle) + throttle * dl;
+			dl /= 100;
 			dr = ref * (100-throttle) + throttle * dr;
+			dr /= 100;
 			//We're not moving, and we're not telling the motors to move
 			//Sounds ok ?
 			waiting = (dl == 0) && (dr == 0) &&
