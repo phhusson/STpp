@@ -53,8 +53,8 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 #define abs(x) ((x) > 0 ? (x) : -(x))
 #define signof(x, y) ((x) > 0 ? (y) : -(y))
 
-			int dl = d_d + d_a;
-			int dr = d_d - d_a;
+			int dl = d_d - d_a;
+			int dr = d_d + d_a;
 
 			dl/=0x4000;
 			dr/=0x4000;
