@@ -12,7 +12,6 @@ LidarNeato::LidarNeato(Gpio& rx, Uart& u): uart(u) {
 
 	rx
 		.setDirection(Gpio::INPUT);
-
 }
 
 LidarNeato& operator>>(LidarNeato& lidar, lidar_neato_t& packet) {
@@ -62,7 +61,11 @@ LidarNeato& operator>>(LidarNeato& lidar, lidar_neato_t& packet) {
 
 	return lidar;
 }
+
 uint16_t LidarNeato::getDistance(int angle) {
 	AutoLock a(distancesLock);
 	return distances[angle];
 }
+
+uint16_t LidarNeato::distances[360];
+Mutex LidarNeato::distancesLock;

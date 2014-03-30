@@ -19,18 +19,16 @@
 
 static Shell shell;
 
-static lidar_neato_t lidar_packet;
-
-static Gpio LidarRX(GpioD[9]);
-static Uart Lidar(3);
-static LidarNeato lidar(LidarRX, Lidar);
 
 int main() {
 	UsbSerial usb;
-	Asserv asserv(Encoder1, Encoder0, Tim13, HBridge1, HBridge0);
 
-	Task lidar_task([]() {
+	Task lidar_task([&usb]() {
+		Gpio LidarRX(GpioD[9]);
+		Uart Lidar(3);
+		LidarNeato lidar(LidarRX, Lidar);
 		while(true) {
+			lidar_neato_t lidar_packet;
 			lidar >> lidar_packet;
 		}
 	}, "Lidar reader");
@@ -38,6 +36,7 @@ int main() {
 	usb << "Hello !" << endl;
 	shell.setStream(&usb, &usb);
 
+	Asserv asserv(Encoder1, Encoder0, Tim13, HBridge1, HBridge0);
 	//Use _ prefix as a hideme for autocompletion
 	shell << "_UserButton" << UserButton;
 
@@ -66,12 +65,12 @@ int main() {
 
 	shell.add([&usb](Stack& s) {
 		int angle = s.pop().toInt();
-		usb << "Lidar distance " << lidar.getDistance(angle) << endl;
+		usb << "Lidar distance " << LidarNeato::getDistance(angle) << endl;
 	}, "lidar");
 
 	shell.add([&usb](Stack& s) {
 		for(int angle=0; angle<360; ++angle)
-			usb << lidar.getDistance(angle) << ", ";
+			usb << LidarNeato::getDistance(angle) << ", ";
 		usb << endl;
 	}, "lidar", "dump");
 
