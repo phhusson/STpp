@@ -31,7 +31,8 @@ LDFLAGS=-lpthread
 endif
 
 ASFLAGS:=$(CXXFLAGS)
-CXXFLAGS+=-Iinc -Iplat-inc $(FREERTOS_INC) $(STM32_INC) $(USB_INC) -Wall -fno-stack-protector -O3 -DARM_MATH_CM4 -D__FPU_PRESENT=1 $(ARCH_CFLAGS)
+#LDLIBS:=$(shell $(PREFIX)gcc -print-libgcc-file-name)
+CXXFLAGS+=-Iinc -Iplat-inc $(FREERTOS_INC) $(STM32_INC) $(USB_INC) -Wall -fno-stack-protector -O3 -DARM_MATH_CM4 -D__FPU_PRESENT=1 $(ARCH_CFLAGS) -fshort-double
 CFLAGS:=$(CXXFLAGS)
 CXXFLAGS+=-fno-rtti -fno-exceptions -std=c++11
 LIB_SRC=$(wildcard lib/*.cpp) $(wildcard lib/*.c)
@@ -53,7 +54,6 @@ EXECS:=$(addprefix examples/,$(TARGETS))
 ifeq ($(PLAT),stm)
 EXECS:=$(addsuffix .flash,$(EXECS)) $(addsuffix .ram,$(EXECS))
 endif
-LDLIBS:=$(shell $(PREFIX)gcc -print-libgcc-file-name)
 
 all: $(EXECS)
 
