@@ -1,7 +1,13 @@
 #include "Spi.h"
 
 Spi::Spi(int n) {
-	base = I2S2ext_BASE + (SPI_TypeDef*)((n-1) * 0x400);
+	if(n == 1) RCC->APB2ENR |= 1 << 12;
+	else if(n == 2) RCC->APB1ENR |= 1 << 14;
+	else if(n == 3) RCC->APB1ENR |= 1 << 15;
+	else while(1);
+
+	base = SPI1;
+	base->CR1 |= SPI_CR1_SSM | SPI_CR1_SSI;
 }
 
 Spi& Spi::enable() {
@@ -16,6 +22,8 @@ Spi& Spi::master() {
 
 Spi& Spi::setDivisorPow2(int v) {
 	base->CR1 &= ~SPI_CR1_BR;
+	v &= 0x7;
+	base->CR1 |= v << 3;
 	return *this;
 }
 
