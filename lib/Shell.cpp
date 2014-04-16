@@ -4,8 +4,8 @@ static NullIStream nullis;
 static NullOStream nullos;
 
 Shell::Shell() : cbs_name{}, n_cbs(0),
-	history{}, history_pos(0),
-	in(&nullis), out(&nullos) {
+	in(&nullis), out(&nullos),
+	history{}, history_pos(0) {
 
 	current_object = 0;
 	got_name = false;
@@ -252,7 +252,7 @@ void Shell::exec(bool echo, const char* prompt) {
 	char cmd[LINE_SIZE];
 	while(true) {
 		*out << prompt;
-		for(int i=0; i<(sizeof(cmd)-2); ++i) {
+		for(int i=0; i<int(sizeof(cmd)-2); ++i) {
 			*in >> cmd[i];
 			// \r\n
 			if(cmd[i] == '\r' || cmd[i] == '\n') {

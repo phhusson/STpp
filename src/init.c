@@ -15,6 +15,7 @@ void call_constructors() {
 	}
 }
 
+extern int main(void);
 void postScheduler() {
 	call_constructors();
 	main();
@@ -92,8 +93,8 @@ void init(void) {
 	SCB->AIRCR = (SCB->AIRCR & SCB_AIRCR_PRIGROUP_Msk) | 3 << SCB_AIRCR_PRIGROUP_Pos;
 
 	xTaskHandle handle_main;
-	extern void main(void);
-	xTaskCreate((pdTASK_CODE)postScheduler, (const signed char*)"Main thread", 1024, NULL, tskIDLE_PRIORITY+1, &handle_main);
+	int ret = xTaskCreate((pdTASK_CODE)postScheduler, (const signed char*)"Main thread", 1024, NULL, tskIDLE_PRIORITY+1, &handle_main);
+	if(ret != pdPASS) while(1);
 
 	SysTick->LOAD = 168000;
 	SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_CLKSOURCE_Msk;

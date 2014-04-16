@@ -87,8 +87,6 @@ class Asserv {
 		VelocityAccel infos;
 		Position position;
 
-		int deadZone1, deadZone2;
-
 		int targetAngle, targetDist;
 		int c_propDist, c_propAngle;
 		int c_intDist, c_intAngle;
@@ -102,8 +100,8 @@ class Asserv {
 		int beenZero;
 
 		int throttle;
-		int dateStart;
 		int date;
+		int dateStart;
 
 	public:
 		Asserv(IncrementalEncoder& left, IncrementalEncoder& right, Timer& tim, HBridgeST& mot1, HBridgeST& mot2);
