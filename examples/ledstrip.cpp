@@ -1,34 +1,42 @@
 #include <Board.h>
-#include <tr1/functional>
-#include <Log.h>
-#include <Timer.h>
-#include <Irq.h>
-#include <Spi.h>
+#include <LedStrip.h>
 
 int main() {
-	auto ledStripeG = GpioB[5];
-	auto ledStripe = Spi(1);
+#if 0
+	auto ledStripG = GpioB[5];
+	//DmaStream dma(2, 3, 3);
+	//auto ledStripS = Spi(1, &dma);
+	//auto ledStripS = Spi(1);
+	//LedStrip ledStrip(ledStripS);
 
-	ledStripeG
+	ledStripG
 		.setPushPull()
 		.setDirection(Gpio::OUTPUT)
-		.setAlternate(Gpio::SPI1_2)
 		.setSpeed(Gpio::SPEED_100MHz);
 
-	ledStripe
-		.enable()
-		.setDivisorPow2(4)
-		.master();
+	ledStripG = false;
+	time.msleep(100);
+	ledStripG = true;
+	time.msleep(100);
+	ledStripG = false;
 
+	//ledStripS.configGpio(ledStripG);
+
+//#if 0
+	int l = 0;
 	while(1) {
-		//110 110 11.
-		ledStripe.send(0b11011011);
-		//..0 110 110 1..
-		ledStripe.send(0b01101101);
-		//.10 110 110
-		ledStripe.send(0b10110110);
+		for(int i=0; i<71; ++i) {
+			if(i==l)
+				ledStrip.push(32, 32, 32);
+			else
+				ledStrip.push(0, 0, 0);
+		}
+		ledStrip.push(0, 0, 0);
 
-		for(int i=0; i<500; ++i)
-			ledStripe.send(0);
+		l++;
+		l %= 72;
+		ledStrip.reset();
 	}
+#endif
+	while(1);
 }
