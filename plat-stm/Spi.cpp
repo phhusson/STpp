@@ -6,7 +6,9 @@ void Spi::init() {
 	else if(n == 3) RCC->APB1ENR |= 1 << 15;
 	else while(1);
 
-	base = SPI1;
+	if(n == 1)
+		base = SPI1;
+	else while(1);
 	base->CR1 |= SPI_CR1_SSM | SPI_CR1_SSI;
 }
 
@@ -16,7 +18,9 @@ Spi::Spi(int n, DmaStream* stream):
 	init();
 	stream->
 		peripheralFixed()
+		.memoryFixed(false)
 		.setDirection(DmaStream::M2P)
+		.peripheralControlled()
 		.setPeripheral(&(base->DR));
 }
 

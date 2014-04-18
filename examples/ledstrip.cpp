@@ -2,12 +2,11 @@
 #include <LedStrip.h>
 
 int main() {
-#if 0
 	auto ledStripG = GpioB[5];
-	//DmaStream dma(2, 3, 3);
-	//auto ledStripS = Spi(1, &dma);
+	DmaStream dma(2, 3, 3);
+	auto ledStripS = Spi(1, &dma);
 	//auto ledStripS = Spi(1);
-	//LedStrip ledStrip(ledStripS);
+	LedStrip ledStrip(ledStripS);
 
 	ledStripG
 		.setPushPull()
@@ -15,28 +14,28 @@ int main() {
 		.setSpeed(Gpio::SPEED_100MHz);
 
 	ledStripG = false;
-	time.msleep(100);
+	time.msleep(2);
 	ledStripG = true;
-	time.msleep(100);
+	time.msleep(2);
 	ledStripG = false;
+	time.msleep(2);
+	ledStripG = true;
+	ledStripS.configGpio(ledStripG);
+	time.msleep(4);
 
-	//ledStripS.configGpio(ledStripG);
-
-//#if 0
 	int l = 0;
 	while(1) {
 		for(int i=0; i<71; ++i) {
-			if(i==l)
-				ledStrip.push(32, 32, 32);
+			if(l==i)
+				ledStrip.push(0, 255, 0);
 			else
-				ledStrip.push(0, 0, 0);
+				ledStrip.push(6, 0, 0);
 		}
 		ledStrip.push(0, 0, 0);
 
 		l++;
 		l %= 72;
 		ledStrip.reset();
+		//time.msleep(200);
 	}
-#endif
-	while(1);
 }
