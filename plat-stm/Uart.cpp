@@ -48,8 +48,8 @@ void USART6_IRQHandler() {
 	irq_handler(USART6, 6);
 }
 
-Uart::Uart(int n) :
-	number(n) {
+void Uart::init() {
+	int n = number;
 	switch(n) {
 		case 1:
 			RCC->APB2ENR |= 1<<4;
@@ -70,6 +70,23 @@ Uart::Uart(int n) :
 	uart_queue_rx[n] = xQueueCreate(32, 1);
 }
 
+Uart::Uart(int n) :
+	number(n), dma(NULL) {
+	init();
+}
+
+Uart::Uart(int n, DmaStream* dma) :
+	number(n), dma(dma) {
+	init();
+	dma->
+		peripheralFixed(true)
+		.memoryFixed(false)
+		.fifo(true)
+		.setDirection(DmaStream::M2P)
+		.peripheralControlled(false)
+		.setPeripheral(&(base->DR));
+}
+
 Uart& Uart::configGpio(Gpio& p) {
 	int af;
 
@@ -85,7 +102,31 @@ Uart& Uart::configGpio(Gpio& p) {
 	return *this;
 }
 
+Uart& Uart::put(char* s, int l) {
+	if(!dma) {
+		for(int i=0; i<l; ++i)
+			put(s[i]);
+		return *this;
+	}
+	txDma(true);
+	base->SR  &= ~USART_SR_TC;
+	dma->
+		numberOfData(l)
+		.setMemory(s)
+		.enable()
+		.wait();
+
+	return *this;
+}
+
 Uart& Uart::put(char c) {
+	if(dma) {
+		static char dma_c __attribute((section("dma")));
+		dma_c = c;
+		put(&dma_c, 1);
+		while(! (base->SR & (1<<7)));
+		return *this;
+	}
 	while(! (base->SR & (1<<7)));
 	base->DR = c;
 	while(! (base->SR & (1<<7)));
@@ -199,4 +240,12 @@ bool Uart::available() {
 void Uart::wait() {
 	char c;
 	xQueuePeek(uart_queue_rx[number], &c, portMAX_DELAY);
+}
+
+Uart& Uart::txDma(bool en) {
+	if(en)
+		base->CR3 |= USART_CR3_DMAT;
+	else
+		base->CR3 &= ~USART_CR3_DMAT;
+	return *this;
 }

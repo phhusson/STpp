@@ -5,13 +5,17 @@
 #include <stm32f4xx.h>
 #include "OStream.h"
 #include "IStream.h"
+#include "Dma.h"
 
 class Uart : public OStream, public IStream {
 	private:
 		int number;
 		volatile USART_TypeDef *base;
+		void init();
+		DmaStream* dma;
 	public:
 		Uart(int);
+		Uart(int, DmaStream* dma);
 		Uart& configGpio(Gpio& p);
 		char waitForNext();
 		Uart& setMantissa(int);
@@ -21,11 +25,13 @@ class Uart : public OStream, public IStream {
 		Uart& enableTransmitter();
 		Uart& disableTransmitter();
 		Uart& enable();
+		Uart& txDma(bool en);
 		Uart& disable();
 		Uart& sendBreak();
 		Uart& setHalfDuplex(bool);
 	public:
 		virtual Uart& put(char);
+		virtual Uart& put(char*, int);
 		virtual Uart& endl();
 	public:
 		virtual int get();
