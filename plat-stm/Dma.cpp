@@ -94,9 +94,17 @@ DmaStream& DmaStream::numberOfData(int n) {
 DmaStream& DmaStream::enable() {
 	setCurrent(currentBuf == 0);
 	if(streamId < 4)
-		dma->LIFCR &= ~(0x1f << (6*streamId));
+		if(streamId < 2)
+			dma->LIFCR = 0x1f << (6*streamId);
+		else
+			dma->LIFCR = 0x1f << (6*streamId+4);
 	else
-		dma->HIFCR &= ~(0x1f << (6*(streamId-4)));
+		if(streamId < 6)
+			dma->HIFCR = 0x1f << (6*(streamId-4));
+		else
+			dma->HIFCR = 0x1f << (6*(streamId-4)+4);
+	dma->HIFCR = 0xffffffff;
+	dma->LIFCR = 0xffffffff;
 
 	stream->CR |= DMA_SxCR_EN;
 
@@ -122,5 +130,13 @@ DmaStream& DmaStream::setMemory(volatile void* p) {
 	else
 		stream->M1AR = (uint32_t)p;
 
+	return *this;
+}
+
+DmaStream& DmaStream::fifo(bool enabled) {
+	if(enabled)
+		stream->FCR |= DMA_SxFCR_DMDIS;
+	else
+		stream->FCR &= ~DMA_SxFCR_DMDIS;
 	return *this;
 }

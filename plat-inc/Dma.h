@@ -28,6 +28,7 @@ class DmaStream {
 		DmaStream& wait();
 		DmaStream& setPeripheral(volatile void*);
 		DmaStream& setMemory(volatile void*);
+		DmaStream& fifo(bool);
 };
 
 #endif /* _DMA_H */
