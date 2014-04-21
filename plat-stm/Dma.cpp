@@ -1,7 +1,34 @@
 #include "Dma.h"
 #include <Log.h>
+#include <FreeRTOS.h>
+#include <semphr.h>
+#include <task.h>
+#include <Irq.h>
 
-DmaStream::DmaStream(int dmaId, int streamId, int channel): streamId(streamId) {
+extern "C" {
+	void DMA1_Stream0_IRQHandler();
+	void DMA1_Stream1_IRQHandler();
+	void DMA1_Stream2_IRQHandler();
+	void DMA1_Stream3_IRQHandler();
+	void DMA1_Stream4_IRQHandler();
+	void DMA1_Stream5_IRQHandler();
+	void DMA1_Stream6_IRQHandler();
+	void DMA1_Stream7_IRQHandler();
+	void DMA2_Stream0_IRQHandler();
+	void DMA2_Stream1_IRQHandler();
+	void DMA2_Stream2_IRQHandler();
+	void DMA2_Stream3_IRQHandler();
+	void DMA2_Stream4_IRQHandler();
+	void DMA2_Stream5_IRQHandler();
+	void DMA2_Stream6_IRQHandler();
+	void DMA2_Stream7_IRQHandler();
+};
+
+xSemaphoreHandle dmaSem[8][2];
+
+DmaStream::DmaStream(int dmaId, int streamId, int channel): streamId(streamId), dmaId(dmaId) {
+	vSemaphoreCreateBinary(dmaSem[dmaId][streamId]);
+	xSemaphoreTake(dmaSem[dmaId][streamId], 0);
 	if(dmaId == 1) RCC->AHB1ENR |= 1 << 21;
 	else if(dmaId == 2) RCC->AHB1ENR |= 1 << 22;
 	else while(1);
@@ -26,6 +53,27 @@ DmaStream::DmaStream(int dmaId, int streamId, int channel): streamId(streamId) {
 	stream->CR &= ~DMA_SxCR_CHSEL;
 	channel &= 7;
 	stream->CR |= channel << 25;
+
+	Irq(irqNr()).enable();
+	stream->CR |= DMA_SxCR_TCIE;
+}
+
+int DmaStream::irqNr() {
+	if(dmaId == 1) {
+		if(streamId <= 6)
+			return 11 + streamId;
+		if(streamId == 7)
+			return DMA1_Stream7_IRQn;
+		while(1);
+	} else if(dmaId == 2) {
+		if(streamId <= 4)
+			return DMA2_Stream0_IRQn + streamId;
+		if(streamId <= 7)
+			return DMA2_Stream5_IRQn + streamId-5;
+		while(1);
+	} else while(1);
+		
+	return 0;
 }
 
 DmaStream& DmaStream::setCurrent(bool first) {
@@ -112,6 +160,9 @@ DmaStream& DmaStream::enable() {
 }
 
 DmaStream& DmaStream::wait() {
+	if(!(stream->CR & DMA_SxCR_EN))
+		return *this;
+	xSemaphoreTake(dmaSem[dmaId][streamId], portMAX_DELAY);
 	while(stream->CR & DMA_SxCR_EN);
 
 	return *this;
@@ -138,5 +189,31 @@ DmaStream& DmaStream::fifo(bool enabled) {
 		stream->FCR |= DMA_SxFCR_DMDIS;
 	else
 		stream->FCR &= ~DMA_SxFCR_DMDIS;
+
 	return *this;
 }
+
+static void irq_handler(DMA_TypeDef *dmab, int dma, int stream) {
+	long v;
+	xSemaphoreGiveFromISR(dmaSem[dma][stream], &v);
+	dmab->HIFCR = 0xffffffff;
+	dmab->LIFCR = 0xffffffff;
+}
+
+void DMA1_Stream0_IRQHandler() { irq_handler(DMA1, 1, 0); }
+void DMA1_Stream1_IRQHandler() { irq_handler(DMA1, 1, 1); }
+void DMA1_Stream2_IRQHandler() { irq_handler(DMA1, 1, 2); }
+void DMA1_Stream3_IRQHandler() { irq_handler(DMA1, 1, 3); }
+void DMA1_Stream4_IRQHandler() { irq_handler(DMA1, 1, 4); }
+void DMA1_Stream5_IRQHandler() { irq_handler(DMA1, 1, 5); }
+void DMA1_Stream6_IRQHandler() { irq_handler(DMA1, 1, 6); }
+void DMA1_Stream7_IRQHandler() { irq_handler(DMA1, 1, 7); }
+
+void DMA2_Stream0_IRQHandler() { irq_handler(DMA2, 2, 0); }
+void DMA2_Stream1_IRQHandler() { irq_handler(DMA2, 2, 1); }
+void DMA2_Stream2_IRQHandler() { irq_handler(DMA2, 2, 2); }
+void DMA2_Stream3_IRQHandler() { irq_handler(DMA2, 2, 3); }
+void DMA2_Stream4_IRQHandler() { irq_handler(DMA2, 2, 4); }
+void DMA2_Stream5_IRQHandler() { irq_handler(DMA2, 2, 5); }
+void DMA2_Stream6_IRQHandler() { irq_handler(DMA2, 2, 6); }
+void DMA2_Stream7_IRQHandler() { irq_handler(DMA2, 2, 7); }

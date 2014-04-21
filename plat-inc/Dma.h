@@ -9,7 +9,9 @@ class DmaStream {
 		DMA_Stream_TypeDef* stream;
 		int currentBuf;
 		int streamId;
+		int dmaId;
 		DmaStream& setCurrent(bool first);
+		int irqNr();
 
 	public:
 		DmaStream(int dmaController, int streamNumber, int channel);
