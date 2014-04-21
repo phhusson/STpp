@@ -20,7 +20,7 @@ class Spi {
 	public:
 		Spi(int n);
 		Spi(int n, DmaStream* s);
-		Spi& enable();
+		Spi& enable(bool v=true);
 		Spi& setDivisorPow2(int d);
 		Spi& master();
 		Spi& slave();

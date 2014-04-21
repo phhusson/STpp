@@ -17,10 +17,11 @@ Spi::Spi(int n, DmaStream* stream):
 
 	init();
 	stream->
-		peripheralFixed()
+		peripheralFixed(true)
 		.memoryFixed(false)
+		.fifo(true)
 		.setDirection(DmaStream::M2P)
-		.peripheralControlled()
+		.peripheralControlled(false)
 		.setPeripheral(&(base->DR));
 }
 
@@ -28,8 +29,11 @@ Spi::Spi(int n): n(n), dma(0) {
 	init();
 }
 
-Spi& Spi::enable() {
-	base->CR1 |= SPI_CR1_SPE;
+Spi& Spi::enable(bool v) {
+	if(v)
+		base->CR1 |= SPI_CR1_SPE;
+	else
+		base->CR1 &= ~SPI_CR1_SPE;
 	return *this;
 }
 
@@ -62,17 +66,21 @@ Spi& Spi::send(char *s, int l) {
 		return *this;
 	}
 
+	dma->wait();
+	while( !(base->SR & SPI_SR_TXE));
 	txDma(true);
 	dma->
 		numberOfData(l)
 		.setMemory(s)
-		.enable()
-		.wait();
+		.enable();
 	return *this;
 }
 
 Spi& Spi::setLsbFirst(bool lsbFirst) {
-	base->CR1 |= SPI_CR1_LSBFIRST;
+	if(lsbFirst)
+		base->CR1 |= SPI_CR1_LSBFIRST;
+	else
+		base->CR1 &= ~SPI_CR1_LSBFIRST;
 	return *this;
 }
 
@@ -92,6 +100,9 @@ Spi& Spi::rxDma(bool enable) {
 }
 
 Spi& Spi::txDma(bool enable) {
-	base->CR2 |= SPI_CR2_TXDMAEN;
+	if(enable)
+		base->CR2 |= SPI_CR2_TXDMAEN;
+	else
+		base->CR2 &= ~SPI_CR2_TXDMAEN;
 	return *this;
 }
