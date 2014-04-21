@@ -36,16 +36,16 @@ static void ledSetByte(uint8_t *buf, int offset, int v) {
 }
 
 LedStrip& LedStrip::push(int r, int g, int b) {
-	uint8_t buf[9];
-	ledSetByte(buf, 0, g);
-	ledSetByte(buf, 8, r);
-	ledSetByte(buf, 16, b);
-	spi.send((char*)buf, 9);
+	static uint8_t _dma_buf[9] __attribute__((section("dma")));
+	ledSetByte(_dma_buf, 0, g);
+	ledSetByte(_dma_buf, 8, r);
+	ledSetByte(_dma_buf, 16, b);
+	spi.send((char*)_dma_buf, 9);
 	return *this;
 }
 
 LedStrip& LedStrip::reset() {
-	for(int i=0; i<900; ++i)
-		spi.send(0);
+	static char _dma_buf[5] __attribute__((section("dma")));
+	spi.send(_dma_buf, sizeof(_dma_buf));
 	return *this;
 }
