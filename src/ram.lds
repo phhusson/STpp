@@ -21,6 +21,10 @@ SECTIONS {
 	} > ccmram
 	_ebss = _sbss + SIZEOF(.bss);
 
+	.dma : {
+		*(.dma*);
+	} > ram
+
 	. = ALIGN(4);
 	.init_array : {
 		__init_array_start = .;
