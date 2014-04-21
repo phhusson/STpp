@@ -1,6 +1,8 @@
 #include <Ax12.h>
 #include <Log.h>
 
+static char buf[16] __attribute((section("dma")));
+static char *bufPos = buf;
 Ax12::Ax12(Gpio g, Uart u, int i) :
 	uart(u), id(i) {
 	g
@@ -13,15 +15,16 @@ Ax12::Ax12(Gpio g, Uart u, int i) :
 	uart
 		.enable()
 		//~1Mbps
-		.setMantissa(2)
-		.setFraction(0xb)
+		//.setMantissa(2)
+		//.setFraction(0xb)
 		//a,b,c
-		//setMantissa(0x16)
-		//.setFraction(0x9)
+		.setMantissa(0x16)
+		.setFraction(0x9)
 		.setHalfDuplex(true)
 		.enableReceive()
 		.enableTransmitter();
 	deferred = false;
+	bufPos = buf;
 }
 
 Ax12& Ax12::defer() {
@@ -72,21 +75,28 @@ Ax12& Ax12::setSpeed(unsigned short v) {
 	return *this;
 }
 
+void Ax12::flush() {
+	uart.put(buf, bufPos-buf);
+}
+
 void Ax12::prelude() {
-	uart
-		.put(0xff)
-		.put(0xff)
-		.put(id);
+	*bufPos++ = 0xff;
+	*bufPos++ = 0xff;
+	*bufPos++ = id;
 	checksum=id;
 }
 
 void Ax12::put(char v) {
-	uart.put(v);
+	*bufPos++ = v;
+	if(bufPos >= buf + sizeof(buf))
+		while(1);
 	checksum+=v;
 }
 
 void Ax12::putChecksum() {
-	uart.put(~checksum);
+	*bufPos++ = ~checksum;
+	flush();
+	bufPos = buf;
 }
 
 void Ax12::readReg(char reg) {
@@ -117,9 +127,8 @@ void Ax12::writeReg(char reg, char val) {
 
 Ax12& Ax12::action(bool broadcast) {
 	checksum = 0;
-	uart
-		.put(0xff)
-		.put(0xff);
+	*bufPos++ = 0xff;
+	*bufPos++ = 0xff;
 	put(broadcast ? 0xfe : id);
 	put(2);
 	put(0x05);

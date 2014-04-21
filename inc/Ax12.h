@@ -16,6 +16,7 @@ class Ax12 {
 		char checksum;
 		void getMsg();
 		bool deferred;
+		void flush();
 	public:
 		Ax12(Gpio g, Uart u, int i);
 		Ax12& setLed(bool);
