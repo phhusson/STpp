@@ -20,7 +20,9 @@ static xQueueHandle uart_queue_rx[7];
 static void irq_handler(volatile USART_TypeDef* b, int i) {
 	if(b->SR & USART_SR_RXNE) {
 		char val = b->DR;
-		xQueueSendFromISR(uart_queue_rx[i], &val, NULL);
+		long v;
+		xQueueSendFromISR(uart_queue_rx[i], &val, &v);
+		portEND_SWITCHING_ISR(v);
 	}
 }
 

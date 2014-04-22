@@ -196,6 +196,7 @@ DmaStream& DmaStream::fifo(bool enabled) {
 static void irq_handler(DMA_TypeDef *dmab, int dma, int stream) {
 	long v;
 	xSemaphoreGiveFromISR(dmaSem[dma][stream], &v);
+	portEND_SWITCHING_ISR(v);
 	dmab->HIFCR = 0xffffffff;
 	dmab->LIFCR = 0xffffffff;
 }
