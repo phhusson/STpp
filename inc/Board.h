@@ -3,7 +3,7 @@
 #include <Time.h>
 #include <HBridgeST.h>
 #include <IncrementalEncoder.h>
-
+#include <Uart.h>
 
 // Motor control
 extern Gpio Prop0_PWM;
@@ -53,3 +53,7 @@ extern Gpio UserButton;
 
 //Which timer to use for precise (<1ms) timing
 extern Time time;
+
+extern Gpio Zigbee_RX;
+extern Gpio Zigbee_TX;
+extern Uart Zigbee_UART;
