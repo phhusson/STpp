@@ -2,6 +2,12 @@
 
 Endl endl;
 
+OStream& OStream::put(char *s, int l) {
+	for(int i=0; i<l; ++i) {
+		put(s[i]);
+	}
+}
+
 OStream& operator<<(OStream& o, char c) {
 	o.put(c);
 	return o;

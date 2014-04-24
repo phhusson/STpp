@@ -6,6 +6,7 @@ extern Endl endl;
 class OStream {
 	public:
 		virtual OStream& put(char) = 0;
+		virtual OStream& put(char* s, int l);
 		virtual OStream& endl() = 0;
 };
 
