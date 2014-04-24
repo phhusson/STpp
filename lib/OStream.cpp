@@ -6,6 +6,7 @@ OStream& OStream::put(char *s, int l) {
 	for(int i=0; i<l; ++i) {
 		put(s[i]);
 	}
+	return *this;
 }
 
 OStream& operator<<(OStream& o, char c) {
