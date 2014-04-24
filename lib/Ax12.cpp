@@ -19,7 +19,7 @@ Ax12::Ax12(Gpio g, Uart u, int i) :
 		//.setFraction(0xb)
 		//a,b,c
 		.setMantissa(0x16)
-		.setFraction(0x9)
+		.setFraction(0x6)
 		.setHalfDuplex(true)
 		.enableReceive()
 		.enableTransmitter();
