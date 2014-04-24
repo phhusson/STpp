@@ -220,8 +220,8 @@ Uart& Uart::setHalfDuplex(bool b) {
 }
 
 Uart& Uart::endl() {
-	put('\r');
-	put('\n');
+	static char eol[] __attribute((section("dma"))) = "\r\n";
+	put(eol, sizeof(eol)-1);
 	return *this;
 }
 
