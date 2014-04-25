@@ -4,7 +4,7 @@
 static char buf[16] __attribute((section("dma")));
 static char *bufPos = buf;
 Ax12::Ax12(Gpio g, Uart u, int i) :
-	uart(u), id(i) {
+	uart(u), id(i), g(0) {
 	g
 		.setPushPull()
 		.setAlternate(Gpio::USART1_3)
@@ -25,6 +25,29 @@ Ax12::Ax12(Gpio g, Uart u, int i) :
 		.enableTransmitter();
 	deferred = false;
 	bufPos = buf;
+}
+
+Ax12::Ax12(Uart u, int i, Gpio *g) : uart(u), id(i), g(g) {
+	g
+		->setPushPull()
+		.setDirection(Gpio::OUTPUT)
+		.setSpeed(Gpio::SPEED_100MHz)
+		.setResistor(Gpio::PULL_UP);
+
+	uart
+		.enable()
+		//~1Mbps
+		.setMantissa(2)
+		.setFraction(0xb)
+		//a,b,c
+		//.setMantissa(0x16)
+		//.setFraction(0x6)
+		//.setHalfDuplex(true)
+		.enableReceive()
+		.enableTransmitter();
+	deferred = false;
+	bufPos = buf;
+	*g = false;
 }
 
 Ax12& Ax12::defer() {
@@ -173,6 +196,9 @@ void Ax12::getMsg() {
 	//12 should be enough... right ?
 	if(id == 0xfe)
 		return;
+	if(g)
+		*g = true;
+
 	char msg[12];
 	msg[3]=0xff;
 	int i;
@@ -187,6 +213,8 @@ void Ax12::getMsg() {
 		checksum+=msg[j];
 	checksum=~checksum;
 	log << "end (found " << (int)checksum << endl;
+	if(g)
+		*g = false;
 }
 
 Ax12& Ax12::setMaxTorque(unsigned short int value, bool persist) {

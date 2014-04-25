@@ -6,6 +6,7 @@
 class Ax12 {
 	private:
 		Uart uart;
+		Gpio *g;
 		int id;
 		void prelude();
 		void writeReg(char reg, char val);
@@ -18,7 +19,10 @@ class Ax12 {
 		bool deferred;
 		void flush();
 	public:
+		//One wire
 		Ax12(Gpio g, Uart u, int i);
+			//Two wire
+		Ax12(Uart u, int i, Gpio *sw);
 		Ax12& setLed(bool);
 		Ax12& ping();
 
