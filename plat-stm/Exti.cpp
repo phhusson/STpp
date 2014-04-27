@@ -4,9 +4,6 @@
 #include "Irq.h"
 #include "Log.h"
 
-void exti_handler(int v) {
-}
-
 Exti::Callback Exti::top_cb[15];
 Exti::Callback Exti::bottom_cb[15];
 
@@ -16,7 +13,6 @@ void exti_handler() {
 	while(reg) {
 		if(reg&1) {
 			Exti::callTopCB(i);
-			exti_handler(i);
 			EXTI->PR = 1<<i;
 		}
 		++i;
