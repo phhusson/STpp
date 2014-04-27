@@ -23,6 +23,7 @@ SRC:=$(wildcard src/*.c) $(wildcard src/*.s)
 SRC_OBJS:=$(subst .c,.o,$(SRC))
 SRC_OBJS:=$(subst .s,.o,$(SRC_OBJS))
 CXXFLAGS=-mcpu=cortex-m4 -g -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard
+LDFLAGS=-flto --gc-sections
 else
 ARCH_CFLAGS=-DARCH=unix
 CXXFLAGS=-g
@@ -32,7 +33,7 @@ endif
 
 ASFLAGS:=$(CXXFLAGS)
 #LDLIBS:=$(shell $(PREFIX)gcc -print-libgcc-file-name)
-CXXFLAGS+=-Iinc -Iplat-inc $(FREERTOS_INC) $(STM32_INC) $(USB_INC) -Wall -fno-stack-protector -O3 -DARM_MATH_CM4 -D__FPU_PRESENT=1 $(ARCH_CFLAGS) -fshort-double
+CXXFLAGS+=-Iinc -Iplat-inc $(FREERTOS_INC) $(STM32_INC) $(USB_INC) -Wall -fno-stack-protector -O3 -DARM_MATH_CM4 -D__FPU_PRESENT=1 $(ARCH_CFLAGS) -fshort-double -fdata-sections -ffunction-sections
 CFLAGS:=$(CXXFLAGS)
 CXXFLAGS+=-fno-rtti -fno-exceptions -std=c++11
 LIB_SRC=$(wildcard lib/*.cpp) $(wildcard lib/*.c)
