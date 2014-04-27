@@ -17,6 +17,7 @@ class Uart : public OStream, public IStream {
 		Uart(int);
 		Uart(int, DmaStream* dma);
 		Uart& configGpio(Gpio& p);
+		Uart& configGpio(Gpio& rx, Gpio& tx);
 		char waitForNext();
 		Uart& setMantissa(int);
 		Uart& setFraction(int);

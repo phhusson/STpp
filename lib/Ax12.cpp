@@ -5,11 +5,10 @@ static char buf[16] __attribute((section("dma")));
 static char *bufPos = buf;
 Ax12::Ax12(Gpio g, Uart u, int i) :
 	uart(u), id(i), g(0) {
+
+	u.configGpio(g);
 	g
-		.setPushPull()
-		.setAlternate(Gpio::USART1_3)
 		.setDirection(Gpio::OUTPUT)
-		.setSpeed(Gpio::SPEED_100MHz)
 		.setResistor(Gpio::PULL_UP);
 
 	uart

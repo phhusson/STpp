@@ -97,8 +97,17 @@ Uart& Uart::configGpio(Gpio& p) {
 
 	p.setAlternate(af);
 	p.setSpeed(Gpio::SPEED_100MHz);
+	p.setPushPull();
 
 	//Perhaps control direction... one day...
+	return *this;
+}
+
+Uart& Uart::configGpio(Gpio& rx, Gpio& tx) {
+	configGpio(rx);
+	rx.setDirection(Gpio::INPUT);
+	configGpio(tx);
+	tx.setDirection(Gpio::OUTPUT);
 	return *this;
 }
 
