@@ -49,14 +49,17 @@ Shell& operator<<(Shell& shell, Asserv& a) {
 	addSetter(shell, a, dist);
 
 	shell.add([&a,&shell](Stack& s) {
+		(void)s;
 		a.reset();
 	}, shell.current_object, "reset");
 
 	shell.add([&a,&shell](Stack& s) {
+		(void)s;
 		a.start();
 	}, shell.current_object, "start");
 
 	shell.add([&a,&shell](Stack& s) {
+		(void)s;
 		OStream& o = *(shell.out);
 
 		o << "Asserv" << endl;

@@ -4,6 +4,7 @@
 Shell& operator<<(Shell& shell, Gpio& g) {
 	if(!shell.got_name) while(1);
 	shell.add([&g,&shell](Stack& s) {
+		(void)s;
 		*shell.out << (g.getState() ? "# On" : "# Off" ) << endl;
 	}, shell.current_object, "printState");
 

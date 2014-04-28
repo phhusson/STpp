@@ -111,6 +111,9 @@ void abort() {
 }
 
 void __aeabi_atexit(void *fnc, void *arg, void *dso) {
+	(void)fnc;
+	(void)arg;
+	(void)dso;
 }
 
 void __cxa_pure_virtual() {

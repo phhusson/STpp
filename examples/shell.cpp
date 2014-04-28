@@ -58,23 +58,27 @@ int main() {
 	//shell << "Strategie" << strategie;
 
 	shell.add([&asserv/*,&mamoutor*/](Stack& s) {
+		(void)s;
 		asserv.reset();
 		//mamoutor.disable();
 		Encoder0 = Encoder1 = 0;
 	}, "reset");
 
 	shell.add([&usb](Stack& s) {
+		(void)s;
 		int angle = s.pop().toInt();
 		usb << "Lidar distance " << LidarNeato::getDistance(angle) << endl;
 	}, "lidar");
 
 	shell.add([&usb](Stack& s) {
+		(void)s;
 		for(int angle=0; angle<360; ++angle)
 			usb << LidarNeato::getDistance(angle) << ", ";
 		usb << endl;
 	}, "lidar", "dump");
 
 	shell.add([&usb,&asserv](Stack& s) {
+		(void)s;
 		usb << asserv.getPosition();
 	}, "whereami");
 

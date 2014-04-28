@@ -7,6 +7,7 @@ IStream& operator>>(IStream& i, char &c) {
 }
 
 IStream& operator>>(IStream& i, int &c) {
+	(void)c;
 	//TODO
 	while(1);
 	return i;

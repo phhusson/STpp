@@ -33,6 +33,7 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 
 	tim
 		.setTopCB([&tim, this](int timer_id) {
+			(void)timer_id;
 			++date;
 			infos.compute(targetDist, targetAngle);
 			position.update();

@@ -37,6 +37,7 @@ OStream& operator<<(OStream& o, int i) {
 }
 
 OStream& operator<<(OStream& o, Endl e) {
+	(void)e;
 	o.endl();
 	return o;
 }

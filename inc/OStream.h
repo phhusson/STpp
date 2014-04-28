@@ -12,7 +12,7 @@ class OStream {
 
 class NullOStream : public OStream {
 	public:
-		virtual OStream& put(char c) { return *this; }
+		virtual OStream& put(char c) { (void)c; return *this; }
 		virtual OStream& endl() { return *this; }
 };
 

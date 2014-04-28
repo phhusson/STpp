@@ -33,7 +33,7 @@ endif
 
 ASFLAGS:=$(CXXFLAGS)
 #LDLIBS:=$(shell $(PREFIX)gcc -print-libgcc-file-name)
-CXXFLAGS+=-Iinc -Iplat-inc $(FREERTOS_INC) $(STM32_INC) $(USB_INC) -Wall -fno-stack-protector -O3 -DARM_MATH_CM4 -D__FPU_PRESENT=1 $(ARCH_CFLAGS) -fshort-double -fdata-sections -ffunction-sections
+CXXFLAGS+=-Iinc -Iplat-inc $(FREERTOS_INC) $(STM32_INC) $(USB_INC) -Wall -fno-stack-protector -O3 -DARM_MATH_CM4 -D__FPU_PRESENT=1 $(ARCH_CFLAGS) -fshort-double -fdata-sections -ffunction-sections -Wextra -Werror
 CFLAGS:=$(CXXFLAGS)
 CXXFLAGS+=-fno-rtti -fno-exceptions -std=c++11
 LIB_SRC=$(wildcard lib/*.cpp) $(wildcard lib/*.c)
@@ -55,6 +55,14 @@ EXECS:=$(addprefix examples/,$(TARGETS))
 ifeq ($(PLAT),stm)
 EXECS:=$(addsuffix .flash,$(EXECS)) $(addsuffix .ram,$(EXECS))
 endif
+
+BAD_FILES:=3rdparty/STM32_USB-Host-Device_Lib_V2.1.0/Libraries/STM32_USB_OTG_Driver//src/usb_core.o lib/arm_sin_cos_f32.o
+BAD_FILES+=3rdparty/STM32_USB-Host-Device_Lib_V2.1.0/Libraries/STM32_USB_OTG_Driver//src/usb_dcd_int.o
+BAD_FILES+=3rdparty/STM32_USB-Host-Device_Lib_V2.1.0/Libraries/STM32_USB_Device_Library//Core/src/usbd_core.o
+BAD_FILES+=3rdparty/STM32_USB-Host-Device_Lib_V2.1.0/Libraries/STM32_USB_Device_Library//Core/src/usbd_req.o
+BAD_FILES+=3rdparty/STM32_USB-Host-Device_Lib_V2.1.0/Libraries/STM32_USB_Device_Library//Class/hid/src/usbd_hid_core.o
+BAD_FILES+=3rdparty/STM32_USB-Host-Device_Lib_V2.1.0/Libraries/STM32_USB_Device_Library//Class/cdc/src/usbd_cdc_core.o
+$(BAD_FILES): CFLAGS+=-Wno-sign-compare -Wno-strict-aliasing -Wno-unused-parameter
 
 all: $(EXECS)
 

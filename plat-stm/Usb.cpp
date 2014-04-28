@@ -43,11 +43,12 @@ void USB_OTG_BSP_EnableInterrupt(void) {
 }
 
 void USB_OTG_BSP_DriveVBUS(uint32_t speed, uint8_t state) {
+	(void)speed;
 	USB_Vbus_en.setState(state == 0);
 }
 
-void USB_OTG_BSP_ConfigVBUS(uint32_t speed)
-{
+void USB_OTG_BSP_ConfigVBUS(uint32_t speed) {
+	(void)speed;
 
 }
 
@@ -91,6 +92,7 @@ void USBD_USR_Init() {
 }
 
 void USBD_USR_DeviceReset(uint8_t speed ) {
+	(void)speed;
 	log << "USBD resting" << endl;
 }
 

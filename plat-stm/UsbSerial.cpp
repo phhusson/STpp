@@ -38,6 +38,8 @@ static uint16_t UsbSerial_DeInit(void)
 }
 
 static uint16_t UsbSerial_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t Len) { 
+	//Hum...
+	(void)Len;
 	switch (Cmd) {
 		case SET_LINE_CODING:
 			linecoding.bitrate = (uint32_t)(Buf[0] | (Buf[1] << 8) | (Buf[2] << 16) | (Buf[3] << 24));
@@ -108,7 +110,7 @@ UsbSerial& UsbSerial::put(char c) {
 	APP_Rx_ptr_in++;
 
 	while(1) {
-		uint32_t delta = APP_Rx_ptr_in - APP_Rx_ptr_out;
+		int delta = APP_Rx_ptr_in - APP_Rx_ptr_out;
 		if(delta<0)
 			delta += APP_RX_DATA_SIZE;
 		if(delta < APP_RX_DATA_SIZE/4)

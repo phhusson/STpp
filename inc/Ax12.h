@@ -6,8 +6,8 @@
 class Ax12 {
 	private:
 		Uart uart;
-		Gpio *g;
 		int id;
+		Gpio *g;
 		void prelude();
 		void writeReg(char reg, char val);
 		void writeReg(char reg, unsigned short val);

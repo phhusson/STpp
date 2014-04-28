@@ -95,7 +95,10 @@ Spi& Spi::configGpio(Gpio& g) {
 }
 
 Spi& Spi::rxDma(bool enable) {
-	base->CR2 |= SPI_CR2_RXDMAEN;
+	if(enable)
+		base->CR2 |= SPI_CR2_RXDMAEN;
+	else
+		base->CR2 &= ~SPI_CR2_RXDMAEN;
 	return *this;
 }
 

@@ -117,6 +117,7 @@ void Shell::pushInt(const char *str) {
 
 void Shell::pushStr(const char *str) {
 	while(1);
+	(void)str;
 }
 
 void Shell::pushValue(const char *str) {
