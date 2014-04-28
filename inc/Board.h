@@ -4,6 +4,7 @@
 #include <HBridgeST.h>
 #include <IncrementalEncoder.h>
 #include <Uart.h>
+#include <Ax12.h>
 
 // Motor control
 extern Gpio Prop0_PWM;
@@ -57,3 +58,9 @@ extern Time time;
 extern Gpio Zigbee_RX;
 extern Gpio Zigbee_TX;
 extern Uart Zigbee_UART;
+
+extern Gpio Ax12TX;
+extern Gpio Ax12RX;
+extern Gpio Ax12EN;
+extern Uart Ax12_UART;
+extern Ax12 mamoutor;

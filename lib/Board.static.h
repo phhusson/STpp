@@ -4,6 +4,7 @@
 #include "HBridgeST.h"
 #include "IncrementalEncoder.h"
 #include "Uart.h"
+#include "Ax12.h"
 
 // Motor control
 Gpio Prop0_PWM(GpioB[10]);
@@ -13,12 +14,12 @@ HBridgeST HBridge0(Prop0A, Prop0B, Prop0_PWM, Tim2, 3);
 
 Gpio Enc0A(GpioE[9]);
 Gpio Enc0B(GpioE[11]);
-IncrementalEncoder Encoder0(Enc0A, Enc0B, Tim1, 0, true);
+IncrementalEncoder Encoder0(Enc0A, Enc0B, Tim1, 0, false);
 
 Gpio Prop1_PWM(GpioB[11]);
 Gpio Prop1A(GpioB[14]);
 Gpio Prop1B(GpioB[12]);
-HBridgeST HBridge1(Prop1A, Prop1B, Prop1_PWM, Tim2, 4);
+HBridgeST HBridge1(Prop1B, Prop1A, Prop1_PWM, Tim2, 4);
 
 Gpio Enc1A(GpioB[4]);
 Gpio Enc1B(GpioB[5]);
@@ -80,3 +81,10 @@ Gpio UserButton(GpioA[0]);
 
 //Which timer to use for precise (<1ms) timing
 Time time(Tim14);
+
+Gpio Ax12Tx(GpioA[2]);
+Gpio Ax12Rx(GpioA[3]);
+Gpio Ax12En(GpioA[1]);
+Uart Ax12_UART(2);
+//Need actual id
+Ax12 mamoutor(Ax12_UART, 0xfe, &Ax12En, Ax12Rx, Ax12Tx);

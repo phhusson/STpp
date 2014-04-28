@@ -54,8 +54,10 @@ int main() {
 	shell << "Encoder0" << Encoder0;
 	shell << "Encoder1" << Encoder1;
 
-	//Strategie strategie(mamoutor, asserv);
-	//shell << "Strategie" << strategie;
+	Strategie strategie(mamoutor, asserv);
+	shell << "Strategie" << strategie;
+
+	shell << "Mamoutor" << mamoutor;
 
 	shell.add([&asserv/*,&mamoutor*/](Stack& s) {
 		(void)s;

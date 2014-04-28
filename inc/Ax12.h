@@ -21,8 +21,8 @@ class Ax12 {
 	public:
 		//One wire
 		Ax12(Gpio g, Uart u, int i);
-			//Two wire
-		Ax12(Uart u, int i, Gpio *sw);
+		//Three wires
+		Ax12(Uart u, int i, Gpio *sw, Gpio& rx, Gpio& tx);
 		Ax12& setLed(bool);
 		Ax12& ping();
 

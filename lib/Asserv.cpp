@@ -54,8 +54,8 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 #define abs(x) ((x) > 0 ? (x) : -(x))
 #define signof(x, y) ((x) > 0 ? (y) : -(y))
 
-			int dl = d_d - d_a;
-			int dr = d_d + d_a;
+			int dl = d_d + d_a;
+			int dr = d_d - d_a;
 
 			dl/=0x4000;
 			dr/=0x4000;
@@ -150,16 +150,23 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 		.enable();
 }
 
+Asserv& Asserv::wait() {
+	while(!waiting);
+	return *this;
+}
+
 Asserv& Asserv::setTargetDist(int t) {
 	dateStart = date;
 	beenZero = 0;
 	targetDist = t;
+	waiting = true;
 	return *this;
 }
 
 Asserv& Asserv::setTargetAngle(int t) {
 	beenZero = 0;
 	targetAngle = t;
+	waiting = true;
 	return *this;
 }
 

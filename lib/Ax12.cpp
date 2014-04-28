@@ -17,7 +17,7 @@ Ax12::Ax12(Gpio g, Uart u, int i) :
 		//.setMantissa(2)
 		//.setFraction(0xb)
 		//a,b,c
-		.setMantissa(0x16)
+		//.setMantissa(0x16)
 		.setFraction(0x6)
 		.setHalfDuplex(true)
 		.enableReceive()
@@ -26,7 +26,8 @@ Ax12::Ax12(Gpio g, Uart u, int i) :
 	bufPos = buf;
 }
 
-Ax12::Ax12(Uart u, int i, Gpio *g) : uart(u), id(i), g(g) {
+Ax12::Ax12(Uart u, int i, Gpio *g, Gpio& rx, Gpio& tx) : uart(u), id(i), g(g) {
+	u.configGpio(rx, tx);
 	g
 		->setPushPull()
 		.setDirection(Gpio::OUTPUT)
@@ -36,12 +37,11 @@ Ax12::Ax12(Uart u, int i, Gpio *g) : uart(u), id(i), g(g) {
 	uart
 		.enable()
 		//~1Mbps
-		.setMantissa(2)
-		.setFraction(0xb)
+		//.setMantissa(2)
+		//.setFraction(0xb)
 		//a,b,c
-		//.setMantissa(0x16)
-		//.setFraction(0x6)
-		//.setHalfDuplex(true)
+		.setMantissa(0x16)
+		.setFraction(0x6)
 		.enableReceive()
 		.enableTransmitter();
 	deferred = false;

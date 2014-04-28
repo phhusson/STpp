@@ -96,7 +96,7 @@ class Asserv {
 		int maxEngine, minEngine;
 		int maxForwardAccel, maxBackwardAccel;
 
-		bool waiting;
+		volatile bool waiting;
 		int beenZero;
 
 		int throttle;
@@ -127,6 +127,8 @@ class Asserv {
 
 		Asserv& reset();
 		Asserv& start();
+
+		Asserv& wait();
 
 		int getAngle();
 		int getDist();

@@ -6,9 +6,18 @@ Strategie::Strategie(Ax12& Mamoutor, Asserv& asserv) :
 }
 
 void Strategie::run() {
-	asserv.setTargetDist(0x30000);
-	time.msleep(5000);
+	asserv.dist(10000);
+	time.msleep(2000);
+	//asserv.wait();
+	asserv.angle(-2500);
+	time.msleep(2000);
+	//asserv.wait();
+	asserv.dist(8000);
+	time.msleep(2000);
+	//asserv.wait();
 	mamoutor();
+	time.msleep(2000);
+	resetMamoutor();
 }
 
 void Strategie::reset() {
@@ -20,9 +29,9 @@ void Strategie::reset() {
 }
 
 void Strategie::resetMamoutor() {
-	mamoutor_servo.goTo(0x000);
+	mamoutor_servo.goTo(0x200);
 }
 
 void Strategie::mamoutor() {
-	mamoutor_servo.goTo(0x280);
+	mamoutor_servo.goTo(0x300);
 }
