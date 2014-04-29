@@ -88,3 +88,7 @@ Gpio Ax12En(GpioA[1]);
 Uart Ax12_UART(2);
 //Need actual id
 Ax12 mamoutor(Ax12_UART, 0xfe, &Ax12En, Ax12Rx, Ax12Tx);
+
+Gpio External_TX(GpioD[8]);
+Gpio External_RX(GpioD[9]);
+Uart ExternalUart(3);
