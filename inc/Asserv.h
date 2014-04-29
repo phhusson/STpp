@@ -112,7 +112,8 @@ class Asserv {
 		Asserv& dist(int t);
 		Position& getPosition();
 
-		Asserv& setMaxAcceleration(int l);
+		Asserv& setMaxForwardAcceleration(int l);
+		Asserv& setMaxBackwardAcceleration(int l);
 		Asserv& setMaxEngine(int l);
 		Asserv& setMinEngine(int l);
 

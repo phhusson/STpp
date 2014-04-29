@@ -210,8 +210,13 @@ Asserv& Asserv::setAccelAngle(int c) {
 	return *this;
 }
 
-Asserv& Asserv::setMaxAcceleration(int l) {
+Asserv& Asserv::setMaxForwardAcceleration(int l) {
 	maxForwardAccel = l;
+	return *this;
+}
+
+Asserv& Asserv::setMaxBackwardAcceleration(int l) {
+	maxBackwardAccel = l;
 	return *this;
 }
 

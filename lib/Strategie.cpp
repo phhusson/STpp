@@ -3,6 +3,21 @@
 
 Strategie::Strategie(Ax12& Mamoutor, Asserv& asserv) :
 	mamoutor_servo(Mamoutor), asserv(asserv) {
+	
+#if 1
+	//If big robot
+	asserv
+		.setProportionnalDist(0x1000)
+		.setMaxForwardAcceleration(0x200)
+		.setMaxBackwardAcceleration(0x200);
+#else
+	//If small robot
+	asserv
+		.setProportionnalDist(0x20000)
+		.setMaxForwardAccel(0x80)
+		.setMaxBackwardAccel(0x80);
+#endif
+	
 }
 
 void Strategie::run() {
