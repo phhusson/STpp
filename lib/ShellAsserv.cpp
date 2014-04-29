@@ -11,8 +11,11 @@ OStream& operator<<(OStream& o, VelocityAccel& i) {
 	o << " Integral Distance = " << i.getIntegralDist() << endl;
 	o << endl;
 
-	o << " Max Accel = " << i.maxAccel << endl;
-	o << " Min Accel = " << i.minAccel << endl;
+	o << " Max Linear Accel = " << i.maxLinearAccel << endl;
+	o << " Min Linear Accel = " << i.minLinearAccel << endl;
+
+	o << " Max Rotation Accel = " << i.maxRotationAccel << endl;
+	o << " Min Rotation Accel = " << i.minRotationAccel << endl;
 
 	o << " Max Vel = " << i.maxVel << endl;
 	o << " Min Vel = " << i.minVel << endl;

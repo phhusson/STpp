@@ -47,8 +47,9 @@ VelocityAccel::VelocityAccel(VelocityAccelPerEncoderCompute &left, VelocityAccel
 	targetDist(0), targetAngle(0),
 	N(N), D(D) {
 
-		minAccel = maxAccel = 0;
-		minVel = maxVel = 0;
+	minLinearAccel = maxLinearAccel = 0;
+	minRotationAccel = maxRotationAccel = 0;
+	minVel = maxVel = 0;
 }
 
 void VelocityAccel::compute(int targetDist, int targetAngle) {
@@ -66,10 +67,15 @@ void VelocityAccel::compute(int targetDist, int targetAngle) {
 		intAngle = 0;
 	this->targetAngle = targetAngle;
 
-	if(getAccelDist() > maxAccel)
-		maxAccel = getAccelDist();
-	if(getAccelDist() < minAccel)
-		minAccel = getAccelDist();
+	if(getAccelDist() > maxLinearAccel)
+		maxLinearAccel = getAccelDist();
+	if(getAccelDist() < minLinearAccel)
+		minLinearAccel = getAccelDist();
+
+	if(getAccelAngle() > maxRotationAccel)
+		maxRotationAccel = getAccelAngle();
+	if(getAccelAngle() < minRotationAccel)
+		minRotationAccel = getAccelAngle();
 
 	if(getVelocityDist() > maxVel)
 		maxVel = getVelocityDist();
