@@ -96,6 +96,7 @@ class Asserv {
 
 		int maxEngine, minEngine;
 		int maxForwardAccel, maxBackwardAccel;
+		int maxRotationAccel;
 
 		volatile bool waiting;
 		int beenZero;
@@ -115,6 +116,7 @@ class Asserv {
 
 		Asserv& setMaxForwardAcceleration(int l);
 		Asserv& setMaxBackwardAcceleration(int l);
+		Asserv& setMaxRotationAcceleration(int l);
 		Asserv& setMaxEngine(int l);
 		Asserv& setMinEngine(int l);
 

@@ -48,6 +48,7 @@ Shell& operator<<(Shell& shell, Asserv& a) {
 	addSetter(shell, a, setMinEngine);
 	addSetter(shell, a, setMaxForwardAcceleration);
 	addSetter(shell, a, setMaxBackwardAcceleration);
+	addSetter(shell, a, setMaxRotationAcceleration);
 
 	addSetter(shell, a, angle);
 	addSetter(shell, a, dist);

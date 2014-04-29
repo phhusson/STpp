@@ -16,6 +16,7 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 	c_accelDist(0x0), c_accelAngle(0),
 	maxEngine(0x3ff), minEngine(0x80),
 	maxForwardAccel(0x80), maxBackwardAccel(0x80),
+	maxRotationAccel(0x10000),
 	waiting(false),
 	date(0), dateStart(0) {
 	tim
@@ -96,8 +97,8 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 				dr = 0;
 			}
 
-			//Check if we're near the destination
 #if 1
+			//Check if we're near the destination (dist)
 			int maxAccel = infos.getVelocityDist() > 0 ? maxBackwardAccel : maxForwardAccel;
 			int x0 = (1000*infos.getVelocityDist()*infos.getVelocityDist())/(16*maxAccel);
 			x0 = abs(x0);
@@ -107,10 +108,19 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 				dr = 0;
 			}
 #endif
-
+#if 1
+			//Check if we're near the destination (angle)
+			int t0 = (1000*infos.getVelocityAngle()*infos.getVelocityAngle())/(16*maxRotationAccel);
+			t0 = abs(t0);
+			if(abs(infos.getDeltaAngle()) < t0) {
+				//Brrrrrrrrrrrrrrrrrrrrrrrrrraaaaaaaaaaakkkkkeeeeeeeee
+				dl = 0;
+				dr = 0;
+			}
+#endif
 
 			//ABS/ESP
-			if(infos.getAccelDist() > maxForwardAccel || infos.getAccelDist() < -maxForwardAccel) {
+			if(infos.getAccelDist() > maxForwardAccel || infos.getAccelDist() < -maxBackwardAccel) {
 				if(throttle > 0) {
 					throttle -= 10;
 				}
@@ -217,6 +227,11 @@ Asserv& Asserv::setMaxForwardAcceleration(int l) {
 
 Asserv& Asserv::setMaxBackwardAcceleration(int l) {
 	maxBackwardAccel = l;
+	return *this;
+}
+
+Asserv& Asserv::setMaxRotationAcceleration(int l) {
+	maxRotationAccel = l;
 	return *this;
 }
 
