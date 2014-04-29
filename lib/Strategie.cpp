@@ -7,14 +7,14 @@ Strategie::Strategie(Ax12& Mamoutor, Asserv& asserv) :
 
 void Strategie::run() {
 	asserv.dist(10000);
-	time.msleep(2000);
-	//asserv.wait();
+	asserv.wait();
+
 	asserv.angle(-2500);
-	time.msleep(2000);
-	//asserv.wait();
+	asserv.wait();
+
 	asserv.dist(8000);
-	time.msleep(2000);
-	//asserv.wait();
+	asserv.wait();
+
 	mamoutor();
 	time.msleep(2000);
 	resetMamoutor();

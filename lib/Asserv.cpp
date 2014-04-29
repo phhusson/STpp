@@ -90,6 +90,7 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 					int res = date - dateStart;
 					log << "That makes time of " << res/1000 << "s" << res%1000 << "ms" << endl;
 					dateStart = 0;
+					waiting = false;
 				}
 				dl = 0;
 				dr = 0;
@@ -139,10 +140,6 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 			dl /= 100;
 			dr = ref * (100-throttle) + throttle * dr;
 			dr /= 100;
-			//We're not moving, and we're not telling the motors to move
-			//Sounds ok ?
-			waiting = (dl == 0) && (dr == 0) &&
-				(infos.getVelocityDist() == 0) && (infos.getVelocityAngle() == 0);
 
 			motorl.setSpeed(dl);
 			motorr.setSpeed(dr);
@@ -151,21 +148,24 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 }
 
 Asserv& Asserv::wait() {
-	while(!waiting);
+	while(waiting);
 	return *this;
 }
 
 Asserv& Asserv::setTargetDist(int t) {
+	targetDist = t;
+
 	dateStart = date;
 	beenZero = 0;
-	targetDist = t;
 	waiting = true;
 	return *this;
 }
 
 Asserv& Asserv::setTargetAngle(int t) {
-	beenZero = 0;
 	targetAngle = t;
+
+	dateStart = date;
+	beenZero = 0;
 	waiting = true;
 	return *this;
 }
