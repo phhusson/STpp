@@ -48,7 +48,7 @@ Gpio Zigbee_RX(GpioC[11]);
 Gpio Zigbee_TX(GpioC[10]);
 //Can be either uart 3 or 4
 //Need a Zigbee class
-Uart Zigbee_UART(4);
+//Uart Zigbee_UART(4);
 
 
 //On-board leds
