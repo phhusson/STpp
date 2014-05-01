@@ -1,4 +1,5 @@
 #include <Ax12.h>
+#include <Board.h>
 #include <Log.h>
 
 static char buf[16] __attribute((section("dma")));
@@ -130,7 +131,6 @@ void Ax12::readReg(char reg) {
 	put(reg);
 	putChecksum();
 	getMsg();
-	getMsg();
 }
 
 void Ax12::writeReg(char reg, char val) {
@@ -142,7 +142,6 @@ void Ax12::writeReg(char reg, char val) {
 	put(reg);
 	put(val);
 	putChecksum();
-	getMsg();
 	getMsg();
 	deferred = false;
 }
@@ -156,8 +155,6 @@ Ax12& Ax12::action(bool broadcast) {
 	put(0x05);
 	putChecksum();
 	getMsg();
-	if(!broadcast)
-		getMsg();
 
 	return *this;
 }
@@ -172,7 +169,6 @@ void Ax12::writeReg(char reg, unsigned short val) {
 	put(val&0xff);
 	put(val>>8);
 	putChecksum();
-	getMsg();
 	getMsg();
 }
 
@@ -192,12 +188,15 @@ Ax12& Ax12::ping() {
 }
 
 void Ax12::getMsg() {
-	//12 should be enough... right ?
 	if(id == 0xfe)
 		return;
-	if(g)
+	if(g) {
+		//FIXME
+		time.msleep(1);
 		*g = true;
+	}
 
+	//12 should be enough... right ?
 	char msg[12];
 	msg[3]=0xff;
 	int i;
