@@ -51,9 +51,28 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 			d_a += c_velAngle * infos.getVelocityAngle();
 			d_a += c_propAngle * infos.getDeltaAngle();
 			d_a += c_intAngle * infos.getIntegralAngle();
-
 #define abs(x) ((x) > 0 ? (x) : -(x))
 #define signof(x, y) ((x) > 0 ? (y) : -(y))
+
+#if 1
+			//Check if we're near the destination (dist)
+			int maxAccel = infos.getVelocityDist() > 0 ? maxBackwardAccel : maxForwardAccel;
+			int x0 = (1000*infos.getVelocityDist()*infos.getVelocityDist())/(16*maxAccel);
+			x0 = abs(x0);
+			if(abs(infos.getDeltaDist()) < x0) {
+				//Brrrrrrrrrrrrrrrrrrrrrrrrrraaaaaaaaaaakkkkkeeeeeeeee
+				d_d = 0;
+			}
+#endif
+#if 1
+			//Check if we're near the destination (angle)
+			int t0 = (1000*infos.getVelocityAngle()*infos.getVelocityAngle())/(16*maxRotationAccel);
+			t0 = abs(t0);
+			if(abs(infos.getDeltaAngle()) < t0) {
+				//Brrrrrrrrrrrrrrrrrrrrrrrrrraaaaaaaaaaakkkkkeeeeeeeee
+				d_a = 0;
+			}
+#endif
 
 			int dl = d_d + d_a;
 			int dr = d_d - d_a;
@@ -97,27 +116,6 @@ Asserv::Asserv(IncrementalEncoder& _left, IncrementalEncoder& _right,
 				dr = 0;
 			}
 
-#if 1
-			//Check if we're near the destination (dist)
-			int maxAccel = infos.getVelocityDist() > 0 ? maxBackwardAccel : maxForwardAccel;
-			int x0 = (1000*infos.getVelocityDist()*infos.getVelocityDist())/(16*maxAccel);
-			x0 = abs(x0);
-			if(abs(infos.getDeltaDist()) < x0) {
-				//Brrrrrrrrrrrrrrrrrrrrrrrrrraaaaaaaaaaakkkkkeeeeeeeee
-				dl = 0;
-				dr = 0;
-			}
-#endif
-#if 1
-			//Check if we're near the destination (angle)
-			int t0 = (1000*infos.getVelocityAngle()*infos.getVelocityAngle())/(16*maxRotationAccel);
-			t0 = abs(t0);
-			if(abs(infos.getDeltaAngle()) < t0) {
-				//Brrrrrrrrrrrrrrrrrrrrrrrrrraaaaaaaaaaakkkkkeeeeeeeee
-				dl = 0;
-				dr = 0;
-			}
-#endif
 
 			//ABS/ESP
 			if(infos.getAccelDist() > maxForwardAccel || infos.getAccelDist() < -maxBackwardAccel) {

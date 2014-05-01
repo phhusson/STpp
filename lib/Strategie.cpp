@@ -8,8 +8,11 @@ Strategie::Strategie(Ax12& Mamoutor, Asserv& asserv) :
 	//If big robot
 	asserv
 		.setProportionnalDist(0x1000)
-		.setMaxForwardAcceleration(0x200)
-		.setMaxBackwardAcceleration(0x200);
+		//.setMaxForwardAcceleration(0x200)
+		//.setMaxBackwardAcceleration(0x200)
+		.setMaxForwardAcceleration(0x198)
+		.setMaxBackwardAcceleration(0x198)
+		.setMaxRotationAcceleration(0x68);
 #else
 	//If small robot
 	asserv
