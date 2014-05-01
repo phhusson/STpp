@@ -19,14 +19,11 @@
 
 static Shell shell;
 
-
 int main() {
 	UsbSerial usb;
 
 	Task lidar_task([&usb]() {
-		Gpio LidarRX(GpioD[9]);
-		Uart Lidar(3);
-		LidarNeato lidar(LidarRX, Lidar);
+		LidarNeato lidar(External_RX, ExternalUart);
 		while(true) {
 			lidar_neato_t lidar_packet;
 			lidar >> lidar_packet;
