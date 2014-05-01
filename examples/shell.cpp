@@ -51,10 +51,19 @@ int main() {
 	shell << "Encoder0" << Encoder0;
 	shell << "Encoder1" << Encoder1;
 
-	Strategie strategie(mamoutor, asserv);
+	Strategie strategie(mamoutorRight, asserv);
 	shell << "Strategie" << strategie;
 
-	shell << "Mamoutor" << mamoutor;
+	shell << "Mamoutor" << mamoutorRight;
+
+	shell << "bacLeftExternal" << bacLeftExternal;
+	shell << "bacLeftCentered" << bacLeftCentered;
+	shell << "bacLeftReservoir" << bacLeftReservoir;
+
+	shell << "bacRightCentered" << bacRightCentered;
+	shell << "bacRightReservoir" << bacRightReservoir;
+
+	shell << "Ax12" << ax12Broadcast;
 
 	shell.add([&asserv/*,&mamoutor*/](Stack& s) {
 		(void)s;

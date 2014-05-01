@@ -86,8 +86,17 @@ Gpio Ax12Tx(GpioA[2]);
 Gpio Ax12Rx(GpioA[3]);
 Gpio Ax12En(GpioA[1]);
 Uart Ax12_UART(2);
-//Need actual id
-Ax12 mamoutor(Ax12_UART, 0xfe, &Ax12En, Ax12Rx, Ax12Tx);
+
+Ax12 mamoutorRight(Ax12_UART, 144, &Ax12En, Ax12Rx, Ax12Tx);
+
+Ax12 bacLeftExternal(Ax12_UART, 141, &Ax12En, Ax12Rx, Ax12Tx);
+Ax12 bacLeftCentered(Ax12_UART, 129, &Ax12En, Ax12Rx, Ax12Tx);
+Ax12 bacLeftReservoir(Ax12_UART, 121, &Ax12En, Ax12Rx, Ax12Tx);
+
+Ax12 bacRightCentered(Ax12_UART, 20, &Ax12En, Ax12Rx, Ax12Tx);
+Ax12 bacRightReservoir(Ax12_UART, 142, &Ax12En, Ax12Rx, Ax12Tx);
+
+Ax12 ax12Broadcast(Ax12_UART, 0xfe, &Ax12En, Ax12Rx, Ax12Tx);
 
 Gpio External_TX(GpioD[8]);
 Gpio External_RX(GpioD[9]);

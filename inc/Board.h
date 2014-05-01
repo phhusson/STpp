@@ -63,7 +63,14 @@ extern Gpio Ax12TX;
 extern Gpio Ax12RX;
 extern Gpio Ax12EN;
 extern Uart Ax12_UART;
-extern Ax12 mamoutor;
+
+extern Ax12 mamoutorRight;
+extern Ax12 bacLeftExternal;
+extern Ax12 bacLeftCentered;
+extern Ax12 bacLeftReservoir;
+extern Ax12 bacRightCentered;
+extern Ax12 bacRightReservoir;
+extern Ax12 ax12Broadcast;
 
 extern Gpio External_TX;
 extern Gpio External_RX;
