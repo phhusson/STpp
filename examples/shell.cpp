@@ -7,6 +7,7 @@
 #include <Shell.h>
 #include <ShellAsserv.h>
 #include <ShellAx12.h>
+#include <ShellBacAFruits.h>
 #include <ShellGpio.h>
 #include <ShellHBridgeST.h>
 #include <ShellIncrementalEncoder.h>
@@ -62,6 +63,9 @@ int main() {
 
 	shell << "bacRightCentered" << bacRightCentered;
 	shell << "bacRightReservoir" << bacRightReservoir;
+
+	shell << "bacRight" << bacRight;
+	shell << "bacLeft" << bacLeft;
 
 	shell << "Ax12" << ax12Broadcast;
 

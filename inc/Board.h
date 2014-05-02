@@ -1,6 +1,7 @@
 #include <Led.h>
 #include <Pwm.h>
 #include <Time.h>
+#include <BacAFruits.h>
 #include <HBridgeST.h>
 #include <IncrementalEncoder.h>
 #include <Uart.h>
@@ -71,6 +72,9 @@ extern Ax12 bacLeftReservoir;
 extern Ax12 bacRightCentered;
 extern Ax12 bacRightReservoir;
 extern Ax12 ax12Broadcast;
+
+extern BacAFruits bacLeft;
+extern BacAFruits bacRight;
 
 extern Gpio External_TX;
 extern Gpio External_RX;

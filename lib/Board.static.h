@@ -96,6 +96,9 @@ Ax12 bacLeftReservoir(Ax12_UART, 121, &Ax12En, Ax12Rx, Ax12Tx);
 Ax12 bacRightCentered(Ax12_UART, 20, &Ax12En, Ax12Rx, Ax12Tx);
 Ax12 bacRightReservoir(Ax12_UART, 142, &Ax12En, Ax12Rx, Ax12Tx);
 
+BacAFruits bacLeft(&bacLeftExternal, &bacLeftCentered, &bacLeftReservoir, true);
+BacAFruits bacRight(NULL, &bacRightCentered, &bacRightReservoir, false);
+
 Ax12 ax12Broadcast(Ax12_UART, 0xfe, &Ax12En, Ax12Rx, Ax12Tx);
 
 Gpio External_TX(GpioD[8]);
