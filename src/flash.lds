@@ -18,7 +18,7 @@ SECTIONS {
 	.bss : {
 		_sbss = .;
 		*(.bss*) *(COMMON);
-	} > ram
+	} > ccmram
 	_ebss = _sbss + SIZEOF(.bss);
 
 	.dma : {
