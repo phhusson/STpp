@@ -46,10 +46,9 @@ Gpio USB_DP(GpioA[12]);
 //Zigbee
 Gpio Zigbee_RX(GpioC[11]);
 Gpio Zigbee_TX(GpioC[10]);
-//Can be either uart 3 or 4
-//Need a Zigbee class
-//Uart Zigbee_UART(4);
-
+//TODO: Need a Zigbee class
+DmaStream ZigbeeUartDma(1, 4, 4);
+Uart Zigbee_UART(4, &ZigbeeUartDma);
 
 //On-board leds
 /*
@@ -85,7 +84,8 @@ Time time(Tim14);
 Gpio Ax12Tx(GpioA[2]);
 Gpio Ax12Rx(GpioA[3]);
 Gpio Ax12En(GpioA[1]);
-Uart Ax12_UART(2);
+DmaStream Ax12UartDma(1, 6, 4);
+Uart Ax12_UART(2, &Ax12UartDma);
 
 Ax12 mamoutorRight(Ax12_UART, 144, &Ax12En, Ax12Rx, Ax12Tx);
 
@@ -103,4 +103,5 @@ Ax12 ax12Broadcast(Ax12_UART, 0xfe, &Ax12En, Ax12Rx, Ax12Tx);
 
 Gpio External_TX(GpioD[8]);
 Gpio External_RX(GpioD[9]);
-Uart ExternalUart(3);
+DmaStream ExternalUartDma(1, 3, 4);
+Uart ExternalUart(3, &ExternalUartDma);
