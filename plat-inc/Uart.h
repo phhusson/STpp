@@ -6,6 +6,7 @@
 #include "OStream.h"
 #include "IStream.h"
 #include "Dma.h"
+#include "Lock.h"
 
 class Uart : public OStream, public IStream {
 	private:
@@ -13,6 +14,7 @@ class Uart : public OStream, public IStream {
 		volatile USART_TypeDef *base;
 		void init();
 		DmaStream* dma;
+		Mutex lock;
 	public:
 		Uart(int);
 		Uart(int, DmaStream* dma);

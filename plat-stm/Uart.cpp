@@ -119,6 +119,7 @@ Uart& Uart::put(char* s, int l) {
 			put(s[i]);
 		return *this;
 	}
+	AutoLock m(lock);
 	txDma(true);
 	base->SR  &= ~USART_SR_TC;
 	dma->
@@ -138,6 +139,7 @@ Uart& Uart::put(char c) {
 		while(! (base->SR & (1<<7)));
 		return *this;
 	}
+	AutoLock m(lock);
 	while(! (base->SR & (1<<7)));
 	base->DR = c;
 	while(! (base->SR & (1<<7)));
