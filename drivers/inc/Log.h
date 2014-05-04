@@ -4,7 +4,7 @@
 
 class Log : public OStream {
 	private:
-		char log[32][128];
+		volatile char log[32][128];
 		int line;
 		int position;
 	public:
