@@ -14,7 +14,7 @@ HOST_ARCH=$(shell arch)
 PLAT?=stm
 ifeq ($(PLAT),stm)
 include usb.mk
-ARCH_CFLAGS=-DARCH=stm
+ARCH_CFLAGS=-DARCH=stm -fshort-double
 ifeq ($(HOST_ARCH),armv7l)
 	PREFIX=
 endif
@@ -33,8 +33,7 @@ endif
 
 ASFLAGS:=$(CXXFLAGS)
 #LDLIBS:=$(shell $(PREFIX)gcc -print-libgcc-file-name)
-#CXXFLAGS+=-Iinc -Iplat-inc $(FREERTOS_INC) $(STM32_INC) $(USB_INC) -Wall -fno-stack-protector -O3 -DARM_MATH_CM4 -D__FPU_PRESENT=1 $(ARCH_CFLAGS) -fshort-double -fdata-sections -ffunction-sections -Wextra -Werror
-CXXFLAGS+=-Iinc -Idrivers/inc -Iplat-inc $(FREERTOS_INC) $(STM32_INC) $(USB_INC) -Wall -fno-stack-protector -O3 -DARM_MATH_CM4 -D__FPU_PRESENT=1 $(ARCH_CFLAGS) -fshort-double -Wextra -Werror
+CXXFLAGS+=-Iinc -Idrivers/inc -Iplat-inc $(FREERTOS_INC) $(STM32_INC) $(USB_INC) -Wall -fno-stack-protector -O3 -DARM_MATH_CM4 -D__FPU_PRESENT=1 $(ARCH_CFLAGS) -Wextra -Werror -fdata-sections -ffunction-sections
 CFLAGS:=$(CXXFLAGS)
 CXXFLAGS+=-fno-rtti -fno-exceptions -std=c++11
 
