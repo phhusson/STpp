@@ -1,7 +1,7 @@
 #include "Lock.h"
 
 Mutex::Mutex() {
-	vSemaphoreCreateBinary(sem);
+	sem = xSemaphoreCreateMutex();
 }
 
 void Mutex::lock() {
@@ -9,6 +9,22 @@ void Mutex::lock() {
 }
 
 void Mutex::unlock() {
+	xSemaphoreGive(sem);
+}
+
+BinarySemaphore::BinarySemaphore() {
+	vSemaphoreCreateBinary(sem);
+}
+
+void BinarySemaphore::take() {
+	xSemaphoreTake(sem, portMAX_DELAY);
+}
+
+bool BinarySemaphore::tryTake() {
+	return xSemaphoreTake(sem, portMAX_DELAY) != 0;
+}
+
+void BinarySemaphore::give() {
 	xSemaphoreGive(sem);
 }
 

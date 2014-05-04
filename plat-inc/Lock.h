@@ -15,6 +15,16 @@ class Mutex {
 		void unlock();
 };
 
+class BinarySemaphore {
+	private:
+		xSemaphoreHandle sem;
+	public:
+		BinarySemaphore();
+		void take();
+		void give();
+		bool tryTake();
+};
+
 class AutoLock {
 	private:
 		Mutex _m;
