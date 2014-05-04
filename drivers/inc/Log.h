@@ -10,6 +10,7 @@ class Log : public OStream {
 	public:
 		virtual Log& put(char);
 		virtual Log& endl();
+		void dump(OStream& o);
 };
 
 extern Log log;
