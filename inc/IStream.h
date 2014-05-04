@@ -14,6 +14,7 @@ class NullIStream : public IStream {
 		virtual bool available() { return false; }
 };
 
+IStream& operator>>(IStream& i, unsigned char &c);
 IStream& operator>>(IStream& i, char &c);
 IStream& operator>>(IStream& i, int &c);
 IStream& operator>>(IStream& i, char* str);

@@ -1,5 +1,11 @@
 #include <IStream.h>
 
+IStream& operator>>(IStream& i, unsigned char &c) {
+	i.wait();
+	c = (unsigned char)i.get();
+	return i;
+}
+
 IStream& operator>>(IStream& i, char &c) {
 	i.wait();
 	c = i.get();
