@@ -106,6 +106,7 @@ UsbSerial::UsbSerial() {
 
 extern volatile uint32_t APP_Rx_ptr_out;
 UsbSerial& UsbSerial::put(char c) {
+	AutoLock m(lock);
 	APP_Rx_Buffer[APP_Rx_ptr_in] = c;
 	APP_Rx_ptr_in++;
 

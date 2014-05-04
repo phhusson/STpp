@@ -4,10 +4,12 @@
 #include <OStream.h>
 #include <IStream.h>
 #include <Usb.h>
+#include <Lock.h>
 
 class UsbSerial : public OStream, public IStream {
 	private:
 		Usb u;
+		Mutex lock;
 	public:
 		UsbSerial();
 		~UsbSerial();
