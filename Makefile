@@ -34,13 +34,19 @@ endif
 ASFLAGS:=$(CXXFLAGS)
 #LDLIBS:=$(shell $(PREFIX)gcc -print-libgcc-file-name)
 #CXXFLAGS+=-Iinc -Iplat-inc $(FREERTOS_INC) $(STM32_INC) $(USB_INC) -Wall -fno-stack-protector -O3 -DARM_MATH_CM4 -D__FPU_PRESENT=1 $(ARCH_CFLAGS) -fshort-double -fdata-sections -ffunction-sections -Wextra -Werror
-CXXFLAGS+=-Iinc -Iplat-inc $(FREERTOS_INC) $(STM32_INC) $(USB_INC) -Wall -fno-stack-protector -O3 -DARM_MATH_CM4 -D__FPU_PRESENT=1 $(ARCH_CFLAGS) -fshort-double -Wextra -Werror
+CXXFLAGS+=-Iinc -Idrivers/inc -Iplat-inc $(FREERTOS_INC) $(STM32_INC) $(USB_INC) -Wall -fno-stack-protector -O3 -DARM_MATH_CM4 -D__FPU_PRESENT=1 $(ARCH_CFLAGS) -fshort-double -Wextra -Werror
 CFLAGS:=$(CXXFLAGS)
 CXXFLAGS+=-fno-rtti -fno-exceptions -std=c++11
+
 LIB_SRC=$(wildcard lib/*.cpp) $(wildcard lib/*.c)
 LIB_OBJS=$(subst cpp,o,$(LIB_SRC)) lib/debug.o
 LIB_OBJS:=$(subst .c,.o,$(LIB_OBJS))
 LIB_INCS=$(wildcard inc/*.h)
+
+DRIVERS_SRC=$(wildcard drivers/*.cpp) $(wildcard drivers/*.c)
+DRIVERS_OBJS=$(subst .cpp,.o,$(DRIVERS_SRC))
+DRIVERS_OBJS:=$(subst .c,.o,$(DRIVERS_OBJS))
+DRIVERS_INCS=$(wildcard drivers/inc/*.h)
 
 PLAT_SRC=$(wildcard plat-$(PLAT)/*.cpp)
 PLAT_OBJS=$(subst cpp,o,$(PLAT_SRC))
@@ -72,20 +78,19 @@ all: $(EXECS)
 
 lib/static.o: lib/static.cpp lib/Board.static.h
 
-.SECONDARY: $(LIB_OBJS) $(FREERTOS_OBJS) $(SRC_OBJS) $(USB_OBJS) $(PLAT_OBJS)
+.SECONDARY: $(LIB_OBJS) $(FREERTOS_OBJS) $(SRC_OBJS) $(USB_OBJS) $(PLAT_OBJS) $(DRIVERS_OBJS) $(EXECS)
 
-#lib/%.o: lib/%.cpp $(LIB_INCS) $(PLAT_INCS)
-#	$(CXX) -c $< -o $@ $(CXXFLAGS)
-
-lib/%.o: lib/%.cpp $(LIB_INCS) $(PLAT_INCS)
+lib/%.o: lib/%.cpp $(LIB_INCS) $(PLAT_INCS) $(DRIVER_INCS)
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
 
+drivers/%.o: drivers/%.cpp $(DRIVERS_INCS) $(PLAT_INCS)
+	$(CXX) -c $< -o $@ $(CXXFLAGS)
 
 ifeq ($(PLAT),stm)
-%.ram: %.o $(LIB_OBJS) $(PLAT_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS) $(USB_OBJS)
+%.ram: %.o $(LIB_OBJS) $(PLAT_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS) $(USB_OBJS) $(DRIVERS_OBJS)
 	$(LD) $^ -o $@ $(LDFLAGS) -Tsrc/ram.lds $(LDLIBS)
 
-%.flash: %.o $(LIB_OBJS) $(PLAT_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS) $(USB_OBJS)
+%.flash: %.o $(LIB_OBJS) $(PLAT_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS) $(USB_OBJS) $(DRIVERS_OBJS)
 	$(LD) $^ -o $@ $(LDFLAGS) -Tsrc/flash.lds $(LDLIBS)
 else
 examples/%: examples/%.o $(LIB_OBJS) $(PLAT_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS) $(USB_OBJS)
@@ -93,4 +98,4 @@ examples/%: examples/%.o $(LIB_OBJS) $(PLAT_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS) $
 endif
 
 clean:
-	-rm -f examples/*.flash examples/*.ram $(FREERTOS_OBJS) $(LIB_OBJS) $(SRC_OBJS) $(USB_OBJS) $(PLAT_OBJS)
+	-rm -f examples/*.flash examples/*.ram $(FREERTOS_OBJS) $(LIB_OBJS) $(SRC_OBJS) $(USB_OBJS) $(PLAT_OBJS) $(DRIVERS_OBJS)
