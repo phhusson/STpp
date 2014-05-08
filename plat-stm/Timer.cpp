@@ -1,4 +1,5 @@
 #include <Timer.h>
+#include <Gpio.h>
 #include <Log.h>
 
 Timer::Timer(volatile TIM_TypeDef* b, int n) :
@@ -265,6 +266,26 @@ void Timer::callTopCb(int nr) {
 
 Timer& Timer::setTopCB(Callback cb) {
 	topCBs[number] = cb;
+	return *this;
+}
+
+/*
+ * Used to set the AF function of a GPIO if it is used with this timer
+ */
+Timer& Timer::setAlternate(Gpio& gpio) {
+	if (number <= 2) 
+		gpio.setAlternate(Gpio::TIM1_2);
+	else if (number <= 5)
+		gpio.setAlternate(Gpio::TIM3_5);
+	else if (number <= 7)
+		// There are no PWM output for TIM6 and TIM7
+		for(;;);
+	else if (number <= 11)
+		gpio.setAlternate(Gpio::TIM8_11);
+	else if (number <= 14)
+		gpio.setAlternate(Gpio::CAN1_2_TIM12_14);
+	else
+		for(;;);
 	return *this;
 }
 

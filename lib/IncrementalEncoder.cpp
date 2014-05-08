@@ -2,15 +2,9 @@
 
 IncrementalEncoder::IncrementalEncoder(Gpio& a, Gpio& b, Timer& t, int prescaler, bool reverse):
 	encoderA(a), encoderB(b), tim(t), reverse(reverse) {
-	int n_tim = tim.getNumber();
-	if(n_tim<=2){
-		encoderA.setAlternate(Gpio::TIM1_2);
-		encoderB.setAlternate(Gpio::TIM1_2);
-	}
-	else if(n_tim<=5){
-		encoderA.setAlternate(Gpio::TIM3_5);
-		encoderB.setAlternate(Gpio::TIM3_5);
-	}
+
+	tim.setAlternate(encoderA);
+	tim.setAlternate(encoderB);
 
 	tim
 		.setPrescaler(prescaler)

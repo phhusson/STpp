@@ -2,19 +2,8 @@
 
 Pwm::Pwm(Gpio &p, Timer &t, int n, int pre, int atr) :
 	gpio(p), tim(t), chan(n) {
-	int n_tim = tim.getNumber();
-	if(n_tim<=2)
-		gpio.setAlternate(Gpio::TIM1_2);
-	else if(n_tim<=5)
-		gpio.setAlternate(Gpio::TIM3_5);
-	else if(n_tim<=7)
-		for(;;);
-	else if(n_tim<=11)
-		gpio.setAlternate(Gpio::TIM8_11);
-	else if(n_tim<=14)
-		gpio.setAlternate(Gpio::CAN1_2_TIM12_14);
-	else
-		for(;;);
+
+	tim.setAlternate(gpio);
 
 	gpio
 		.setSpeed(Gpio::SPEED_100MHz)

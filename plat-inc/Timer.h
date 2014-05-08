@@ -1,6 +1,7 @@
 #ifndef _TIMER_H
 #define _TIMER_H
 #include <tr1/functional>
+#include <Gpio.h>
 #include <stm32f4xx.h>
 
 class Timer {
@@ -67,6 +68,7 @@ class Timer {
 		Timer& setURS(bool);
 		static void callTopCb(int nr);
 		Timer& setTopCB(Callback cb);
+		Timer& setAlternate(Gpio& gpio);
 	private:
 		Timer& clearInterrupt();
 };
