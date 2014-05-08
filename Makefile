@@ -76,7 +76,7 @@ BAD_FILES+=3rdparty/STM32_USB-Host-Device_Lib_V2.1.0/Libraries/STM32_USB_HOST_Li
 BAD_FILES+=3rdparty/STM32_USB-Host-Device_Lib_V2.1.0/Libraries/STM32_USB_HOST_Library//Core/src/usbh_ioreq.o
 $(BAD_FILES): CFLAGS+=-Wno-sign-compare -Wno-strict-aliasing -Wno-unused-parameter
 
-OBJS=$(PLAT_OBJS) $(SRC_OBJS) $(FREERTOS_OBJS) $(USB_OBJS) $(DRIVERS_OBJS) $(SHELL_OBJS) $(LIB_OBJS)
+OBJS=$(PLAT_OBJS) $(FREERTOS_OBJS) $(USB_OBJS) $(DRIVERS_OBJS) $(SHELL_OBJS) $(LIB_OBJS)
 
 all: $(EXECS)
 
@@ -91,10 +91,13 @@ drivers/%.o: drivers/%.cpp $(DRIVERS_INCS) $(PLAT_INCS)
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
 
 ifeq ($(PLAT),stm)
-%.ram: %.o $(OBJS)
+libSTpp.a: $(OBJS)
+	ar rcs $@ $^
+
+%.ram: %.o $(SRC_OBJS) libSTpp.a
 	$(LD) $^ -o $@ $(LDFLAGS) -Tsrc/ram.lds $(LDLIBS)
 
-%.flash: %.o $(OBJS)
+%.flash: %.o $(SRC_OBJS) libSTpp.a
 	$(LD) $^ -o $@ $(LDFLAGS) -Tsrc/flash.lds $(LDLIBS)
 else
 examples/%: examples/%.o $(OBJS)
