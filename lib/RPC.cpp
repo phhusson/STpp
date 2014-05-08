@@ -35,7 +35,7 @@ void RPC::handleIncoming() {
 	if(c != 0xa5)
 			  return;
 	*in >> id;
-	if(id>sizeof(cbs))
+	if(id>sizeof(cbs)/sizeof(cbs[0]))
 			  return;
 
 	unsigned char checksum = 0;
