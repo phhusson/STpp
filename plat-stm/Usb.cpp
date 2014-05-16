@@ -139,7 +139,6 @@ Usb::Usb() {
 		.setPrescaler(1)
 		.setAutoReloadBuffered(true)
 		.setOneShot(true);
-	log << "Tim6 configured" << endl;
 
 	USB_Vbus_en
 		.setSpeed(Gpio::SPEED_100MHz)
@@ -163,36 +162,13 @@ Usb::Usb() {
 		.setResistor(Gpio::PULL_UP)
 		.setAlternate(Gpio::OTG_FS_HS);
 
-	if(!USB_ID && USB_Vbus_det)
-		log << "Vbus and USB OTG A found... dafuk." << endl;
-	else if(!USB_ID)
+	if(USB_Vbus_det)
+		log << "Found vbus, we're (probably) guest" << endl;
+	else if(!USB_ID) {
 		log << "Found a USB OTG A, we're host" << endl;
-	else if(USB_Vbus_det)
-		log << "Found vbus, we're guest" << endl;
-	else
-		log << "Found neither VBus nor OTG A..." << endl;
-
-	/*
-	USBD_Init(&USB_OTG_dev,
-			USB_OTG_FS_CORE_ID,
-			&USR_desc,
-			&USBD_CDC_cb,
-			&USR_cb);
-
-	UserButton
-		.setDirection(Gpio::INPUT)
-		.setResistor(Gpio::PULL_DOWN);
-
-
-	Exti(UserButton)
-		.enableRising()
-		.enableIRQ()
-		.setTopCB([] (int nr) { 
-				static uint8_t hid_buf[4];
-				hid_buf[1] += 10;
-				USBD_HID_SendReport(&USB_OTG_dev,
-					hid_buf,
-					4);
-				log << "Sending " << (int)hid_buf[1] << endl;
-		});*/
+		USB_Vbus_en = false;
+		log << "Enabled vbus" << endl;
+	} else {
+		log << "We are currently disconnected..." << endl;
+	}
 }
