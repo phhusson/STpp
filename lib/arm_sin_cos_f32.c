@@ -374,6 +374,9 @@ void arm_sin_cos_f32(
   float32_t y0, y1;                              /* nearest output values */
   float32_t fract;                               /* fractional part of input */
 
+  if(theta >= 180)
+	  theta -= 360;
+
   /* Calculation of fractional part */
   if(theta > 0.0f)
   {
