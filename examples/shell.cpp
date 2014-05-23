@@ -38,6 +38,11 @@ int main() {
 	//Use _ prefix as a hideme for autocompletion
 	shell << "_UserButton" << UserButton;
 
+	shell << "LedG" << LedG;
+	shell << "LedO" << LedO;
+	shell << "LedR" << LedR;
+	shell << "LedB" << LedB;
+
 	shell << "_Prop0A" << Prop0A;
 	shell << "_Prop0B" << Prop0B;
 
