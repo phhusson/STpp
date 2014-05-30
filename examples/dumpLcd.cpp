@@ -1,4 +1,5 @@
 #include <Board.h>
+#include <Bluetooth.h>
 #include <Gpio.h>
 #include <Exti.h>
 #include <Irq.h>
@@ -6,6 +7,7 @@
 #include <Timer.h>
 #include <Log.h>
 #include <Lock.h>
+#include <IRRemote.h>
 
 int digit_read(int low, int high) {
 	int v = 0;
@@ -68,6 +70,29 @@ int main() {
 	auto Pwm3_g = GpioA[3];
 	Pwm pompe3(Pwm3_g, Tim2, 4);
 
+#if 0
+	//Usart3
+	auto BT_Tx = GpioB[10];
+	auto BT_Rx = GpioB[11];
+
+	log << "Starting..." << endl;
+
+	Bluetooth bt(3, BT_Tx, BT_Rx);
+	//0x105f .. 0x1230
+	//= 0x1147
+	bt.setMantissa(0x114).setFraction(0x7);
+	while(1) {
+		for(int i=0x105F; i<0x1230; ++i) {
+			bt.setMantissa(i >> 4).setFraction(i & 0xf);
+			if(bt.available()) {
+				bt << (int) i << endl;
+				while(bt.available()) bt.get();
+			}
+			time.msleep(50);
+		}
+	}
+#endif
+
 #define prepare_gpio_input(g) { \
 	g \
 		.setDirection(Gpio::INPUT) \
@@ -83,7 +108,6 @@ int main() {
 	prepare_gpio_input(data9);
 
 
-	log << "Starting..." << endl;
 
 	volatile int rawValue = 0;
 	volatile int lastUpdate = 0;
@@ -98,6 +122,7 @@ int main() {
 	    .setOneShot(false);
 
 
+	//Decode the LCD
 	Tim4
 	    .setTopCB([&rawValue, &lastUpdate, &clk, &data9, &data8, &data7, &data6](int timer_id) {
 		(void) timer_id;
@@ -261,13 +286,18 @@ int main() {
 
 						if(delta > liquidValues[currentLiquid][0]) {
 							currentPump->setDutyCycle(100);
+							log << "pwm = " << 100 << endl;
 						} else if(delta > liquidValues[currentLiquid][1]) {
 							currentPump->setDutyCycle(50);
+							log << "pwm = " << 50 << endl;
 						} else if(delta > liquidValues[currentLiquid][2] || actualValue < 5) {
 							currentPump->setDutyCycle(35);
+							log << "pwm = " << 35 << endl;
 						} else if(delta > liquidValues[currentLiquid][3]) {
 							currentPump->setDutyCycle(25);
+							log << "pwm = " << 25 << endl;
 						} else {
+							log << "pwm = " << 0 << endl;
 							currentPump->setDutyCycle(0);
 							commandDone.give();
 							newCommand.take();
@@ -293,7 +323,6 @@ int main() {
 	currentPump = &pompe1;
 	newCommand.give();
 	commandDone.take();
-#endif
 
 	currentLiquid = SYRUP;
 	currentAim = 20;
@@ -306,7 +335,62 @@ int main() {
 	currentPump = &pompe3;
 	newCommand.give();
 	commandDone.take();
+#endif
 
-	while(1)
-		time.msleep(1000);
+	log << "Starting IR Remote" << endl;
+	auto irpin = GpioE[7];
+	IRRemote remote(Tim12, irpin);
+
+	log << "IR Remote started" << endl;
+
+	while(1) {
+		LedG.setDutyCycle(100);
+		int cmd = remote.next();
+		LedG.setDutyCycle(0);
+		log << "Got cmd = " << cmd << endl;
+		switch(cmd) {
+			case 0:
+				//10cl pompe 1
+				currentAim = 100;
+				currentPump = &pompe1;
+				newCommand.give();
+				commandDone.take();
+				break;
+			case 1:
+				//15cl pompe 1
+				currentAim = 150;
+				currentPump = &pompe1;
+				newCommand.give();
+				commandDone.take();
+				break;
+			case 2:
+				//10cl pompe 1 + 10 cl pompe 3
+				currentAim = 100;
+				currentPump = &pompe1;
+				newCommand.give();
+				commandDone.take();
+
+				currentAim = 100;
+				currentPump = &pompe3;
+				newCommand.give();
+				commandDone.take();
+				break;
+
+			case 3:
+				//3cl pompe 1 + 15 cl pompe 3
+				currentAim = 30;
+				currentPump = &pompe1;
+				newCommand.give();
+				commandDone.take();
+
+				currentAim = 150;
+				currentPump = &pompe3;
+				newCommand.give();
+				commandDone.take();
+				break;
+			default:
+				//Bite.
+				break;
+		};
+	}
 }
